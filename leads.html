@@ -1,0 +1,2910 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leads Proyek | Mulya Teknik</title>
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        /* BRAND & CORE COLORS (LIGHT DEFAULT) */
+        --primary-color: #0a4a80;
+        --secondary-color: #00bcd4;
+        --detail-color: #17a2b8;
+        --delete-color: #ff4d4f;
+        --edit-color: #faad14;
+
+        --text-color: #1f2933;
+        --text-soft: #6b7280;
+
+        --background-light: #f3f7fb;
+        --background-dark: #e3eefc;
+
+        --bg-body: radial-gradient(circle at top left, #e0f2ff 0, #f3f7fb 35%, #eef2ff 100%);
+        --bg-sidebar: #ffffff;
+        --bg-elevated: #ffffff;
+        --bg-elevated-soft: #f4f7fa;
+        --bg-kanban-column: #f4f7fa;
+
+        --border-subtle: #e0e0e0;
+        --glass-border: rgba(148,163,184,0.35);
+
+        --shadow-deep: 0 20px 50px rgba(15, 23, 42, 0.18);
+        --input-button-shadow: 0 10px 30px rgba(0, 188, 212, 0.35);
+
+        --chip-bg: #f0f3f7;
+
+        --transition-fast: 0.25s ease;
+        --transition-med: 0.35s ease;
+
+        /* ===== TOKEN KHUSUS CARD BESAR & CARD KECIL ===== */
+        --panel-bg: rgba(255,255,255,0.92);
+        --panel-border: rgba(10,74,128,0.18);
+
+        --leadcard-bg: linear-gradient(135deg,
+                        rgba(255,255,255,0.96),
+                        rgba(226,240,255,0.92));
+        --leadcard-border: rgba(10,74,128,0.22);
+        --leadcard-ring: rgba(0,188,212,0.25);
+
+        --leadcard-title: var(--primary-color);
+        --leadcard-text: var(--text-soft);
+
+        --leadcard-hover-bg: linear-gradient(135deg,
+                            rgba(0,188,212,0.82),
+                            rgba(10,74,128,0.86));
+        --leadcard-hover-border: rgba(10,74,128,0.45);
+
+        --sidebar-width: 250px;
+
+        /* ✅ MOBILE TOKENS (lebih kecil & sama feel dengan design.html) */
+        --mobile-sidebar-width: min(74vw, 270px);
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+        /* ✅ helper untuk posisi tombol X (acuan sbw) */
+        --sbw: var(--mobile-sidebar-width);
+    }
+
+    :root[data-theme="dark"] {
+        color-scheme: dark;
+        --primary-color: #38bdf8;
+        --secondary-color: #22d3ee;
+        --detail-color: #38bdf8;
+
+        --text-color: #e5e7eb;
+        --text-soft: #9ca3af;
+
+        --background-light: #020617;
+        --background-dark: #020617;
+
+        --bg-body: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #020617 100%);
+        --bg-sidebar: rgba(15,23,42,0.98);
+        --bg-elevated: rgba(15,23,42,0.97);
+        --bg-elevated-soft: rgba(15,23,42,0.86);
+        --bg-kanban-column: rgba(15,23,42,0.9);
+
+        --border-subtle: rgba(148,163,184,0.4);
+        --glass-border: rgba(56,189,248,0.35);
+
+        --shadow-deep: 0 28px 80px rgba(15,23,42,0.9);
+        --input-button-shadow: 0 20px 60px rgba(8,47,73,0.9);
+
+        --chip-bg: rgba(15,23,42,0.9);
+
+        --panel-bg: rgba(15,23,42,0.92);
+        --panel-border: rgba(56,189,248,0.28);
+
+        --leadcard-bg: radial-gradient(circle at top left,
+                        rgba(2,6,23,0.92),
+                        rgba(15,23,42,0.96));
+        --leadcard-border: rgba(56,189,248,0.35);
+        --leadcard-ring: rgba(56,189,248,0.18);
+
+        --leadcard-title: #e5e7eb;
+        --leadcard-text: #9ca3af;
+
+        --leadcard-hover-bg: linear-gradient(135deg,
+                            #020617,
+                            #1d4ed8);
+        --leadcard-hover-border: rgba(56,189,248,0.65);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    ::-webkit-scrollbar { width: 0; background: transparent; display: none; }
+    html, body, .leads-grid, .modal-content, .dropdown-list {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    body {
+        background: var(--bg-body);
+        color: var(--text-color);
+        display: flex;
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+        width: var(--sidebar-width);
+        background: var(--bg-sidebar);
+        box-shadow: 0 18px 40px rgba(15,23,42,0.25);
+        border-right: 1px solid var(--border-subtle);
+        padding: 20px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 1200;
+        transition: left var(--transition-med), width var(--transition-med), background var(--transition-med), box-shadow var(--transition-med);
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(18px);
+    }
+
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 20px 20px;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 10px;
+        gap: 12px;
+    }
+
+    .sidebar-header img {
+        width: 46px;
+        height: 46px;
+        object-fit: contain;
+        filter: drop-shadow(0 8px 18px rgba(15,23,42,0.25));
+    }
+
+    .sidebar h2 {
+        font-weight: 800;
+        font-size: 20px;
+        background: linear-gradient(130deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        white-space: nowrap;
+        overflow: hidden;
+        letter-spacing: 0.03em;
+    }
+
+    :root[data-theme="dark"] .sidebar h2 {
+        background: linear-gradient(90deg, #38bdf8, #facc15);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar ul.menu {
+        list-style: none;
+        flex-grow: 1;
+        padding: 0 10px;
+    }
+
+    .sidebar ul.menu > li {
+        margin: 6px 0;
+        border-radius: 999px;
+        transition: all var(--transition-fast);
+        position: relative;
+    }
+
+    .sidebar ul.menu > li > a {
+        display: flex;
+        align-items: center;
+        padding: 12px 18px;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 999px;
+        gap: 14px;
+        transition: all 0.3s;
+        background: transparent;
+        font-size: 15px;
+    }
+
+    :root[data-theme="light"] .sidebar ul.menu > li > a { color: var(--primary-color); }
+
+    .sidebar ul.menu > li > a i {
+        font-size: 20px;
+        color: var(--secondary-color);
+        min-width: 20px;
+        flex-shrink: 0;
+    }
+
+    :root[data-theme="dark"] .sidebar ul.menu > li > a { color: #e5e7eb; }
+    :root[data-theme="dark"] .sidebar ul.menu > li > a i { color: #38bdf8; }
+
+    .sidebar ul.menu > li:hover > a {
+        background: radial-gradient(circle at top left,
+                    rgba(56,189,248,0.10),
+                    rgba(15,23,42,0.02));
+        box-shadow: 0 8px 20px rgba(15,23,42,0.10);
+    }
+
+    .sidebar ul.menu > li.active > a {
+        position: relative;
+        background: linear-gradient(
+            135deg,
+            rgba(15, 23, 42, 0.08) 0%,
+            rgba(148, 197, 253, 0.55) 40%,
+            #e0f2ff 100%
+        );
+        color: #0f172a;
+        font-weight: 700;
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.55);
+        box-shadow: 0 16px 36px rgba(15,23,42,0.25);
+        padding-left: 30px;
+    }
+
+    .sidebar ul.menu > li.active > a i { color: #0ea5e9; }
+
+    :root[data-theme="dark"] .sidebar ul.menu > li.active > a {
+        background: linear-gradient(
+            135deg,
+            #020617 0%,
+            #0b1120 40%,
+            rgba(37, 99, 235, 0.75) 100%
+        );
+        color: #e5e7eb;
+        border-color: rgba(37,99,235,0.85);
+        box-shadow: 0 22px 48px rgba(15,23,42,0.9);
+    }
+
+    :root[data-theme="dark"] .sidebar ul.menu > li.active > a i { color: #38bdf8; }
+
+    .sidebar ul.menu li.has-submenu { position: relative; }
+    .sidebar ul.menu li.has-submenu > a { justify-content: space-between; }
+
+    .submenu-toggle-icon {
+        font-size: 16px;
+        color: var(--text-soft);
+        transition: transform var(--transition-fast);
+    }
+
+    .sidebar ul.menu li.has-submenu.open,
+    .sidebar ul.menu li.has-submenu.active {
+        border-radius: 18px;
+        padding-bottom: 8px;
+    }
+    .sidebar ul.menu li.has-submenu.open > a,
+    .sidebar ul.menu li.has-submenu.active > a { border-radius: 18px; }
+
+    @keyframes fadeDown {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .submenu {
+        list-style: none;
+        margin: 0 10px 8px 48px;
+        padding: 6px 0 4px 0;
+        border-left: 1px dashed rgba(148,163,184,0.6);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.25s ease, opacity 0.25s ease;
+    }
+
+    .has-submenu.open .submenu {
+        max-height: 500px;
+        opacity: 1;
+        animation: fadeDown 0.2s ease-out;
+    }
+
+    .has-submenu.open > a .submenu-toggle-icon { transform: rotate(180deg); }
+
+    .submenu li { margin-bottom: 4px; }
+
+    .submenu li a {
+        display: block;
+        font-size: 13px;
+        padding: 6px 10px;
+        color: var(--primary-color);
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all var(--transition-fast);
+    }
+
+    .submenu li a:hover {
+        color: #ffffff;
+        background: linear-gradient(135deg,
+                    rgba(10,74,128,0.4),
+                    rgba(0,188,212,0.5));
+    }
+
+    .submenu li.active a {
+        color: #ffffff;
+        font-weight: 600;
+        background: linear-gradient(135deg,
+                    rgba(10,74,128,0.6),
+                    rgba(0,188,212,0.7));
+        box-shadow: 0 8px 20px rgba(15,23,42,0.2);
+        border-radius: 10px;
+    }
+
+    :root[data-theme="dark"] .submenu li a { color: #e5e7eb; }
+    :root[data-theme="dark"] .submenu li a:hover {
+        color: #e5e7eb;
+        background: rgba(37,99,235,0.5);
+    }
+    :root[data-theme="dark"] .submenu li.active a {
+        color: #e5e7eb;
+        background: linear-gradient(135deg,
+                    rgba(37,99,235,0.8),
+                    rgba(56,189,248,0.8));
+        box-shadow: 0 18px 40px rgba(15,23,42,0.85);
+    }
+
+    .sidebar-footer {
+        padding: 12px 20px;
+        margin-top: auto;
+        border-top: 1px solid var(--border-subtle);
+        padding-bottom: calc(12px + var(--safe-bottom));
+    }
+
+    .btn-logout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 11px 14px;
+        background: #0a4a80;
+        color: #ffffff;
+        border: 1px solid #0a4a80;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        gap: 8px;
+        transition: all var(--transition-fast);
+        box-shadow: 0 14px 35px rgba(15,23,42,0.25);
+    }
+
+    :root[data-theme="dark"] .btn-logout {
+        background: radial-gradient(circle at top left,
+                    rgba(239,68,68,0.2),
+                    rgba(15,23,42,0.95));
+        color: #fee2e2;
+        border: 1px solid rgba(248,113,113,0.5);
+        box-shadow: 0 14px 35px rgba(248,113,113,0.35);
+    }
+
+    .btn-logout i { font-size: 18px; color: #ffffff; }
+
+    .btn-logout:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 50px rgba(248,113,113,0.55);
+        filter: brightness(1.05);
+    }
+
+    .sidebar.collapsed { width: 80px; overflow: visible; }
+    .sidebar.collapsed .sidebar-header h2,
+    .sidebar.collapsed ul.menu li span,
+    .sidebar.collapsed .btn-logout span,
+    .sidebar.collapsed .submenu { display: none; }
+
+    .sidebar.collapsed .sidebar-header { justify-content: center; }
+    .sidebar.collapsed .sidebar-header img { margin: 0; }
+
+    .sidebar.collapsed ul.menu > li > a {
+        justify-content: center;
+        padding: 14px 0;
+        border-radius: 22px;
+    }
+    .sidebar.collapsed ul.menu > li > a i { margin: 0; }
+    .sidebar.collapsed .submenu-toggle-icon { opacity: 0; visibility: hidden; }
+
+    /* ================= TOGGLE & OVERLAY ================= */
+    .toggle-btn {
+        position: fixed;
+        top: calc(24px + var(--safe-top));
+        left: 265px;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 14px;
+        color: var(--primary-color);
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 1300;
+        transition: all var(--transition-med);
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 18px 38px rgba(15,23,42,0.18);
+    }
+
+    :root[data-theme="dark"] .toggle-btn {
+        background: rgba(15,23,42,0.98);
+        color: #e5e7eb;
+        border-color: rgba(56,189,248,0.6);
+        box-shadow: 0 22px 50px rgba(15,23,42,0.9);
+    }
+    :root[data-theme="dark"] .toggle-btn i { color: #e5e7eb; }
+
+    .toggle-btn.scrolled {
+        background: transparent !important;
+        box-shadow: none !important;
+        border-color: transparent !important;
+    }
+
+    .sidebar.collapsed ~ .toggle-btn { left: 95px; }
+    .sidebar.collapsed ~ .toggle-btn i {
+        transform: rotate(180deg);
+        transition: transform var(--transition-med);
+    }
+
+    /* ✅ overlay */
+    .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at top left,
+                    rgba(56,189,248,0.15),
+                    rgba(15,23,42,0.9));
+        backdrop-filter: blur(5px);
+        z-index: 1100;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .overlay.active { display: block; opacity: 1; }
+
+    /* ================= MAIN WRAPPER ================= */
+    .main-wrapper {
+        flex: 1;
+        margin-left: var(--sidebar-width);
+        padding: 0;
+        transition: margin-left var(--transition-med);
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar.collapsed ~ .main-wrapper { margin-left: 80px; }
+
+    .main-content {
+        padding: 32px 40px 32px 40px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* ================= ALERTS ================= */
+    .alert-container { width: 100%; margin-bottom: 18px; flex-shrink: 0; }
+
+    .alert {
+        padding: 13px 18px;
+        border-radius: 12px;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+        border: 1px solid;
+        margin-bottom: 10px;
+        font-size: 13px;
+        background: var(--bg-elevated);
+        backdrop-filter: blur(12px);
+    }
+
+    .alert-danger {
+        background-color: rgba(248,113,113,0.08);
+        border-color: rgba(248,113,113,0.6);
+        color: #fecaca;
+    }
+
+    :root:not([data-theme="dark"]) .alert-danger {
+        color: #b91c1c;
+        background-color: #fff1f0;
+        border-color: #ffccc7;
+    }
+
+    .alert-success {
+        background-color: rgba(34,197,94,0.08);
+        border-color: rgba(74,222,128,0.6);
+        color: #bbf7d0;
+    }
+
+    :root:not([data-theme="dark"]) .alert-success {
+        color: #2f855a;
+        background-color: #f6ffed;
+        border-color: #b7eb8f;
+    }
+
+    .alert-close-btn {
+        background: transparent;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        opacity: 0.7;
+        color: inherit;
+    }
+
+    /* ================= PAGE HEADER ================= */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(148,163,184,0.35);
+        flex-shrink: 0;
+        gap: 18px;
+    }
+
+    .page-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    .page-title h1 {
+        font-weight: 800;
+        font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
+        background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    :root[data-theme="dark"] .page-title h1 {
+        background: linear-gradient(90deg, #38bdf8, #facc15);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .page-title p { font-size: 13px; color: var(--text-soft); }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        min-width: 0;
+    }
+
+    .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--glass-border);
+        background: radial-gradient(circle at top left,
+                    rgba(15,23,42,0.02),
+                    rgba(148,163,184,0.12));
+        color: var(--text-color);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        box-shadow: 0 10px 26px rgba(15,23,42,0.18);
+        transition: all var(--transition-fast);
+        white-space: nowrap;
+    }
+
+    .theme-toggle i { font-size: 16px; }
+
+    .theme-toggle:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 38px rgba(15,23,42,0.25);
+        filter: brightness(1.03);
+    }
+
+    .theme-toggle.is-dark {
+        background: radial-gradient(circle at top left,
+                    rgba(15,23,42,0.85),
+                    rgba(37,99,235,0.5));
+        color: #e5e7eb;
+        border-color: rgba(129,140,248,0.7);
+    }
+
+    .action-buttons button {
+        background: linear-gradient(135deg, var(--secondary-color), #00a6bb);
+        color: #fff;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 14px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all var(--transition-fast);
+        box-shadow: var(--input-button-shadow);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .action-buttons button i { font-size: 18px; }
+
+    .action-buttons button:hover {
+        transform: translateY(-2px) translateX(1px);
+        box-shadow: 0 20px 55px rgba(0,188,212,0.45);
+    }
+
+    @media (min-width: 769px) {
+        .page-header { padding-left: 60px; position: relative; }
+        .sidebar.collapsed ~ .main-wrapper .page-header { padding-left: 60px; }
+    }
+
+    /* ================= CONTROLS ================= */
+    .project-controls {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+        background: var(--bg-elevated);
+        padding: 14px 16px;
+        border-radius: 18px;
+        box-shadow: var(--shadow-deep);
+        flex-shrink: 0;
+        border: 1px solid rgba(148,163,184,0.3);
+        backdrop-filter: blur(12px);
+    }
+
+    .project-controls .search-wrapper { position: relative; }
+    .project-controls .search-wrapper i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #9ca3af;
+    }
+
+    .project-controls input,
+    .project-controls select {
+        width: 100%;
+        padding: 9px 12px 9px 42px;
+        border: 1px solid rgba(148,163,184,0.55);
+        border-radius: 999px;
+        transition: all 0.25s ease;
+        font-size: 13px;
+        background: radial-gradient(circle at top left,
+                    rgba(255,255,255,0.85),
+                    rgba(226,232,240,0.9));
+        color: var(--text-color);
+        outline: none;
+    }
+
+    .project-controls select { padding-left: 14px; }
+
+    .project-controls input:focus,
+    .project-controls select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 1px rgba(56,189,248,0.9);
+        background: rgba(15,23,42,0.02);
+    }
+
+    :root[data-theme="dark"] .project-controls input,
+    :root[data-theme="dark"] .project-controls select { background: rgba(15,23,42,0.9); }
+
+    /* ================= LEADS BOARD ================= */
+    .leads-wrapper {
+        background: var(--panel-bg);
+        border-radius: 18px;
+        padding: 14px 16px 18px;
+        box-shadow: var(--shadow-deep);
+        border: 1px solid var(--panel-border);
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 0;
+        backdrop-filter: blur(12px);
+    }
+
+    .leads-header-row { display: none; }
+
+    .leads-grid {
+        margin-top: 4px;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-auto-rows: minmax(0, 1fr);
+        gap: 18px;
+        padding-bottom: 6px;
+        overflow: visible;
+    }
+
+    .leads-empty {
+        font-size: 13px;
+        color: var(--text-soft);
+        padding: 12px 4px;
+    }
+
+    .leads-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px dashed rgba(148,163,184,0.35);
+        font-size: 12px;
+        color: var(--text-soft);
+        flex-shrink: 0;
+        gap: 10px;
+    }
+
+    .pagination-info { font-size: 12px; color: var(--text-soft); }
+
+    .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.5);
+        background: radial-gradient(circle at top left,
+                    rgba(255,255,255,0.9),
+                    rgba(226,232,240,0.9));
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-color);
+        box-shadow: 0 8px 20px rgba(15,23,42,0.12);
+        transition: all var(--transition-fast);
+        white-space: nowrap;
+    }
+
+    :root[data-theme="dark"] .pagination-btn {
+        background: rgba(15,23,42,0.98);
+        border-color: rgba(56,189,248,0.6);
+        color: #e5e7eb;
+        box-shadow: 0 18px 40px rgba(15,23,42,0.85);
+    }
+
+    .pagination-btn i { font-size: 16px; }
+
+    .pagination-btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 30px rgba(15,23,42,0.3);
+    }
+
+    .pagination-btn:disabled {
+        opacity: 0.5;
+        cursor: default;
+        box-shadow: none;
+    }
+
+    /* ================= CARD ================= */
+    .kanban-card {
+        position: relative;
+        border-radius: 18px;
+        padding: 14px 15px;
+        background: var(--leadcard-bg);
+        box-shadow: 0 14px 32px rgba(15,23,42,0.22);
+        cursor: pointer;
+        transition: transform var(--transition-fast),
+                    box-shadow var(--transition-fast),
+                    background var(--transition-fast),
+                    border-color var(--transition-fast),
+                    filter var(--transition-fast);
+        overflow: visible;
+        border: 1px solid var(--leadcard-border);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 140px;
+    }
+
+    .kanban-card::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        border: 1px solid rgba(255,255,255,0.35);
+        opacity: 0.55;
+        pointer-events: none;
+    }
+
+    .kanban-card .card-content { background: transparent; border-radius: inherit; padding: 0; }
+
+    .kanban-card:hover {
+        transform: translateY(-5px) translateX(1px);
+        box-shadow: 0 26px 60px rgba(15,23,42,0.75);
+        background: var(--leadcard-hover-bg);
+        border-color: var(--leadcard-hover-border);
+        filter: saturate(1.05);
+    }
+
+    .card-content h3 {
+        color: var(--leadcard-title);
+        font-size: clamp(13px, 0.9rem, 14px);
+        font-weight: 650;
+        margin-bottom: 6px;
+        line-height: 1.35;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .card-content p {
+        font-size: 12px;
+        color: var(--leadcard-text);
+        margin-bottom: 3px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .card-content p i { font-size: 14px; color: var(--leadcard-title); }
+
+    .kanban-card:hover .card-content h3,
+    .kanban-card:hover .card-content p { color: #ffffff; }
+
+    .kanban-card:hover .card-content p i { color: #e0f7ff; }
+
+    .lead-card-nonlead {
+        opacity: 0.96;
+        background: radial-gradient(circle at top left,
+                var(--leadcard-ring),
+                rgba(15,23,42,0.04));
+        border-color: color-mix(in srgb, var(--leadcard-border) 70%, rgba(148,163,184,0.25));
+    }
+
+    :root[data-theme="dark"] .lead-card-nonlead {
+        background: radial-gradient(circle at top left,
+                    rgba(29,78,216,0.40),
+                    rgba(2,6,23,0.92));
+        border-color: rgba(129,140,248,0.55);
+    }
+
+    .lead-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+
+    .lead-card-footer {
+        margin-top: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: var(--text-soft);
+    }
+
+    .lead-card-hint { font-style: italic; }
+
+    .status-badge {
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .status-negosiasi { background:#fff7e6; color:#d48806; }
+    .status-aktif { background:#e6fffb; color:#08979c; }
+    .status-onhold { background:#fff1f0; color:#cf1322; }
+    .status-selesai { background:#f6ffed; color:#389e0d; }
+    .status-dibatalkan { background:#f5f5f5; color:#8c8c8c; }
+
+    :root[data-theme="dark"] .status-negosiasi { background: rgba(250, 204, 21, 0.15); color: #facc15; }
+    :root[data-theme="dark"] .status-aktif { background: rgba(45, 212, 191, 0.12); color: #5eead4; }
+    :root[data-theme="dark"] .status-onhold { background: rgba(248, 113, 113, 0.15); color: #fecaca; }
+    :root[data-theme="dark"] .status-selesai { background: rgba(22, 163, 74, 0.18); color: #bbf7d0; }
+    :root[data-theme="dark"] .status-dibatalkan { background: rgba(148,163,184,0.22); color: #e5e7eb; }
+
+    /* ================= MODAL ================= */
+    .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at top left,
+                    rgba(56,189,248,0.15),
+                    rgba(15,23,42,0.92));
+        backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 1500;
+        padding: 16px;
+        padding-top: calc(16px + var(--safe-top));
+        padding-bottom: calc(16px + var(--safe-bottom));
+    }
+    .modal.active { display: flex; }
+
+    .modal-content {
+        background: var(--bg-elevated);
+        padding: 24px 26px;
+        border-radius: 22px;
+        width: 550px;
+        max-width: 92%;
+        box-shadow: var(--shadow-deep);
+        max-height: 90vh;
+        overflow-y: auto;
+        border: 1px solid var(--glass-border);
+    }
+
+    .modal-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        border-bottom: 1px solid rgba(148,163,184,0.4);
+        padding-bottom: 10px;
+        gap: 10px;
+    }
+
+    .modal-header-custom h2 {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .close-modal-icon {
+        background: none;
+        border: none;
+        font-size: 26px;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: color var(--transition-fast), transform var(--transition-fast);
+        padding: 0;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+    .close-modal-icon:hover { color: var(--delete-color); transform: scale(1.05); }
+
+    .modal-content input:not([type="checkbox"]),
+    .modal-content textarea,
+    .modal-content select {
+        width: 100%;
+        padding: 9px 11px;
+        margin-bottom: 13px;
+        border-radius: 10px;
+        border: 1px solid rgba(148,163,184,0.6);
+        font-size: 13px;
+        transition: all 0.25s ease;
+        background: radial-gradient(circle at top left,
+                    rgba(255,255,255,0.96),
+                    rgba(226,232,240,0.98));
+        color: var(--text-color);
+    }
+
+    :root[data-theme="dark"] .modal-content input:not([type="checkbox"]),
+    :root[data-theme="dark"] .modal-content textarea,
+    :root[data-theme="dark"] .modal-content select { background: rgba(15,23,42,0.96); }
+
+    .modal-content input:focus,
+    .modal-content textarea:focus,
+    .modal-content select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 1px rgba(56,189,248,0.9);
+        outline: none;
+    }
+
+    .modal-content textarea { min-height: 80px; }
+
+    .modal-content label {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-color);
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    #currentMoUFile { color: var(--primary-color) !important; }
+
+    .modal-footer {
+        margin-top: 16px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .modal-footer button {
+        padding: 9px 18px;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.25s ease;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, var(--primary-color), #083c6b);
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(15,23,42,0.6);
+    }
+
+    .btn-save:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+        box-shadow: 0 20px 50px rgba(15,23,42,0.9);
+    }
+
+    button.is-waiting { opacity: 0.7; cursor: wait; }
+
+    .btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(10, 74, 128, 0.18);
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(0, 74, 128, 0.28);
+        outline: none;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+    .btn-download i { font-size: 14px; }
+    .btn-download:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(0, 74, 128, 0.4);
+        filter: brightness(1.05);
+    }
+
+    /* MULTI SELECT TIM */
+    .custom-select-wrapper {
+        position: relative;
+        margin-bottom: 15px;
+        user-select: none;
+    }
+
+    .select-display {
+        min-height: 45px;
+        padding: 7px 10px;
+        border: 1px solid rgba(148,163,184,0.6);
+        background: radial-gradient(circle at top left,
+                    rgba(255,255,255,0.96),
+                    rgba(226,232,240,0.98));
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        border-radius: 10px;
+    }
+
+    :root[data-theme="dark"] .select-display { background: rgba(15,23,42,0.98); }
+
+    .select-display:hover { border-color: #a1a1aa; }
+
+    .select-display.active {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 1px rgba(56,189,248,0.9);
+        background: rgba(15,23,42,0.02);
+    }
+
+    .user-tag {
+        background: var(--primary-color);
+        color: white;
+        font-size: 12px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    .user-tag span {
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        margin-left: 2px;
+    }
+    .user-tag span:hover { color: #ffccc7; }
+
+    .placeholder-text { color: #757575; font-size: 13px; padding: 2px 0; }
+
+    .dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--bg-elevated);
+        border: 1px solid rgba(148,163,184,0.6);
+        border-top: none;
+        z-index: 100;
+        max-height: 210px;
+        overflow-y: auto;
+        display: none;
+        box-shadow: 0 18px 40px rgba(15,23,42,0.85);
+        border-radius: 0 0 12px 12px;
+    }
+    .dropdown-list.show { display: block; }
+
+    .search-box-container {
+        padding: 8px;
+        background: var(--bg-elevated);
+        border-bottom: 1px solid rgba(148,163,184,0.4);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .search-box-container input {
+        margin-bottom: 0 !important;
+        padding: 7px !important;
+        height: auto;
+        font-size: 12px !important;
+        border-radius: 999px !important;
+    }
+
+    .dropdown-item {
+        padding: 8px 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid rgba(148,163,184,0.15);
+        font-size: 13px;
+        transition: background 0.2s;
+    }
+    .dropdown-item:hover { background-color: var(--background-dark); }
+
+    .dropdown-item input[type="checkbox"] {
+        width: auto !important;
+        margin: 0 !important;
+        cursor: pointer;
+    }
+
+    .dropdown-item label {
+        margin: 0;
+        cursor: pointer;
+        flex-grow: 1;
+        font-weight: 400;
+    }
+
+    /* DETAIL LIST */
+    .detail-list { list-style: none; padding: 0; margin: 0; }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 8px;
+        border-bottom: 1px solid rgba(148,163,184,0.3);
+        font-size: 13px;
+        background-color: var(--bg-elevated);
+        gap: 12px;
+    }
+
+    .detail-list .detail-item:nth-child(even) { background-color: var(--bg-elevated-soft); }
+
+    .detail-item span:first-child { font-weight: 600; color: var(--primary-color); flex-shrink: 0; }
+    .detail-item span:last-child { color: var(--text-color); text-align: right; }
+
+    .detail-item.comment {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .detail-item.comment span:last-child {
+        text-align: left;
+        color: var(--text-soft);
+        font-style: italic;
+        background: var(--bg-elevated-soft);
+        padding: 8px;
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .team-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+
+    .team-chip {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--chip-bg);
+        font-size: 12px;
+        color: var(--text-color);
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 1199px) {
+        .project-controls { grid-template-columns: 1fr; }
+        .leads-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    /* ✅ MOBILE: lebih kecil, rapi, tidak mentok kanan-kiri, dan tombol X pakai acuan yg kamu kasih */
+    @media (max-width: 768px) {
+        html { font-size: 92%; }
+        body { overflow-y: auto; height: auto; max-height: none; }
+
+        /* SIDEBAR mobile jadi drawer */
+        .sidebar {
+            width: var(--sbw);
+            left: calc(-1 * var(--sbw));
+            padding-top: calc(14px + var(--safe-top));
+            padding-bottom: calc(10px + var(--safe-bottom));
+            box-shadow: 0 28px 70px rgba(15,23,42,0.40);
+        }
+        .sidebar.active { left: 0; }
+
+        /* header sidebar lebih compact */
+        .sidebar-header{
+            padding: 0 14px 14px;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+        .sidebar-header img{
+            width: 40px;
+            height: 40px;
+        }
+        .sidebar h2{
+            font-size: 16px;
+            letter-spacing: 0.02em;
+        }
+
+        /* item menu lebih kecil */
+        .sidebar ul.menu{ padding: 0 8px; }
+        .sidebar ul.menu > li{ margin: 4px 0; }
+        .sidebar ul.menu > li > a{
+            padding: 10px 12px;
+            font-size: 13px;
+            gap: 10px;
+        }
+        .sidebar ul.menu > li > a i{
+            font-size: 18px;
+            min-width: 18px;
+        }
+        .sidebar ul.menu > li.active > a{
+            padding-left: 18px;
+            box-shadow: 0 12px 26px rgba(15,23,42,0.18);
+        }
+
+        .submenu{
+            margin: 0 8px 6px 40px;
+            padding: 6px 0 2px 0;
+        }
+        .submenu li a{
+            font-size: 12px;
+            padding: 6px 9px;
+            border-radius: 10px;
+        }
+
+        .sidebar-footer{ padding: 10px 14px; }
+        .btn-logout{
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+        .btn-logout i{ font-size: 17px; }
+
+        /* tombol burger kecil & aman */
+        .toggle-btn {
+            left: 12px;
+            top: calc(12px + var(--safe-top));
+            width: 38px;
+            height: 38px;
+            font-size: 20px;
+            padding: 0;
+            border-radius: 12px;
+            background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.9)) !important;
+            border: 1px solid rgba(148,163,184,0.55) !important;
+            box-shadow: 0 14px 30px rgba(15,23,42,0.18) !important;
+        }
+        :root[data-theme="dark"] .toggle-btn {
+            background: rgba(15,23,42,0.98) !important;
+            color: #e5e7eb !important;
+            border-color: rgba(56,189,248,0.65) !important;
+            box-shadow: 0 18px 40px rgba(15,23,42,0.85) !important;
+        }
+        :root[data-theme="dark"] .toggle-btn i { color: #e5e7eb !important; }
+
+        /* saat sidebar terbuka, burger hilang */
+        .sidebar.active ~ .toggle-btn {
+            opacity: 0 !important;
+            transform: scale(0.5) !important;
+            pointer-events: none;
+        }
+
+        /* ✅ tombol X: pakai acuan kamu (ID) */
+        #mobileCloseBtn{
+          position: fixed !important;
+          top: calc(12px + var(--safe-top)) !important;
+          left: calc(var(--sbw) + 10px) !important;
+          width: 34px !important;
+          height: 34px !important;
+          min-width: 34px !important;
+          min-height: 34px !important;
+          border-radius: 12px !important;
+          padding: 0 !important;
+          display: none !important;
+          align-items:center !important;
+          justify-content:center !important;
+          z-index: 3000 !important;
+          box-shadow: 0 14px 30px rgba(15,23,42,0.22) !important;
+          border: 1px solid rgba(148,163,184,0.55) !important;
+          background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.9)) !important;
+          color: var(--text-color) !important;
+          -webkit-tap-highlight-color: transparent;
+        }
+        #mobileCloseBtn i{ font-size:20px !important; }
+        .sidebar.active ~ #mobileCloseBtn{ display:inline-flex !important; }
+        .sidebar:not(.active) ~ #mobileCloseBtn{ display:none !important; }
+
+        :root[data-theme="dark"] #mobileCloseBtn{
+          background: rgba(15,23,42,0.98) !important;
+          border-color: rgba(56,189,248,0.55) !important;
+          box-shadow: 0 18px 40px rgba(15,23,42,0.85) !important;
+          color:#e5e7eb !important;
+        }
+
+        .overlay { backdrop-filter: blur(6px); }
+
+        .main-wrapper {
+            margin-left: 0 !important;
+            height: auto;
+            min-height: 100vh;
+            overflow: visible;
+        }
+
+        .main-content {
+            padding: 12px 12px 16px;
+            overflow: visible;
+        }
+
+        /* alert jangan terlalu turun */
+        .alert-container { margin-top: 58px; margin-bottom: 12px; }
+
+        /* HEADER: tidak mentok, lebih compact, dan layout fleksibel */
+        .page-header {
+            flex-direction: column;
+            align-items: stretch;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: rgba(255,255,255,0.70);
+            backdrop-filter: blur(12px);
+            padding: calc(10px + var(--safe-top)) 12px 12px 56px;
+            border-bottom: 1px solid rgba(148,163,184,0.25);
+            box-shadow: 0 2px 12px rgba(15,23,42,0.10);
+            width: 100%;
+            margin-bottom: 12px;
+            gap: 10px;
+            border-radius: 16px;
+        }
+        :root[data-theme="dark"] .page-header{
+            background: rgba(2,6,23,0.60);
+            border-bottom-color: rgba(56,189,248,0.20);
+            box-shadow: 0 10px 30px rgba(15,23,42,0.65);
+        }
+
+        .page-title h1{
+            font-size: 1.25rem;
+            line-height: 1.2;
+            white-space: normal;
+        }
+        .page-title p { font-size: 12px; }
+
+        .header-actions {
+            width: 100%;
+            justify-content: flex-start;
+            gap: 10px;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+
+        /* theme toggle jadi ikon kecil (ga makan tempat) */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 14px;
+            justify-content: center;
+            box-shadow: 0 10px 22px rgba(15,23,42,0.12);
+            flex: 0 0 auto;
+        }
+        .theme-toggle span { display: none; }
+        .theme-toggle i { font-size: 18px; }
+
+        /* tombol tambah: lebih kecil, tapi tetap nyaman (tidak “gede banget”) */
+        .action-buttons { flex: 1 1 auto; min-width: 0; }
+        .action-buttons button {
+            width: 100%;
+            justify-content: center;
+            border-radius: 14px;
+            padding: 11px 12px;
+            font-size: 13px;
+        }
+        .action-buttons button i{ font-size: 18px; }
+
+        /* controls: lebih ringkas dan tidak mentok */
+        .project-controls {
+            padding: 10px 12px;
+            border-radius: 16px;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .project-controls .search-wrapper i { left: 12px; font-size: 18px; }
+        .project-controls input,
+        .project-controls select {
+            padding: 10px 12px 10px 38px;
+            font-size: 12.5px;
+        }
+        .project-controls select { padding-left: 12px; }
+
+        .leads-wrapper {
+            padding: 10px 10px 12px;
+            border-radius: 16px;
+        }
+
+        .leads-grid {
+            grid-template-columns: 1fr;
+            grid-auto-rows: auto;
+            gap: 10px;
+            overflow: visible;
+        }
+
+        .kanban-card {
+            padding: 12px 12px;
+            border-radius: 16px;
+            min-height: 112px;
+            box-shadow: 0 12px 26px rgba(15,23,42,0.16);
+        }
+        .kanban-card:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 18px 40px rgba(15,23,42,0.30);
+        }
+        .card-content h3{ font-size: 13px; margin-bottom: 5px; }
+        .card-content p{ font-size: 11.5px; }
+        .card-content p i{ font-size: 13px; }
+
+        /* pagination stack */
+        .leads-pagination {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+        .pagination-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 10px 12px;
+            font-size: 12px;
+        }
+        .pagination-info { text-align: center; }
+
+        /* MODAL: lebih kecil nyaman */
+        .modal { padding: 12px; }
+        .modal-content {
+            width: min(520px, 94vw);
+            max-height: 84vh;
+            padding: 14px 12px;
+            border-radius: 16px;
+        }
+        .modal-header-custom { margin-bottom: 12px; padding-bottom: 8px; }
+        .modal-header-custom h2 { font-size: 15px; }
+        .close-modal-icon { font-size: 24px; }
+
+        .modal-content label { font-size: 12px; }
+        .modal-content input:not([type="checkbox"]),
+        .modal-content textarea,
+        .modal-content select {
+            padding: 10px 10px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            margin-bottom: 11px;
+        }
+        .modal-content textarea{ min-height: 74px; }
+
+        .select-display { border-radius: 12px; padding: 9px 9px; min-height: 44px; }
+        .dropdown-list { max-height: 44vh; border-radius: 0 0 14px 14px; }
+
+        .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            font-size: 12.5px;
+        }
+        .detail-item span:last-child { text-align: left; width: 100%; word-break: break-word; }
+        .team-container { justify-content: flex-start; }
+
+        .modal-footer {
+            justify-content: stretch;
+            gap: 8px;
+        }
+        .modal-footer button {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 14px;
+            font-size: 13px;
+        }
+        .btn-download { width: 100%; justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+        .main-content { padding: 10px 10px 14px; }
+        .page-header { padding-left: 54px; border-radius: 16px; }
+
+        .toggle-btn { width: 36px; height: 36px; }
+        #mobileCloseBtn{ width: 34px !important; height: 34px !important; left: calc(var(--sbw) + 10px) !important; }
+
+        .sidebar-header img { width: 38px; height: 38px; }
+        .sidebar h2 { font-size: 15px; }
+        .sidebar ul.menu > li > a { padding: 9px 11px; font-size: 12.8px; }
+        .sidebar ul.menu > li > a i { font-size: 18px; }
+
+        .action-buttons button { padding: 10px 12px; }
+        .project-controls input, .project-controls select { font-size: 12.3px; }
+
+        .kanban-card { padding: 11px 11px; border-radius: 15px; min-height: 108px; }
+        .card-content p { font-size: 11.2px; }
+    }
+
+    @media (max-width: 360px) {
+        :root { --mobile-sidebar-width: min(78vw, 250px); }
+        .page-title h1 { font-size: 1.18rem; }
+        .project-controls input, .project-controls select { font-size: 12px; }
+        .sidebar h2 { font-size: 14px; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <img src="assets/logo.png" alt="Logo Mulya Teknik" onerror="this.style.display='none'">
+        <h2>Mulya Teknik</h2>
+    </div>
+    <ul class="menu">
+        <li>
+            <a href="dashboard.html">
+                <i class='bx bxs-dashboard'></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="design.html">
+                <i class='bx bxs-color-fill'></i>
+                <span>Design</span>
+            </a>
+        </li>
+        <li>
+            <a href="laporan.html">
+                <i class='bx bxs-bar-chart-alt-2'></i>
+                <span>Laporan</span>
+            </a>
+        </li>
+        <li>
+            <a href="user.html">
+                <i class='bx bxs-group'></i>
+                <span>Pengguna</span>
+            </a>
+        </li>
+
+        <li class="has-submenu">
+            <a href="javascript:void(0);">
+                <div style="display:flex; align-items:center; gap:14px;">
+                    <i class='bx bxs-buildings'></i>
+                    <span>Proyek</span>
+                </div>
+                <i class='bx bx-chevron-down submenu-toggle-icon'></i>
+            </a>
+            <ul class="submenu">
+                <li><a href="leads.html">Leads</a></li>
+                <li><a href="daftar_proyek.html">Daftar Proyek</a></li>
+                <li><a href="batal.html">Proyek Batal</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <button class="btn-logout" onclick="logout()">
+            <i class='bx bx-log-out'></i> <span>Keluar</span>
+        </button>
+    </div>
+</div>
+
+<button class="toggle-btn" id="toggleBtn"><i class='bx bx-menu'></i></button>
+
+<!-- ✅ tetap id mobileCloseBtn (dipakai CSS acuan) -->
+<button class="mobile-close-btn" id="mobileCloseBtn"><i class='bx bx-x'></i></button>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="main-wrapper">
+    <div class="main-content">
+        <div class="alert-container"></div>
+
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Leads Proyek</h1>
+                <p>Daftar proyek yang masih dalam tahap negosiasi.</p>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" type="button">
+                    <i class='bx bx-moon'></i>
+                    <span>Dark</span>
+                </button>
+                <div class="action-buttons">
+                    <button type="button" onclick="openAddModal()">
+                        <i class='bx bx-plus-circle'></i> Tambah Leads
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-controls" id="projectControls">
+            <div class="search-wrapper">
+                <i class='bx bx-search'></i>
+                <input type="search" id="searchInput" placeholder="Cari Nama Proyek, Klien, atau Lokasi...">
+            </div>
+            <select id="sortFilter">
+                <option value="terbaru">Terbaru</option>
+                <option value="terlama">Terlama</option>
+            </select>
+        </div>
+
+        <div class="leads-wrapper">
+            <div class="leads-grid" id="leadsGrid"></div>
+            <div class="leads-empty" id="leadsEmpty" style="display:none;">
+                Belum ada proyek dengan status <strong>Negosiasi</strong>. Tambahkan leads baru melalui tombol <strong>Tambah Leads</strong>.
+            </div>
+            <div class="leads-pagination" id="leadsPagination"></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL FORM PROYEK (DURASI DIHILANGKAN + TGL SELESAI MANUAL) -->
+<div class="modal" id="modalForm">
+    <div class="modal-content">
+        <div class="modal-header-custom">
+            <h2 id="modalTitle">Tambah Proyek</h2>
+            <button class="close-modal-icon" onclick="closeModal('modalForm')">&times;</button>
+        </div>
+
+        <input type="hidden" id="editProjectId">
+
+        <label>Nama Proyek*</label>
+        <input type="text" id="namaProyek" placeholder="Contoh: Pemasangan AC Gedung A">
+
+        <label>Nama Klien</label>
+        <input type="text" id="namaKlien" placeholder="Contoh: PT. Sumber Makmur">
+
+        <label>Lokasi Proyek</label>
+        <input type="text" id="lokasi" placeholder="Alamat lengkap">
+
+        <label>Tanggal Mulai</label>
+        <input type="date" id="tglMulai">
+
+        <label>Tanggal Selesai</label>
+        <input type="date" id="tglSelesai">
+
+        <label>Status Proyek*</label>
+        <select id="status">
+            <option value="Negosiasi">Negosiasi</option>
+            <option value="Aktif">Aktif</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Selesai">Selesai</option>
+            <option value="Dibatalkan">Dibatalkan</option>
+        </select>
+        <div style="font-size:11px; color:#0b15a0777; margin-top:-10px; margin-bottom:10px;">
+            Saat tambah proyek baru, status otomatis <strong>Negosiasi</strong>.
+            Ubah ke <strong>Aktif</strong> melalui menu Edit dengan mengunggah MoU (wajib).
+        </div>
+
+        <label>Tim yang Ditugaskan</label>
+        <div class="custom-select-wrapper" id="userSelectWrapper">
+            <div class="select-display" onclick="toggleDropdown()">
+                <span class="placeholder-text">Pilih Tim Proyek...</span>
+            </div>
+            <div class="dropdown-list" id="dropdownList">
+                <div class="search-box-container">
+                    <input type="text" id="dropdownSearch" placeholder="Cari nama..." oninput="filterUsers(this.value)">
+                </div>
+                <div id="userListContainer"></div>
+            </div>
+        </div>
+
+        <label>Deskripsi / Catatan</label>
+        <textarea id="komentar" placeholder="Tambahkan detail proyek..."></textarea>
+
+        <div id="mouUploadGroup" style="display: none;">
+            <label for="mouFile">Upload MoU*</label>
+            <input type="file" id="mouFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+            <span id="currentMoUFile" style="font-size:12px; color:#0a4a80;"></span>
+            <div style="font-size:11px; color:#666; margin-top:2px;">Wajib diisi ketika status menjadi <strong>Aktif</strong>.</div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-save" onclick="saveProject()">💾 Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div class="modal" id="modalDetail">
+    <div class="modal-content">
+        <div class="modal-header-custom">
+            <h2 id="detailTitle">Rincian Proyek</h2>
+            <button class="close-modal-icon" onclick="closeModal('modalDetail')">&times;</button>
+        </div>
+        <ul class="detail-list" id="detailList"></ul>
+        <div class="modal-footer" id="detailFooter"></div>
+    </div>
+</div>
+
+<script>
+    // ================= CONFIG & AUTH =================
+    const BASE_URL = "https://mt-optima-api-176148115028.asia-southeast2.run.app";
+    const AUTH_TOKEN = localStorage.getItem('token');
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+    const API_PROJECT_FILES = (id) => `${BASE_URL}/api/projects/${id}/files`;
+    const API_DOWNLOAD_FILE = (attachmentId) => `${BASE_URL}/api/attachments/${attachmentId}/download`;
+
+    const THEME_KEY = 'mt-theme';
+
+    function applyTheme(theme) {
+        if (theme !== 'dark' && theme !== 'light') theme = 'light';
+        const root = document.documentElement;
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem(THEME_KEY, theme);
+        updateThemeToggleUI(theme);
+    }
+
+    function updateThemeToggleUI(theme) {
+        const toggle = document.getElementById('themeToggle');
+        if (!toggle) return;
+        const icon = toggle.querySelector('i');
+        const label = toggle.querySelector('span');
+        if (theme === 'dark') {
+            toggle.classList.add('is-dark');
+            if (icon) { icon.classList.remove('bx-moon'); icon.classList.add('bx-sun'); }
+            if (label) label.textContent = 'Light';
+        } else {
+            toggle.classList.remove('is-dark');
+            if (icon) { icon.classList.remove('bx-sun'); icon.classList.add('bx-moon'); }
+            if (label) label.textContent = 'Dark';
+        }
+    }
+
+    function initThemeToggle() {
+        const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+        applyTheme(savedTheme);
+
+        const toggle = document.getElementById('themeToggle');
+        if (!toggle) return;
+        toggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+        });
+    }
+
+    // debounce GLOBAL untuk semua tombol (3 detik)
+    function initGlobalButtonDebounce() {
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+
+            if (btn.dataset.debouncing === 'true') {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                return;
+            }
+
+            btn.dataset.debouncing = 'true';
+            btn.classList.add('is-waiting');
+
+            setTimeout(() => {
+                btn.dataset.debouncing = 'false';
+                btn.classList.remove('is-waiting');
+            }, 3000);
+        }, true);
+    }
+
+    if (!AUTH_TOKEN) {
+        alert("Sesi habis, silakan login kembali.");
+        window.location.href = "login.html";
+    }
+
+    // ================= ROUTING RULES =================
+    function getRedirectPageByStatus(status) {
+        const s = String(status || '').toLowerCase().trim();
+        if (s.includes('aktif') || s.includes('on hold') || s.includes('onhold')) return 'daftar_proyek.html';
+        if (s.includes('selesai')) return 'laporan.html';
+        if (s.includes('batal') || s.includes('dibatalkan') || s.includes('cancel')) return 'batal.html';
+        return null; // negosiasi tetap di leads.html
+    }
+
+    let projects = [];
+    let usersList = [];
+    let selectedUsers = [];
+    let isSearchMode = false;
+    let searchTimeout = null;
+    let currentPage = 1;
+    const ITEMS_PER_PAGE = 10;
+
+    const searchInput = document.getElementById("searchInput");
+    const sortFilter = document.getElementById("sortFilter");
+    const modalTitle = document.getElementById("modalTitle");
+    const dropdownList = document.getElementById("dropdownList");
+    const userListContainer = document.getElementById("userListContainer");
+    const selectDisplay = document.querySelector(".select-display");
+    const statusSelect = document.getElementById("status");
+    const mouGroup = document.getElementById("mouUploadGroup");
+    const mouFileInput = document.getElementById("mouFile");
+
+    // ================= FETCH DATA =================
+    async function fetchUsers() {
+        try {
+            const response = await fetch(`${BASE_URL}/api/admin/users`, {
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            const data = await response.json();
+            usersList = Array.isArray(data) ? data : (data.data || []);
+            initUserDropdown();
+        } catch (error) {
+            console.error("Gagal memuat user:", error);
+        }
+    }
+
+    function extractUserName(tm) {
+        if (!tm) return null;
+        if (tm.name || tm.nama || tm.full_name) return tm.name || tm.nama || tm.full_name;
+
+        if (tm.user) {
+            if (tm.user.name || tm.user.nama || tm.user.full_name) {
+                return tm.user.name || tm.user.nama || tm.user.full_name;
+            }
+            const uid = tm.user.id || tm.user.user_id || (tm.user.pivot && tm.user.pivot.user_id) || "";
+            return uid ? ("User #" + uid) : null;
+        }
+
+        const id = tm.id || tm.user_id || (tm.pivot && tm.pivot.user_id) || "";
+        if (id) return "User #" + id;
+        return null;
+    }
+
+    function normalizeStatusKey(status) {
+        if (!status) return "negosiasi";
+        const s = status.toLowerCase().replace(/\s+/g, '');
+        if (s.includes('negos')) return 'negosiasi';
+        if (s.includes('akt')) return 'aktif';
+        if (s.includes('hold')) return 'onhold';
+        if (s.includes('selesai') || s.includes('done') || s.includes('complete')) return 'selesai';
+        if (s.includes('batal') || s.includes('cancel')) return 'dibatalkan';
+        return 'negosiasi';
+    }
+
+    function getStatusLocationInfo(statusKey) {
+        switch (statusKey) {
+            case 'negosiasi': return 'Lead (Negosiasi)';
+            case 'aktif': return 'Proyek Aktif (Daftar Proyek)';
+            case 'onhold': return 'On Hold (Daftar Proyek)';
+            case 'selesai': return 'Selesai (Halaman Laporan)';
+            case 'dibatalkan': return 'Dibatalkan (Proyek Batal)';
+            default: return statusKey;
+        }
+    }
+
+    function getAllowedStatuses(currentStatus) {
+        const c = (currentStatus || 'Negosiasi').toLowerCase();
+        if (c.includes('negos')) return ['Negosiasi', 'Aktif', 'On Hold', 'Dibatalkan'];
+        if (c.includes('hold')) return ['On Hold', 'Aktif', 'Dibatalkan'];
+        if (c.includes('aktif')) return ['Aktif', 'On Hold', 'Selesai', 'Dibatalkan'];
+        if (c.includes('selesai')) return ['Selesai', 'Dibatalkan'];
+        if (c.includes('batal')) return ['Dibatalkan'];
+        return ['Negosiasi'];
+    }
+
+    // Daftar_Project_Negosiasi
+    async function fetchProjects() {
+        try {
+            const response = await fetch(`${BASE_URL}/api/projects/negotiation`, {
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            if (!response.ok) throw new Error("Gagal mengambil data proyek");
+
+            const result = await response.json();
+            const rawData = Array.isArray(result) ? result : (result.data || []);
+
+            projects = rawData.map(p => {
+                let teamRaw = p.assigned_users || p.users || p.team_members || [];
+                if (teamRaw && !Array.isArray(teamRaw) && Array.isArray(teamRaw.data)) teamRaw = teamRaw.data;
+
+                return {
+                    id: p.id,
+                    nama: p.nama_proyek || 'Tanpa Nama',
+                    klien: p.nama_klien || 'Tanpa Klien',
+                    lokasi: p.alamat_proyek || '-',
+                    tglMulai: p.tanggal_mulai || '',
+                    tglSelesai: p.tanggal_selesai || p.tgl_selesai || '',
+                    status: p.status || 'Negosiasi',
+                    deskripsi: p.deskripsi || '',
+                    total_rab: p.total_rab || 0,
+                    perkiraan_margin: p.perkiraan_margin || 0,
+                    team_members: teamRaw || []
+                };
+            });
+
+            currentPage = 1;
+            renderProjects();
+        } catch (error) {
+            console.error("Error:", error);
+            tampilkanAlert("Gagal memuat data proyek.", "danger");
+            renderPagination(0);
+        }
+    }
+
+    // Search_Proyek (GET)
+    async function fetchSearchProjects(keyword) {
+        try {
+            const response = await fetch(`${BASE_URL}/api/projects/search?search=${encodeURIComponent(keyword)}`, {
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            if (!response.ok) throw new Error("Gagal mencari proyek.");
+
+            const result = await response.json();
+            const rawData = Array.isArray(result) ? result : (result.data || []);
+
+            projects = rawData.map(p => {
+                let teamRaw = p.assigned_users || p.users || p.team_members || [];
+                if (teamRaw && !Array.isArray(teamRaw) && Array.isArray(teamRaw.data)) teamRaw = teamRaw.data;
+
+                return {
+                    id: p.id,
+                    nama: p.nama_proyek || 'Tanpa Nama',
+                    klien: p.nama_klien || 'Tanpa Klien',
+                    lokasi: p.alamat_proyek || '-',
+                    tglMulai: p.tanggal_mulai || '',
+                    tglSelesai: p.tanggal_selesai || p.tgl_selesai || '',
+                    status: p.status || 'Negosiasi',
+                    deskripsi: p.deskripsi || '',
+                    total_rab: p.total_rab || 0,
+                    perkiraan_margin: p.perkiraan_margin || 0,
+                    team_members: teamRaw || []
+                };
+            });
+
+            currentPage = 1;
+            renderProjects();
+        } catch (error) {
+            console.error("Search error:", error);
+            tampilkanAlert(error.message || "Gagal mencari proyek.", "danger");
+            renderPagination(0);
+        }
+    }
+
+    // ================= API HELPER =================
+    async function assignUsers(projectId, userIds) {
+        const cleanIds = (userIds || [])
+            .map(id => parseInt(id))
+            .filter(id => !Number.isNaN(id));
+        if (!cleanIds.length) return;
+
+        const response = await fetch(`${BASE_URL}/api/projects/${projectId}/assign`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${AUTH_TOKEN}`,
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify({ user_ids: cleanIds })
+        });
+
+        if (!response.ok) {
+            const res = await response.json().catch(() => ({}));
+            let msg = res.message || "Gagal assign anggota tim.";
+            if (res.errors) {
+                const allErrors = Object.values(res.errors).flat();
+                if (allErrors.length) msg = allErrors.join(" | ");
+            }
+            console.error("ASSIGN ERROR DETAIL:", res);
+            throw new Error(msg);
+        }
+    }
+
+    async function unassignUsers(projectId, userIds) {
+        const cleanIds = (userIds || [])
+            .map(id => parseInt(id))
+            .filter(id => !Number.isNaN(id));
+        if (!cleanIds.length) return;
+
+        const response = await fetch(`${BASE_URL}/api/projects/${projectId}/unassign`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${AUTH_TOKEN}`,
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify({ user_ids: cleanIds })
+        });
+
+        if (!response.ok) {
+            const res = await response.json().catch(() => ({}));
+            let msg = res.message || "Gagal unassign anggota tim.";
+            if (res.errors) {
+                const allErrors = Object.values(res.errors).flat();
+                if (allErrors.length) msg = allErrors.join(" | ");
+            }
+            console.error("UNASSIGN ERROR DETAIL:", res);
+            throw new Error(msg);
+        }
+    }
+
+    function getDownloadUrlFromFile(f) {
+        let url = f.url_download || f.download_url || f.url || f.link || f.path_download || f.download_link;
+        const attachId = f.id_attachment || f.attachment_id || f.id;
+        if (!url && attachId) url = API_DOWNLOAD_FILE(attachId);
+        if (!url) return null;
+        if (url.startsWith('https://mt-optima-api-176148115028.asia-southeast2.run.app')) url = url.replace('http://', 'https://');
+        if (!url.startsWith('http')) url = `${BASE_URL}${url}`;
+        return url;
+    }
+
+    async function downloadFile(encodedUrl, encodedName) {
+        const url = decodeURIComponent(encodedUrl);
+        const filename = decodeURIComponent(encodedName || 'file');
+        if (!url) {
+            tampilkanAlert("Link download tidak tersedia.", "danger");
+            return;
+        }
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            if (!response.ok) throw new Error("Gagal mengunduh file (status " + response.status + ")");
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = filename || 'file';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            console.error("Download error:", error);
+            tampilkanAlert(error.message || "Gagal mengunduh file.", "danger");
+        }
+    }
+
+    async function loadAttachmentCards(projectId) {
+        const mouContainer = document.getElementById("mouLinkContainer");
+        const rabContainer = document.getElementById("rabLinkContainer");
+
+        if (mouContainer) mouContainer.textContent = "Memuat...";
+        if (rabContainer) rabContainer.textContent = "Memuat...";
+
+        try {
+            const url = API_PROJECT_FILES(projectId);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true',
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error("Gagal memuat file proyek.");
+
+            const res = await response.json();
+
+            let allFiles = [];
+            if (Array.isArray(res.desain)) allFiles = allFiles.concat(res.desain);
+            if (Array.isArray(res.progres_lapangan)) allFiles = allFiles.concat(res.progres_lapangan);
+            if (Array.isArray(res.dokumen_legal)) allFiles = allFiles.concat(res.dokumen_legal);
+
+            const toLower = (v) => String(v || '').toLowerCase();
+
+            const mouFiles = allFiles.filter(f => toLower(f.kategori_asli || f.kategori || '').includes('mou'));
+            const rabFiles = allFiles.filter(f => toLower(f.kategori_asli || f.kategori || '').includes('rab'));
+
+            renderAttachmentLink(mouFiles, mouContainer, "Unduh MoU");
+            renderAttachmentLink(rabFiles, rabContainer, "Unduh RAB");
+        } catch (error) {
+            console.error("Load attachments error:", error);
+            if (mouContainer) mouContainer.textContent = "Gagal memuat dokumen.";
+            if (rabContainer) rabContainer.textContent = "Gagal memuat dokumen.";
+        }
+    }
+
+    function renderAttachmentLink(list, container, label) {
+        if (!container) return;
+        if (!list || !list.length) {
+            container.textContent = "Belum diunggah.";
+            return;
+        }
+
+        const f = list[list.length - 1];
+        const fileName = f.nama_file || f.original_name || f.filename || label;
+        const downloadUrl = getDownloadUrlFromFile(f);
+
+        if (!downloadUrl) {
+            container.textContent = fileName;
+            return;
+        }
+
+        const safeUrl = encodeURIComponent(downloadUrl);
+        const safeName = encodeURIComponent(fileName);
+
+        container.innerHTML = `
+            <button class="btn-download"
+                title="${fileName}"
+                onclick="downloadFile('${safeUrl}', '${safeName}')">
+                <i class='bx bx-download'></i>
+                <span>${label}</span>
+            </button>
+        `;
+    }
+
+    async function updateStatus(projectId, statusBaru, mouFile = null) {
+        const url = `${BASE_URL}/api/projects/${projectId}/status`;
+        let options = {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${AUTH_TOKEN}`,
+                'ngrok-skip-browser-warning': 'true'
+            }
+        };
+
+        if (mouFile) {
+            const formData = new FormData();
+            formData.append('status', statusBaru);
+            formData.append('mou_file', mouFile);
+            options.body = formData;
+        } else {
+            options.headers['Content-Type'] = 'application/json';
+            options.body = JSON.stringify({ status: statusBaru });
+        }
+
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            const res = await response.json().catch(() => ({}));
+            throw new Error(res.message || "Gagal mengubah status proyek.");
+        }
+    }
+
+    async function deleteProject(id) {
+        if (!confirm(`Hapus proyek ini secara permanen? Data tidak bisa dikembalikan.`)) return;
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/projects/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+
+            if (!response.ok) throw new Error("Gagal menghapus proyek");
+
+            tampilkanAlert("Proyek berhasil dihapus. Mengalihkan ke Proyek Batal...", "success");
+            closeModal('modalDetail');
+
+            setTimeout(() => { window.location.href = "batal.html"; }, 600);
+        } catch (error) {
+            console.error("Delete Error:", error);
+            tampilkanAlert(error.message || "Gagal menghapus proyek.", "danger");
+        }
+    }
+
+    // ================= CREATE / UPDATE PROJECT =================
+    async function saveProject() {
+        const editId = document.getElementById("editProjectId").value;
+        const isEdit = !!editId;
+
+        const nama_proyek = document.getElementById("namaProyek").value.trim();
+        const nama_klien = document.getElementById("namaKlien").value.trim();
+        const alamat_proyek = document.getElementById("lokasi").value.trim();
+
+        const tanggal_mulai = document.getElementById("tglMulai").value;
+        const tanggal_selesai = document.getElementById("tglSelesai").value; // manual input
+
+        const deskripsi = document.getElementById("komentar").value.trim();
+
+        let selectedStatus = statusSelect.value || "Negosiasi";
+        const mouFile = mouFileInput.files[0];
+
+        if (!nama_proyek) {
+            tampilkanAlert("Nama proyek wajib diisi.", "danger");
+            return;
+        }
+
+        if (mouFile && mouFile.size > MAX_FILE_SIZE) {
+            tampilkanAlert("File MoU terlalu besar. Maksimal 10MB.", "danger");
+            return;
+        }
+
+        try {
+            let projectId;
+            let oldStatus = "Negosiasi";
+            let existingProj = null;
+
+            if (isEdit) {
+                existingProj = projects.find(p => p.id == editId);
+                if (existingProj) oldStatus = existingProj.status || "Negosiasi";
+
+                const payloadUpdate = {
+                    nama_proyek,
+                    nama_klien,
+                    deskripsi,
+                    alamat_proyek,
+                    tanggal_mulai,
+                    tanggal_selesai
+                };
+
+                const resUpdate = await fetch(`${BASE_URL}/api/projects/${editId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${AUTH_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
+                    body: JSON.stringify(payloadUpdate)
+                });
+
+                const dataUpdate = await resUpdate.json().catch(() => ({}));
+                if (!resUpdate.ok) {
+                    let msg = dataUpdate.message || "Gagal menyimpan perubahan proyek.";
+                    if (dataUpdate.errors) msg = Object.values(dataUpdate.errors).flat().join(", ");
+                    throw new Error(msg);
+                }
+
+                projectId = parseInt(editId, 10);
+
+                const existingIds = existingProj && existingProj.team_members
+                    ? existingProj.team_members
+                        .map(u => u.id || u.user_id || (u.pivot && u.pivot.user_id) || (u.user && (u.user.id || u.user.user_id)))
+                        .filter(id => id !== undefined && id !== null)
+                        .map(id => parseInt(id))
+                    : [];
+
+                const newIds = selectedUsers
+                    .map(u => parseInt(u.id))
+                    .filter(id => !Number.isNaN(id));
+
+                const toAssign = newIds.filter(id => !existingIds.includes(id));
+                const toUnassign = existingIds.filter(id => !newIds.includes(id));
+
+                await assignUsers(projectId, toAssign);
+                await unassignUsers(projectId, toUnassign);
+
+                const newStatus = selectedStatus;
+
+                // WAJIB MoU jika status menjadi Aktif
+                if (newStatus !== oldStatus) {
+                    if (newStatus === "Aktif" && oldStatus !== "Aktif") {
+                        if (!mouFile) {
+                            tampilkanAlert("Untuk mengubah status menjadi Aktif, harap upload file MoU.", "danger");
+                            return;
+                        }
+                        await updateStatus(projectId, "Aktif", mouFile);
+                    } else {
+                        await updateStatus(projectId, newStatus);
+                    }
+                } else {
+                    // jika tetap Aktif tapi upload mou baru
+                    if (newStatus === "Aktif" && mouFile) {
+                        await updateStatus(projectId, "Aktif", mouFile);
+                    }
+                }
+
+                tampilkanAlert("Proyek berhasil diperbarui.", "success");
+                closeModal('modalForm');
+
+                // Redirect sesuai status
+                const dest = getRedirectPageByStatus(newStatus);
+                if (dest && dest !== "leads.html") {
+                    setTimeout(() => { window.location.href = dest; }, 650);
+                    return;
+                }
+
+            } else {
+                // tambah leads baru: status selalu Negosiasi
+                selectedStatus = "Negosiasi";
+
+                const payloadCreate = {
+                    nama_proyek,
+                    nama_klien,
+                    deskripsi,
+                    alamat_proyek,
+                    tanggal_mulai,
+                    tanggal_selesai
+                };
+
+                const resCreate = await fetch(`${BASE_URL}/api/projects`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${AUTH_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
+                    body: JSON.stringify(payloadCreate)
+                });
+
+                const dataCreate = await resCreate.json().catch(() => ({}));
+                if (!resCreate.ok) {
+                    let msg = dataCreate.message || "Gagal menambah proyek baru.";
+                    if (dataCreate.errors) msg = Object.values(dataCreate.errors).flat().join(", ");
+                    throw new Error(msg);
+                }
+
+                projectId = dataCreate.data ? dataCreate.data.id : dataCreate.id;
+
+                if (selectedUsers.length > 0) {
+                    const newIds = selectedUsers.map(u => parseInt(u.id)).filter(id => !Number.isNaN(id));
+                    await assignUsers(projectId, newIds);
+                }
+
+                tampilkanAlert("Leads baru berhasil ditambahkan. Status awal: Negosiasi.", "success");
+                closeModal('modalForm');
+            }
+
+            isSearchMode = false;
+            searchInput.value = "";
+            await fetchProjects();
+        } catch (error) {
+            console.error("Save Error:", error);
+            tampilkanAlert(error.message || "Terjadi kesalahan saat menyimpan proyek.", "danger");
+        }
+    }
+
+    // ================= RENDER LEADS + PAGINATION =================
+    function renderProjects() {
+        const searchTerm = (searchInput.value || "").toLowerCase().trim();
+        const grid = document.getElementById("leadsGrid");
+        const emptyLabel = document.getElementById("leadsEmpty");
+
+        grid.innerHTML = "";
+        emptyLabel.style.display = "none";
+
+        let list = projects.slice();
+
+        list.sort((a, b) => {
+            const dateA = a.tglMulai ? new Date(a.tglMulai) : new Date(0);
+            const dateB = b.tglMulai ? new Date(b.tglMulai) : new Date(0);
+            return sortFilter.value === 'terbaru' ? dateB - dateA : dateA - dateB;
+        });
+
+        if (!isSearchMode) {
+            const leadsOnly = list.filter(p => normalizeStatusKey(p.status) === 'negosiasi');
+            const totalItems = leadsOnly.length;
+
+            if (!totalItems) {
+                emptyLabel.style.display = "block";
+                renderPagination(0);
+                return;
+            }
+
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const sliced = leadsOnly.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+            sliced.forEach(p => { grid.appendChild(createCardElement(p, false)); });
+
+            renderPagination(totalItems);
+        } else {
+            let filtered = list;
+            if (searchTerm) {
+                filtered = list.filter(p =>
+                    (p.nama || "").toLowerCase().includes(searchTerm) ||
+                    (p.klien || "").toLowerCase().includes(searchTerm) ||
+                    (p.lokasi || "").toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const leads = filtered.filter(p => normalizeStatusKey(p.status) === 'negosiasi');
+            const others = filtered.filter(p => normalizeStatusKey(p.status) !== 'negosiasi');
+            const combined = [...leads, ...others];
+            const totalItems = combined.length;
+
+            if (!totalItems) {
+                emptyLabel.innerHTML = `Tidak ada proyek yang cocok dengan kata kunci <strong>"${searchTerm}"</strong>.`;
+                emptyLabel.style.display = "block";
+                renderPagination(0);
+                return;
+            }
+
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const sliced = combined.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+            sliced.forEach(p => {
+                const isNonLead = normalizeStatusKey(p.status) !== 'negosiasi';
+                grid.appendChild(createCardElement(p, isNonLead));
+            });
+
+            renderPagination(totalItems);
+        }
+    }
+
+    function renderPagination(totalItems) {
+        const container = document.getElementById("leadsPagination");
+        if (!container) return;
+
+        if (!totalItems || totalItems <= ITEMS_PER_PAGE) {
+            container.innerHTML = "";
+            return;
+        }
+
+        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        container.innerHTML = `
+            <button type="button" class="pagination-btn pagination-prev" ${currentPage === 1 ? 'disabled' : ''}>
+                <i class='bx bx-chevron-left'></i><span>Sebelumnya</span>
+            </button>
+            <span class="pagination-info">Halaman ${currentPage} dari ${totalPages}</span>
+            <button type="button" class="pagination-btn pagination-next" ${currentPage === totalPages ? 'disabled' : ''}>
+                <span>Berikutnya</span><i class='bx bx-chevron-right'></i>
+            </button>
+        `;
+
+        const prevBtn = container.querySelector(".pagination-prev");
+        const nextBtn = container.querySelector(".pagination-next");
+
+        if (prevBtn) {
+            prevBtn.addEventListener("click", () => {
+                if (currentPage > 1) { currentPage--; renderProjects(); }
+            });
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener("click", () => {
+                const maxPage = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+                if (currentPage < maxPage) { currentPage++; renderProjects(); }
+            });
+        }
+    }
+
+    function createCardElement(p, isNonLead = false) {
+        const statusKey = normalizeStatusKey(p.status);
+        const statusLabel = p.status || 'Negosiasi';
+        const statusClass = `status-badge status-${statusKey}`;
+        const statusInfo = getStatusLocationInfo(statusKey);
+
+        const showBadge = isNonLead;
+        const badgeHtml = showBadge ? `<span class="${statusClass}">${statusLabel}</span>` : "";
+
+        const footerHint = isNonLead ? statusInfo : "";
+        const footerHtml = footerHint
+            ? `<div class="lead-card-footer"><span class="lead-card-hint">${footerHint}</span></div>`
+            : "";
+
+        const card = document.createElement("div");
+        card.className = "kanban-card";
+        if (isNonLead) card.classList.add("lead-card-nonlead");
+
+        card.innerHTML = `
+            <div class="card-content">
+                <div class="lead-card-header">
+                    <h3 title="${p.nama}">${p.nama}</h3>
+                    ${badgeHtml}
+                </div>
+                <p><i class='bx bxs-user'></i> ${p.klien}</p>
+                <p><i class='bx bxs-map'></i> ${p.lokasi}</p>
+                <p><i class='bx bx-calendar'></i> ${p.tglMulai || 'Belum mulai'}</p>
+                ${footerHtml}
+            </div>
+        `;
+
+        card.addEventListener("click", () => showProjectDetails(p));
+        return card;
+    }
+
+    // ================= MODAL DETAIL =================
+    function showProjectDetails(p) {
+        document.getElementById("detailTitle").textContent = p.nama;
+
+        let teamNamesArr = [];
+        if (p.team_members && Array.isArray(p.team_members)) {
+            teamNamesArr = p.team_members.map(extractUserName).filter(Boolean);
+            teamNamesArr = [...new Set(teamNamesArr)];
+        }
+        const teamHtml = teamNamesArr.length
+            ? teamNamesArr.map(n => `<span class="team-chip">${n}</span>`).join("")
+            : "-";
+
+        let rabDisplay = 'Belum diupload';
+        if (p.total_rab && Number(p.total_rab) > 0) {
+            rabDisplay = `Total RAB: Rp ${Number(p.total_rab).toLocaleString('id-ID')}`;
+        }
+
+        document.getElementById("detailList").innerHTML = `
+            <li class="detail-item"><span>ID Proyek</span> <span>${p.id}</span></li>
+            <li class="detail-item"><span>Klien</span> <span>${p.klien}</span></li>
+            <li class="detail-item"><span>Lokasi</span> <span>${p.lokasi}</span></li>
+            <li class="detail-item"><span>Mulai</span> <span>${p.tglMulai || '-'}</span></li>
+            <li class="detail-item"><span>Selesai</span> <span>${p.tglSelesai || '-'}</span></li>
+            <li class="detail-item"><span>Status</span> <span>${p.status}</span></li>
+            <li class="detail-item"><span>Tim</span> <span class="team-container">${teamHtml}</span></li>
+            <li class="detail-item"><span>Nilai RAB</span> <span>${rabDisplay}</span></li>
+            <li class="detail-item"><span>Dokumen MoU</span> <span id="mouLinkContainer">Belum diunggah.</span></li>
+            <li class="detail-item"><span>File RAB</span> <span id="rabLinkContainer">Belum diunggah.</span></li>
+            <li class="detail-item comment"><span>Deskripsi</span> <span>${p.deskripsi || '-'}</span></li>
+        `;
+
+        const footer = document.getElementById("detailFooter");
+        footer.innerHTML = "";
+
+        const btnDetailFull = document.createElement("button");
+        btnDetailFull.className = "btn-save";
+        btnDetailFull.style.background = "var(--detail-color)";
+        btnDetailFull.innerHTML = "<i class='bx bx-link-external'></i> Detail Penuh";
+        btnDetailFull.onclick = () => { window.location.href = `detail_proyek.html?id=${p.id}`; };
+
+        const btnEdit = document.createElement("button");
+        btnEdit.className = "btn-save";
+        btnEdit.style.background = "var(--edit-color)";
+        btnEdit.innerHTML = "<i class='bx bx-edit'></i> Edit";
+        btnEdit.onclick = () => openEditModal(p);
+
+        const btnDel = document.createElement("button");
+        btnDel.className = "btn-save";
+        btnDel.style.background = "var(--delete-color)";
+        btnDel.innerHTML = "<i class='bx bx-trash'></i> Hapus";
+        btnDel.onclick = () => deleteProject(p.id);
+
+        const btnClose = document.createElement("button");
+        btnClose.className = "btn-save";
+        btnClose.style.background = "#f0f0f0";
+        btnClose.style.color = "#555";
+        btnClose.innerHTML = "Tutup";
+        btnClose.onclick = () => closeModal('modalDetail');
+
+        footer.appendChild(btnDetailFull);
+        footer.appendChild(btnEdit);
+        footer.appendChild(btnDel);
+        footer.appendChild(btnClose);
+
+        openModal('modalDetail');
+        loadAttachmentCards(p.id);
+    }
+
+    function openEditModal(p) {
+        closeModal('modalDetail');
+        clearForm();
+        modalTitle.textContent = "Edit Proyek";
+
+        document.getElementById("editProjectId").value = p.id;
+        document.getElementById("namaProyek").value = p.nama;
+        document.getElementById("namaKlien").value = p.klien;
+        document.getElementById("lokasi").value = p.lokasi;
+        document.getElementById("tglMulai").value = p.tglMulai || "";
+        document.getElementById("tglSelesai").value = p.tglSelesai || "";
+        document.getElementById("komentar").value = p.deskripsi;
+
+        const allowed = getAllowedStatuses(p.status);
+        statusSelect.innerHTML = "";
+        allowed.forEach(st => {
+            const opt = document.createElement("option");
+            opt.value = st;
+            opt.textContent = st;
+            statusSelect.appendChild(opt);
+        });
+        statusSelect.disabled = false;
+        statusSelect.value = p.status || allowed[0];
+
+        if ((p.status || "").toLowerCase().includes("aktif")) {
+            mouGroup.style.display = 'block';
+            document.getElementById("currentMoUFile").innerText = "Jika perlu, unggah MoU baru.";
+        } else {
+            mouGroup.style.display = 'none';
+            document.getElementById("currentMoUFile").innerText = "";
+        }
+
+        selectedUsers = [];
+        if (p.team_members && Array.isArray(p.team_members)) {
+            p.team_members.forEach(tm => {
+                const id = tm.id || tm.user_id || (tm.pivot && tm.pivot.user_id) || (tm.user && (tm.user.id || tm.user.user_id));
+                const name = extractUserName(tm) || ("User #" + id);
+                if (id != null) selectedUsers.push({ id, name });
+            });
+        }
+        renderSelectedUsers();
+        document.querySelectorAll("#userListContainer input[type='checkbox']").forEach(c => {
+            const id = parseInt(c.value);
+            c.checked = !!selectedUsers.find(u => parseInt(u.id) === id);
+        });
+
+        openModal('modalForm');
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("active"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("active"); }
+
+    function clearForm() {
+        document.getElementById("editProjectId").value = "";
+        document.querySelectorAll("#modalForm input, #modalForm textarea, #modalForm select").forEach(el => {
+            if (el.type !== 'file' && el.id !== 'dropdownSearch') el.value = "";
+        });
+
+        mouFileInput.value = null;
+        document.getElementById("currentMoUFile").innerText = "";
+
+        selectedUsers = [];
+        renderSelectedUsers();
+        document.querySelectorAll("#userListContainer input[type='checkbox']").forEach(c => c.checked = false);
+        mouGroup.style.display = 'none';
+
+        statusSelect.innerHTML = "";
+        ['Negosiasi', 'Aktif', 'On Hold', 'Selesai', 'Dibatalkan'].forEach(st => {
+            const opt = document.createElement("option");
+            opt.value = st;
+            opt.textContent = st;
+            statusSelect.appendChild(opt);
+        });
+    }
+
+    function openAddModal() {
+        clearForm();
+        modalTitle.textContent = "Tambah Leads Baru";
+        statusSelect.value = "Negosiasi";
+        statusSelect.disabled = true;
+        mouGroup.style.display = 'none';
+        openModal('modalForm');
+    }
+
+    function tampilkanAlert(msg, type) {
+        const div = document.createElement("div");
+        div.className = `alert alert-${type}`;
+        div.innerHTML = `<div>${msg}</div><button class="alert-close-btn" onclick="this.parentElement.remove()">&times;</button>`;
+        document.querySelector(".alert-container").appendChild(div);
+        setTimeout(() => { if (div && div.parentElement) div.remove(); }, 5000);
+    }
+
+    function handleSearchInput() {
+        const term = (searchInput.value || "").trim();
+        if (searchTimeout) clearTimeout(searchTimeout);
+
+        searchTimeout = setTimeout(() => {
+            currentPage = 1;
+            if (!term) {
+                isSearchMode = false;
+                fetchProjects();
+            } else {
+                isSearchMode = true;
+                fetchSearchProjects(term);
+            }
+        }, 300);
+    }
+
+    function initControls() {
+        searchInput.addEventListener("input", handleSearchInput);
+        sortFilter.addEventListener("change", () => {
+            currentPage = 1;
+            renderProjects();
+        });
+    }
+
+    // Status => tampilkan MoU jika Aktif (wajib)
+    statusSelect.addEventListener('change', () => {
+        const editId = document.getElementById("editProjectId").value;
+        if (!editId) return;
+
+        if (statusSelect.value === 'Aktif') {
+            mouGroup.style.display = 'block';
+        } else {
+            mouGroup.style.display = 'none';
+            mouFileInput.value = null;
+            document.getElementById("currentMoUFile").innerText = "";
+        }
+    });
+
+    // ================= MULTI SELECT TIM =================
+    function initUserDropdown() {
+        userListContainer.innerHTML = "";
+        usersList.forEach(user => {
+            const userId = user.id || user.user_id;
+            if (!userId) return;
+
+            const div = document.createElement("div");
+            div.className = "dropdown-item";
+            const checkboxId = `user_chk_${userId}`;
+            const name = user.name || user.nama || ("User #" + userId);
+
+            div.innerHTML = `
+                <input type="checkbox" id="${checkboxId}" value="${userId}" data-name="${name}">
+                <label for="${checkboxId}">${name}</label>
+            `;
+
+            div.onclick = (e) => {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+                    const chk = div.querySelector("input");
+                    chk.checked = !chk.checked;
+                    handleUserSelection(chk);
+                }
+            };
+            div.querySelector("input").onchange = (e) => handleUserSelection(e.target);
+            userListContainer.appendChild(div);
+        });
+    }
+
+    function handleUserSelection(checkbox) {
+        const id = parseInt(checkbox.value);
+        const name = checkbox.getAttribute('data-name');
+        if (checkbox.checked) {
+            if (!selectedUsers.find(u => parseInt(u.id) === id)) selectedUsers.push({ id, name });
+        } else {
+            selectedUsers = selectedUsers.filter(u => parseInt(u.id) !== id);
+        }
+        renderSelectedUsers();
+    }
+
+    function renderSelectedUsers() {
+        selectDisplay.innerHTML = selectedUsers.length === 0 ? '<span class="placeholder-text">Pilih Tim Proyek...</span>' : '';
+        selectedUsers.forEach(user => {
+            const tag = document.createElement("div");
+            tag.className = "user-tag";
+            tag.innerHTML = `${user.name} <span onclick="event.stopPropagation(); removeUser(${user.id})">&times;</span>`;
+            selectDisplay.appendChild(tag);
+        });
+    }
+
+    function removeUser(id) {
+        selectedUsers = selectedUsers.filter(u => parseInt(u.id) !== parseInt(id));
+        renderSelectedUsers();
+        const chk = document.getElementById(`user_chk_${id}`);
+        if (chk) chk.checked = false;
+    }
+
+    function toggleDropdown() {
+        dropdownList.classList.toggle("show");
+        selectDisplay.classList.toggle("active");
+    }
+
+    function filterUsers(keyword) {
+        const items = userListContainer.querySelectorAll(".dropdown-item");
+        items.forEach(item => {
+            item.style.display = item.innerText.toLowerCase().includes(keyword.toLowerCase()) ? "flex" : "none";
+        });
+    }
+
+    window.addEventListener("click", (e) => {
+        if (!e.target.closest(".custom-select-wrapper")) {
+            dropdownList.classList.remove("show");
+            selectDisplay.classList.remove("active");
+        }
+    });
+
+    // ================= SIDEBAR, SUBMENU & LOGOUT =================
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const mobileCloseBtn = document.getElementById("mobileCloseBtn");
+    const overlay = document.getElementById("overlay");
+
+    document.querySelectorAll(".sidebar ul.menu li.has-submenu > a").forEach(trigger => {
+        trigger.addEventListener("click", (e) => {
+            e.preventDefault();
+            const li = trigger.parentElement;
+            li.classList.toggle("open");
+        });
+    });
+
+    if (toggleBtn) toggleBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+        } else {
+            sidebar.classList.toggle("collapsed");
+        }
+    });
+
+    if (mobileCloseBtn) mobileCloseBtn.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+    });
+
+    if (overlay) overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+    });
+
+    async function logout() {
+        try {
+            await fetch(`${BASE_URL}/api/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+        } catch (error) {
+            console.error("Logout error:", error);
+        } finally {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    }
+
+    function initBurgerScrollTransparency() {
+        const btn = document.getElementById("toggleBtn");
+        if (!btn) return;
+
+        const handleScroll = () => {
+            if (window.scrollY > 10) btn.classList.add("scrolled");
+            else btn.classList.remove("scrolled");
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+    }
+
+    // ================= AUTO ACTIVE SIDEBAR =================
+    function initSidebarActiveState() {
+        const path = window.location.pathname.split("/").pop() || "dashboard.html";
+        const current = path === "" ? "dashboard.html" : path;
+
+        const menuLinks = document.querySelectorAll(".sidebar ul.menu a[href]");
+        menuLinks.forEach(link => {
+            const href = link.getAttribute("href");
+            if (!href || href.startsWith("javascript")) return;
+
+            const li = link.parentElement;
+
+            if (href === current) {
+                if (li.parentElement && li.parentElement.classList.contains("submenu")) {
+                    li.classList.add("active");
+                    const parentLi = li.closest(".has-submenu");
+                    if (parentLi) parentLi.classList.add("active", "open");
+                } else {
+                    li.classList.add("active");
+                }
+            }
+        });
+    }
+
+    // ================= INITIAL LOAD =================
+    document.addEventListener("DOMContentLoaded", () => {
+        initThemeToggle();
+        initGlobalButtonDebounce();
+        initBurgerScrollTransparency();
+        initSidebarActiveState();
+        fetchUsers();
+        fetchProjects();
+        initControls();
+    });
+</script>
+</body>
+</html>

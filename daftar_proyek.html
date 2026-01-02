@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar Proyek | Mulya Teknik</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ✅ MASTER SHELL (Sidebar + Toggle + Overlay + Page Header + Theme Toggle + Submenu Leads Style) -->
+<link rel="stylesheet" href="assets/css/master-shell.dashboard.css">
+
+<style>
+    :root {
+        /* BRAND & CORE COLORS (LIGHT DEFAULT) */
+        --primary-color: #0a4a80;
+        --secondary-color: #00bcd4;
+        --detail-color: #17a2b8;
+        --delete-color: #ff4d4f;
+        --edit-color: #faad14;
+        --success-color: #52c41a;
+
+        --text-main: #1f2933;
+        --text-muted: #6b7280;
+
+        --background-light: #f3f7fb;
+        --background-dark: #e3eefc;
+
+        --bg-body: radial-gradient(circle at top left, #e0f2ff 0, #f3f7fb 35%, #eef2ff 100%);
+        --bg-sidebar: rgba(255,255,255,0.92);
+        --bg-elevated: rgba(255,255,255,0.92);
+        --bg-elevated-soft: rgba(244,247,250,0.92);
+
+        --border-subtle: rgba(148,163,184,0.35);
+        --glass-border: rgba(148,163,184,0.35);
+
+        --shadow-deep: 0 20px 50px rgba(15, 23, 42, 0.18);
+        --shadow-soft: 0 12px 28px rgba(15, 23, 42, 0.12);
+        --input-button-shadow: 0 10px 30px rgba(0, 188, 212, 0.35);
+
+        --chip-bg: rgba(241,245,249,0.9);
+
+        --transition-fast: 0.25s ease;
+        --transition-med: 0.35s ease;
+
+        /* ✅ dipakai master-shell */
+        --sidebar-width: 250px;
+    }
+
+    :root[data-theme="dark"] {
+        color-scheme: dark;
+
+        --primary-color: #38bdf8;
+        --secondary-color: #22d3ee;
+        --detail-color: #38bdf8;
+        --delete-color: #f97373;
+        --edit-color: #facc15;
+        --success-color: #4ade80;
+
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+
+        --background-light: #020617;
+        --background-dark: #020617;
+
+        --bg-body: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #020617 100%);
+        --bg-sidebar: rgba(15,23,42,0.88);
+        --bg-elevated: rgba(15,23,42,0.88);
+        --bg-elevated-soft: rgba(15,23,42,0.72);
+
+        --border-subtle: rgba(148,163,184,0.32);
+        --glass-border: rgba(56,189,248,0.35);
+
+        --shadow-deep: 0 28px 80px rgba(15,23,42,0.9);
+        --shadow-soft: 0 16px 48px rgba(15,23,42,0.65);
+        --input-button-shadow: 0 20px 60px rgba(8,47,73,0.9);
+
+        --chip-bg: rgba(15,23,42,0.9);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* ===== HIDE SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 0; background: transparent; display: none; }
+    html, body, .modal-content, .table-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+
+    body {
+        background: var(--bg-body);
+        color: var(--text-main);
+        display: flex;
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+
+    /* ================= ALERTS ================= */
+    .alert-container { width: 100%; margin-bottom: 18px; flex-shrink: 0; }
+    .alert {
+        padding: 13px 18px;
+        border-radius: 14px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid;
+        margin-bottom: 10px;
+        font-size: 13px;
+        background: var(--bg-elevated);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .alert-danger { background-color: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.6); color: #fecaca; }
+    :root:not([data-theme="dark"]) .alert-danger { color: #b91c1c; background-color: #fff1f0; border-color: #ffccc7; }
+    .alert-success { background-color: rgba(34,197,94,0.08); border-color: rgba(74,222,128,0.6); color: #bbf7d0; }
+    :root:not([data-theme="dark"]) .alert-success { color: #2f855a; background-color: #f6ffed; border-color: #b7eb8f; }
+    .alert-close-btn { background: transparent; border: none; font-size: 22px; cursor: pointer; opacity: 0.7; color: inherit; }
+
+    /* ================= CONTROLS ================= */
+    .project-controls {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 12px;
+        margin-bottom: 14px;
+        background: var(--bg-elevated);
+        padding: 14px 16px;
+        border-radius: 18px;
+        box-shadow: var(--shadow-soft);
+        flex-shrink: 0;
+        border: 1px solid rgba(148,163,184,0.25);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .project-controls .search-wrapper { position: relative; }
+    .project-controls .search-wrapper i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #9ca3af;
+    }
+    .project-controls input,
+    .project-controls select {
+        width: 100%;
+        padding: 10px 12px 10px 42px;
+        border: 1px solid rgba(148,163,184,0.55);
+        border-radius: 999px;
+        transition: all 0.25s ease;
+        font-size: 13px;
+        background: radial-gradient(circle at top left,
+                    rgba(255,255,255,0.85),
+                    rgba(226,232,240,0.9));
+        color: var(--text-main);
+        outline: none;
+    }
+    .project-controls select { padding-left: 14px; }
+    .project-controls input:focus,
+    .project-controls select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 2px rgba(56,189,248,0.28);
+        background: rgba(15,23,42,0.02);
+    }
+    :root[data-theme="dark"] .project-controls input,
+    :root[data-theme="dark"] .project-controls select { background: rgba(15,23,42,0.9); }
+
+    /* ================= STATUS TABS ================= */
+    .status-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+    .status-tab {
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.55);
+        background: var(--bg-elevated-soft);
+        padding: 8px 14px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-muted);
+        box-shadow: 0 8px 20px rgba(15,23,42,0.12);
+        transition: all var(--transition-fast);
+    }
+    .status-tab i { font-size: 16px; }
+    .status-tab:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(15,23,42,0.16); }
+    .status-tab.active {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: #ffffff;
+        border-color: transparent;
+        box-shadow: 0 16px 36px rgba(15,23,42,0.45);
+    }
+    :root[data-theme="dark"] .status-tab { background: rgba(15,23,42,0.95); }
+
+    /* ================= TABLE WRAPPER ================= */
+    .table-wrapper {
+        background: var(--bg-elevated);
+        border-radius: 18px;
+        padding: 14px 16px 18px;
+        box-shadow: var(--shadow-deep);
+        border: 1px solid rgba(148,163,184,0.25);
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 0;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .table-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+    .table-header-row h2 {
+        font-size: 14px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.10em;
+        color: var(--primary-color);
+    }
+    .table-header-row span { font-size: 12px; color: var(--text-muted); line-height: 1.35; }
+
+    /* ✅ INVISIBLE SCROLL */
+    .table-scroll {
+        margin-top: 8px;
+        overflow-x: auto;
+        overflow-y: auto;
+        padding-bottom: 6px;
+        width: 100%;
+        max-width: 100%;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .project-table {
+        width: 100%;
+        max-width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        min-width: 0;
+    }
+
+    .project-table thead { background: var(--bg-elevated-soft); position: sticky; top: 0; z-index: 2; }
+
+    .project-table th,
+    .project-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+        text-align: left;
+        border-bottom: 1px solid rgba(148,163,184,0.22);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .project-table th { font-weight: 800; color: var(--text-muted); }
+
+    .project-table th:nth-child(1), .project-table td:nth-child(1) { width: 48px; }
+    .project-table th:nth-child(7), .project-table td:nth-child(7) { width: 120px; }
+    .project-table th:nth-child(6), .project-table td:nth-child(6) { width: 120px; }
+    .project-table th:nth-child(5), .project-table td:nth-child(5) { width: 200px; }
+
+    .project-table tbody tr {
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+        cursor: pointer;
+    }
+    .project-table tbody tr:nth-child(even) { background: var(--bg-elevated-soft); }
+    .project-table tbody tr:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(15,23,42,0.12);
+        background: radial-gradient(circle at top left, rgba(56,189,248,0.10), rgba(15,23,42,0.02));
+    }
+    .project-table tbody tr.row-outside-main {
+        opacity: 0.96;
+        background: radial-gradient(circle at top left,
+                rgba(148,163,184,0.16),
+                rgba(15,23,42,0.04));
+    }
+
+    /* ✅ STATUS CELL: badge kecil + CENTER */
+    .status-cell{
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+        min-width:0;
+        align-items:center;
+        text-align:center;
+    }
+    .status-location-text{
+        font-size: 11px;
+        color: var(--text-muted);
+        font-style: italic;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    .btn-table-info {
+        padding: 7px 14px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, var(--detail-color), var(--secondary-color));
+        color: #fff;
+        box-shadow: 0 10px 24px rgba(15,23,42,0.35);
+        transition: all 0.2s ease;
+        max-width: 100%;
+        justify-content: center;
+        white-space: nowrap;
+    }
+    .btn-table-info i { font-size: 16px; }
+    .btn-table-info:hover { transform: translateY(-1px) translateX(0.5px); box-shadow: 0 16px 36px rgba(15,23,42,0.55); filter: brightness(1.04); }
+
+    .table-empty { font-size: 13px; color: var(--text-muted); padding: 12px 4px; }
+
+    /* STATUS BADGES */
+    .status-badge {
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 9.5px;
+        font-weight: 900;
+        text-transform: uppercase;
+        white-space: nowrap;
+        display: inline-block;
+        border: 1px solid rgba(148,163,184,0.25);
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.25;
+    }
+    .status-negosiasi { background:#fff7e6; color:#d48806; }
+    .status-aktif { background:#e6fffb; color:#08979c; }
+    .status-onhold { background:#fff1f0; color:#cf1322; }
+    .status-selesai { background:#f6ffed; color:#389e0d; }
+    .status-dibatalkan { background:#f5f5f5; color:#8c8c8c; }
+
+    :root[data-theme="dark"] .status-negosiasi { background: rgba(250, 204, 21, 0.15); color: #facc15; border-color: rgba(250,204,21,0.18); }
+    :root[data-theme="dark"] .status-aktif { background: rgba(45, 212, 191, 0.12); color: #5eead4; border-color: rgba(45,212,191,0.18); }
+    :root[data-theme="dark"] .status-onhold { background: rgba(248, 113, 113, 0.15); color: #fecaca; border-color: rgba(248,113,113,0.18); }
+    :root[data-theme="dark"] .status-selesai { background: rgba(22, 163, 74, 0.18); color: #bbf7d0; border-color: rgba(22,163,74,0.18); }
+    :root[data-theme="dark"] .status-dibatalkan { background: rgba(148,163,184,0.22); color: #e5e7eb; border-color: rgba(148,163,184,0.18); }
+
+    /* ============ PAGINATION ============ */
+    .table-pagination {
+        margin-top: 12px;
+        display: none;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--text-muted);
+        flex-wrap: wrap;
+        flex-shrink: 0;
+    }
+    .table-pagination .page-info { font-weight: 600; }
+
+    .page-btn {
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.6);
+        background: var(--bg-elevated-soft);
+        padding: 6px 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all var(--transition-fast);
+        box-shadow: 0 6px 16px rgba(15,23,42,0.15);
+    }
+    .page-btn i { font-size: 18px; }
+    .page-btn[disabled] { opacity: 0.5; cursor: default; box-shadow: none; }
+    .page-btn:not([disabled]):hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(15,23,42,0.35); }
+
+    /* ================= MODAL (DISAMAKAN DENGAN LEADS) ================= */
+    .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at top left, rgba(56,189,248,0.15), rgba(15,23,42,0.92));
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 1500;
+        padding: 14px;
+    }
+    .modal.active { display: flex; }
+
+    .modal-content {
+        background: var(--bg-elevated);
+        padding: 24px 26px;
+        border-radius: 22px;
+        width: 550px;
+        max-width: 92%;
+        box-shadow: var(--shadow-deep);
+        max-height: 90vh;
+        overflow-y: auto;
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        animation: modalPop .22s ease;
+    }
+    @keyframes modalPop{
+        from{ transform: translateY(10px) scale(.98); opacity:0; }
+        to{ transform: translateY(0) scale(1); opacity:1; }
+    }
+
+    .modal-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        border-bottom: 1px solid rgba(148,163,184,0.4);
+        padding-bottom: 10px;
+        gap: 12px;
+    }
+
+    .modal-header-custom h2 {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.2;
+    }
+
+    .close-modal-icon {
+        background: none;
+        border: none;
+        font-size: 26px;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: color var(--transition-fast), transform var(--transition-fast);
+        padding: 0;
+        line-height: 1;
+    }
+    .close-modal-icon:hover { color: var(--delete-color); transform: scale(1.05); }
+
+    /* LIST DETAIL (VIEW MODE) */
+    .detail-list{ list-style:none; padding:0; margin:0 0 10px; }
+    .detail-item{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+        padding: 10px 8px;
+        border-bottom: 1px solid rgba(148,163,184,0.26);
+        font-size: 13px;
+        background: transparent;
+    }
+    .detail-list .detail-item:nth-child(even){
+        background: rgba(148,163,184,0.08);
+        border-radius: 10px;
+    }
+    :root[data-theme="dark"] .detail-list .detail-item:nth-child(even){
+        background: rgba(148,163,184,0.10);
+    }
+
+    .detail-label{ font-weight: 800; color: var(--primary-color); flex: 0 0 35%; }
+    .detail-value{ flex: 1; text-align: right; color: var(--text-main); min-width: 0; }
+
+    .detail-item.comment{ flex-direction: column; align-items: flex-start; }
+    .detail-item.comment .detail-value{ text-align:left; width:100%; white-space: normal; overflow: visible; }
+
+    /* ✅ CHIP TIM (VIEW MODE) */
+    .team-container{ display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+    .team-chip{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        background: var(--chip-bg);
+        border: 1px solid rgba(148,163,184,0.35);
+        color: var(--text-main);
+        max-width: 100%;
+    }
+    :root[data-theme="dark"] .team-chip{
+        background: rgba(2,6,23,0.45);
+        border-color: rgba(148,163,184,0.22);
+        color: var(--text-main);
+    }
+
+    /* ================= EDIT MODE (STYLE INPUT PERSIS LEADS) ================= */
+    .modal-content.edit-mode{ background: var(--bg-elevated); }
+
+    .edit-form{ display:flex; flex-direction:column; gap: 12px; padding-top: 4px; }
+    .form-group{ display:flex; flex-direction:column; gap: 6px; }
+    .form-group label{ font-size: 13px; font-weight: 800; color: var(--primary-color); }
+    .form-group label .req{ color: var(--delete-color); font-weight: 900; }
+
+    .modal-content input:not([type="checkbox"]):not([type="file"]),
+    .modal-content textarea,
+    .modal-content select{
+        width: 100%;
+        padding: 9px 11px;
+        margin-bottom: 0;
+        border-radius: 10px;
+        border: 1px solid rgba(148,163,184,0.6);
+        font-size: 13px;
+        transition: all 0.25s ease;
+        background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.98));
+        color: var(--text-main);
+        outline: none;
+    }
+    :root[data-theme="dark"] .modal-content input:not([type="checkbox"]):not([type="file"]),
+    :root[data-theme="dark"] .modal-content textarea,
+    :root[data-theme="dark"] .modal-content select{
+        background: radial-gradient(circle at top left, rgba(2,6,23,0.65), rgba(15,23,42,0.92));
+        border-color: rgba(148,163,184,0.35);
+        color: var(--text-main);
+    }
+    .modal-content input:focus,
+    .modal-content textarea:focus,
+    .modal-content select:focus{
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 1px rgba(56,189,248,0.9);
+        outline: none;
+    }
+    .modal-content textarea{
+        min-height: 96px;
+        resize: vertical;
+        line-height: 1.55;
+        white-space: pre-wrap;
+    }
+
+    .input-icon{ position: relative; }
+    .input-icon i{
+        position:absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        color: rgba(107,114,128,0.9);
+        pointer-events:none;
+    }
+    :root[data-theme="dark"] .input-icon i{ color: rgba(156,163,175,0.95); }
+    .input-icon input{ padding-right: 40px; }
+
+    .edit-hint{ margin-top: -2px; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+    .edit-hint strong{ color: var(--primary-color); }
+
+    #mouRequiredRow{ display:none; padding-top: 2px; }
+    #mouRequiredRow .mou-inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; width:100%; }
+    #mouRequiredRow input[type="file"]{
+        width:100%;
+        max-width: 100%;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(148,163,184,0.55);
+        background: rgba(241,245,249,0.92);
+    }
+    :root[data-theme="dark"] #mouRequiredRow input[type="file"]{
+        background: rgba(2,6,23,0.45);
+        border-color: rgba(148,163,184,0.35);
+        color: var(--text-main);
+    }
+    .mou-hint{ margin-top: 6px; font-size: 11px; color: var(--text-muted); font-style: italic; }
+
+    /* ================= MULTI SELECT TIM (SAMA SEPERTI LEADS) ================= */
+    .custom-select-wrapper{ position: relative; width: 100%; }
+    .select-display{
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(148,163,184,0.6);
+        background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.98));
+        display:flex;
+        align-items:center;
+        flex-wrap: wrap;
+        gap: 8px;
+        cursor: pointer;
+        transition: all .25s ease;
+        position: relative;
+    }
+    :root[data-theme="dark"] .select-display{
+        background: radial-gradient(circle at top left, rgba(2,6,23,0.65), rgba(15,23,42,0.92));
+        border-color: rgba(148,163,184,0.35);
+    }
+    .select-display.active{
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 1px rgba(56,189,248,0.9);
+    }
+    .select-display::after{
+        content:"";
+        position:absolute;
+        right: 14px;
+        top: 50%;
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid rgba(107,114,128,0.9);
+        border-bottom: 2px solid rgba(107,114,128,0.9);
+        transform: translateY(-60%) rotate(45deg);
+        opacity:.9;
+        pointer-events:none;
+    }
+    :root[data-theme="dark"] .select-display::after{
+        border-right-color: rgba(156,163,175,0.95);
+        border-bottom-color: rgba(156,163,175,0.95);
+    }
+    .placeholder-text{ color: var(--text-muted); font-weight: 600; font-size: 13px; }
+
+    /* ✅ SOFT TAG TIM (REQUEST: jangan biru tua) */
+    .user-tag{
+        display:inline-flex;
+        align-items:center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(0,188,212,0.14);
+        color: var(--primary-color);
+        border: 1px solid rgba(0,188,212,0.28);
+        font-size: 12px;
+        font-weight: 800;
+        box-shadow: 0 10px 22px rgba(15,23,42,0.10);
+    }
+    :root[data-theme="dark"] .user-tag{
+        background: rgba(34,211,238,0.14);
+        color: var(--text-main);
+        border-color: rgba(34,211,238,0.22);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+    }
+    .user-tag span{
+        display:inline-flex;
+        width: 18px;
+        height: 18px;
+        align-items:center;
+        justify-content:center;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.06);
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        color: inherit;
+    }
+    :root[data-theme="dark"] .user-tag span{ background: rgba(255,255,255,0.12); }
+
+    .dropdown-list{
+        display:none;
+        position:absolute;
+        left:0;
+        right:0;
+        top: calc(100% + 8px);
+        background: var(--bg-elevated);
+        border: 1px solid rgba(148,163,184,0.45);
+        border-radius: 16px;
+        box-shadow: var(--shadow-deep);
+        z-index: 20;
+        overflow:hidden;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .dropdown-list.show{ display:block; }
+
+    .dropdown-search{
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(148,163,184,0.22);
+    }
+    .dropdown-search input{
+        width: 100%;
+        padding: 9px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.55);
+        font-size: 13px;
+        outline:none;
+        background: rgba(241,245,249,0.92);
+    }
+    :root[data-theme="dark"] .dropdown-search input{
+        background: rgba(2,6,23,0.55);
+        border-color: rgba(148,163,184,0.35);
+        color: var(--text-main);
+    }
+    .dropdown-items{
+        max-height: 210px;
+        overflow:auto;
+        padding: 6px;
+    }
+    .dropdown-item{
+        display:flex;
+        align-items:center;
+        gap: 10px;
+        padding: 10px 10px;
+        border-radius: 12px;
+        cursor:pointer;
+        transition: background .2s ease, transform .2s ease;
+        font-size: 13px;
+        color: var(--text-main);
+    }
+    .dropdown-item:hover{
+        background: rgba(56,189,248,0.10);
+        transform: translateY(-1px);
+    }
+    .dropdown-item input[type="checkbox"]{
+        width: 16px;
+        height: 16px;
+        accent-color: var(--secondary-color);
+    }
+    .dropdown-item label{ cursor:pointer; font-weight: 700; }
+
+    .team-help{
+        font-size: 11px;
+        color: var(--text-muted);
+        line-height: 1.4;
+        margin-top: 6px;
+    }
+
+    /* FOOTER + BUTTONS */
+    .modal-footer {
+        margin-top: 16px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding-top: 10px;
+        border-top: 1px solid rgba(148,163,184,0.22);
+    }
+
+    .modal-footer button {
+        padding: 9px 18px;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+    .modal-footer button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+    .btn-detailfull{ background: linear-gradient(135deg, #14b8a6, #22d3ee); color:#fff; box-shadow: 0 14px 30px rgba(20,184,166,0.32); }
+    .btn-edit{ background: linear-gradient(135deg, var(--edit-color), #f59e0b); color:#fff; box-shadow: 0 14px 30px rgba(245,158,11,0.22); }
+    .btn-danger{ background: linear-gradient(135deg, var(--delete-color), #ff7875); color:#fff; box-shadow: 0 14px 30px rgba(255,77,79,0.30); }
+    .btn-save{ background: linear-gradient(135deg, var(--primary-color), #083c6b); color:#fff; box-shadow: 0 14px 30px rgba(15,23,42,0.55); }
+    .btn-closewhite{
+        background: rgba(255,255,255,0.92);
+        color:#111827;
+        border: 1px solid rgba(148,163,184,0.35);
+        box-shadow: 0 12px 26px rgba(15,23,42,0.12);
+    }
+    :root[data-theme="dark"] .btn-closewhite{ background: rgba(148,163,184,0.14); color: var(--text-main); }
+    button.is-waiting{ opacity: .7; cursor: wait; }
+
+    /* ================= RESPONSIVE (ISI HALAMAN) ================= */
+    @media (max-width: 1199px) { .project-controls { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+        html { font-size: 93.75%; }
+        body { overflow-y: auto; height: auto; max-height: none; }
+        .alert-container { margin-top: 6px; }
+        .project-controls { padding: 12px 12px; }
+        .table-pagination { justify-content: center; margin-top: 10px; }
+        .header-right { width: 100%; justify-content: flex-start; gap: 8px; }
+        .status-tabs { justify-content: flex-start; }
+        .status-tab { flex: 1 1 auto; justify-content: center; }
+        .modal-content{ width: 92%; }
+        .detail-label{ flex-basis: 42%; }
+        .team-container{ justify-content:flex-start; }
+        .detail-value{ text-align:left; }
+        .status-cell{ align-items:flex-start; text-align:left; }
+    }
+    @media (max-width: 420px) {
+        .theme-toggle { padding: 8px 12px; }
+        .project-table th:nth-child(5), .project-table td:nth-child(5) { width: 180px; }
+        .select-display{ padding-right: 34px; }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR (MASTER) -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <img src="assets/logo.png" alt="Logo Mulya Teknik" onerror="this.style.display='none'">
+        <div class="brand-text">Mulya Teknik</div>
+    </div>
+
+    <ul class="menu">
+        <li><a href="dashboard.html"><i class='bx bxs-dashboard'></i> <span>Dashboard</span></a></li>
+        <li><a href="design.html"><i class='bx bxs-color-fill'></i> <span>Design</span></a></li>
+        <li><a href="laporan.html"><i class='bx bxs-bar-chart-alt-2'></i> <span>Laporan</span></a></li>
+        <li><a href="user.html"><i class='bx bxs-group'></i> <span>Pengguna</span></a></li>
+
+        <li class="has-submenu open active">
+            <a href="javascript:void(0);">
+                <i class='bx bxs-buildings'></i>
+                <span class="menu-text">Proyek</span>
+                <i class='bx bx-chevron-down submenu-toggle-icon'></i>
+            </a>
+            <ul class="submenu">
+                <li><a href="leads.html">Leads</a></li>
+                <li class="active"><a href="daftar_proyek.html">Daftar Proyek</a></li>
+                <li><a href="batal.html">Proyek Batal</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="sidebar-footer">
+        <button class="btn-logout" onclick="logout()">
+            <i class='bx bx-log-out'></i> <span>Keluar</span>
+        </button>
+    </div>
+</div>
+
+<!-- TOGGLE + OVERLAY (MASTER) -->
+<button class="toggle-btn" id="toggleBtn"><i class='bx bx-menu'></i></button>
+<button class="mobile-close-btn" id="mobileCloseBtn"><i class='bx bx-x'></i></button>
+<div class="overlay" id="overlay"></div>
+
+<!-- MAIN -->
+<div class="main-content">
+    <div class="alert-container"></div>
+
+    <!-- PAGE HEADER (MASTER) -->
+    <div class="page-header">
+        <div class="user-welcome">
+            <h1>Daftar Proyek</h1>
+            <p>Hanya proyek dengan status <strong>Aktif</strong> dan <strong>On Hold</strong> yang tampil di sini.</p>
+        </div>
+
+        <div class="header-right">
+            <button class="theme-toggle" id="themeToggle" type="button">
+                <i class='bx bx-moon'></i>
+                <span>Dark</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Kontrol -->
+    <div class="project-controls">
+        <div class="search-wrapper">
+            <i class='bx bx-search'></i>
+            <input type="search" id="searchInput" placeholder="Cari Nama Proyek, Klien, atau Lokasi...">
+        </div>
+        <select id="sortFilter">
+            <option value="terbaru">Terbaru</option>
+            <option value="terlama">Terlama</option>
+        </select>
+    </div>
+
+    <!-- TAB STATUS -->
+    <div class="status-tabs" id="statusTabs">
+        <button type="button" class="status-tab active" data-tab="aktif">
+            <i class='bx bx-play-circle'></i>
+            <span>Proyek Aktif</span>
+        </button>
+        <button type="button" class="status-tab" data-tab="onhold">
+            <i class='bx bx-pause-circle'></i>
+            <span>Proyek On Hold</span>
+        </button>
+    </div>
+
+    <!-- Tabel -->
+    <div class="table-wrapper">
+        <div class="table-header-row">
+            <h2>PROYEK AKTIF & ON HOLD</h2>
+            <span id="tableHint"></span>
+        </div>
+
+        <div class="table-scroll">
+            <table class="project-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Proyek</th>
+                        <th>Klien</th>
+                        <th>Lokasi</th>
+                        <th>Status</th>
+                        <th>Tgl Mulai</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="projectsTableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="table-pagination" id="paginationContainer">
+            <button type="button" class="page-btn" data-direction="prev">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <span class="page-info" id="pageInfo">Halaman 1 dari 1</span>
+            <button type="button" class="page-btn" data-direction="next">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+        </div>
+
+        <div class="table-empty" id="tableEmpty" style="display:none;">
+            Belum ada proyek dengan status <strong>Aktif</strong> atau <strong>On Hold</strong>.
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DETAIL + EDIT (2 MODE: VIEW -> EDIT) -->
+<div class="modal" id="modalDetail">
+    <div class="modal-content" id="modalContent">
+        <div class="modal-header-custom">
+            <h2 id="detailTitle">Rincian Proyek</h2>
+            <button class="close-modal-icon" type="button" onclick="closeModal('modalDetail')">&times;</button>
+        </div>
+        <ul class="detail-list" id="detailList"></ul>
+        <div class="modal-footer" id="detailFooter"></div>
+    </div>
+</div>
+
+<script>
+    // ================= CONFIG & AUTH =================
+    const BASE_URL = "https://mt-optima-api-176148115028.asia-southeast2.run.app";
+    const AUTH_TOKEN = localStorage.getItem('token');
+    const THEME_KEY = 'mt-theme';
+
+    // ✅ API yang diminta/harus dipertahankan
+    const API_ACTIVE_PROJECTS  = `${BASE_URL}/api/projects/active`;
+    const API_SEARCH_PROJECTS = (q) => `${BASE_URL}/api/projects/search?search=${encodeURIComponent(q || '')}`;
+
+    // detail + edit lama
+    const API_PROJECT_DETAIL   = (id) => `${BASE_URL}/api/projects/${id}`;
+    const API_EDIT_PROJECT     = (id) => `${BASE_URL}/api/projects/${id}`;
+    const API_DELETE_PROJECT   = (id) => `${BASE_URL}/api/projects/${id}`;
+
+    // files + download
+    const API_PROJECT_FILES    = (id) => `${BASE_URL}/api/projects/${id}/files`;
+    const API_DOWNLOAD_FILE    = (attachmentId) => `${BASE_URL}/api/attachments/${attachmentId}/download`;
+
+    // ✅ Update_Status (POST) /api/projects/{id}/status (status + mou_file)
+    const API_UPDATE_STATUS    = (id) => `${BASE_URL}/api/projects/${id}/status`;
+
+    // ✅ USERS (samakan seperti Leads: prefer /api/admin/users, fallback /api/users)
+    const API_USERS_ADMIN      = `${BASE_URL}/api/admin/users`;
+    const API_USERS_FALLBACK   = `${BASE_URL}/api/users`;
+
+    // (opsional kalau nanti kamu pakai)
+    const API_ADD_PROGRESS      = (id) => `${BASE_URL}/${id}/progress`;
+    const API_PROGRESS_HISTORY  = (id) => `${BASE_URL}/api/projects/${id}/progress`;
+
+    if (!AUTH_TOKEN) {
+        alert("Sesi habis, silakan login kembali.");
+        window.location.href = "login.html";
+    }
+
+    // ================= THEME =================
+    function applyTheme(theme) {
+        if (theme !== 'dark' && theme !== 'light') theme = 'light';
+        const root = document.documentElement;
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem(THEME_KEY, theme);
+        updateThemeToggleUI(theme);
+    }
+    function updateThemeToggleUI(theme) {
+        const toggle = document.getElementById('themeToggle');
+        if (!toggle) return;
+        const icon = toggle.querySelector('i');
+        const label = toggle.querySelector('span');
+        if (theme === 'dark') {
+            toggle.classList.add('is-dark');
+            if (icon) { icon.classList.remove('bx-moon'); icon.classList.add('bx-sun'); }
+            if (label) label.textContent = 'Light';
+        } else {
+            toggle.classList.remove('is-dark');
+            if (icon) { icon.classList.remove('bx-sun'); icon.classList.add('bx-moon'); }
+            if (label) label.textContent = 'Dark';
+        }
+    }
+    function initThemeToggle() {
+        const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+        applyTheme(savedTheme);
+        const toggle = document.getElementById('themeToggle');
+        if (!toggle) return;
+        toggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+        });
+    }
+
+    // ================= 3s BUTTON DEBOUNCE (SEMUA BUTTON) =================
+    function initGlobalButtonDebounce() {
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+
+            // ✅ jangan ganggu tombol yang memang harus pindah halaman (Detail Penuh)
+            if (btn.dataset.allowNavigate === "true") return;
+
+            if (btn.dataset.debouncing === 'true') {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                return;
+            }
+
+            btn.dataset.debouncing = 'true';
+            btn.classList.add('is-waiting');
+
+            setTimeout(() => {
+                btn.dataset.debouncing = 'false';
+                btn.classList.remove('is-waiting');
+            }, 3000);
+        }, true);
+    }
+
+    // ================= STATE =================
+    let projects = [];
+    let currentSearchTerm = "";
+    const searchInput = document.getElementById("searchInput");
+    const sortFilter = document.getElementById("sortFilter");
+    let searchDebounceTimer = null;
+
+    let currentTab = 'aktif';
+
+    const PAGE_SIZE = 10;
+    let currentPage = 1;
+    let lastRenderedListLength = 0;
+
+    let currentDetailProject = null;
+    let currentDetailHasMou = false;
+    let modalMode = 'view';
+
+    // ================= USERS (UNTUK MULTI SELECT TIM) =================
+    let usersList = [];
+    let selectedUsers = [];
+
+    // ================= UTILS =================
+    function extractUserName(tm) {
+        if (!tm) return null;
+        if (tm.name || tm.nama || tm.full_name || tm.username || tm.nama_user || tm.nama_lengkap) {
+            return tm.name || tm.nama || tm.full_name || tm.username || tm.nama_user || tm.nama_lengkap;
+        }
+        if (tm.user) {
+            if (tm.user.name || tm.user.nama || tm.user.full_name || tm.user.username) {
+                return tm.user.name || tm.user.nama || tm.user.full_name || tm.user.username;
+            }
+            const uid = tm.user.id || tm.user.user_id || (tm.user.pivot && tm.user.pivot.user_id) || "";
+            return uid ? ("User #" + uid) : null;
+        }
+        const id = tm.id || tm.user_id || (tm.pivot && tm.pivot.user_id) || "";
+        if (id) return "User #" + id;
+        return null;
+    }
+
+    function extractUserId(tm){
+        if (!tm) return null;
+        return tm.id || tm.user_id || (tm.user && (tm.user.id || tm.user.user_id)) || (tm.pivot && tm.pivot.user_id) || null;
+    }
+
+    function normalizeStatusKey(status) {
+        if (!status) return "negosiasi";
+        const s = status.toLowerCase().replace(/\s+/g, '');
+        if (s.includes('negos')) return 'negosiasi';
+        if (s.includes('akt')) return 'aktif';
+        if (s.includes('hold')) return 'onhold';
+        if (s.includes('selesai') || s.includes('done') || s.includes('complete')) return 'selesai';
+        if (s.includes('batal') || s.includes('cancel')) return 'dibatalkan';
+        return 'negosiasi';
+    }
+
+    function getStatusLocationInfo(statusKey) {
+        switch (statusKey) {
+            case 'negosiasi':  return 'Lead (Leads Proyek)';
+            case 'aktif':      return 'Proyek Aktif (Daftar Proyek)';
+            case 'onhold':     return 'On Hold (Daftar Proyek)';
+            case 'selesai':    return 'Selesai (Halaman Laporan)';
+            case 'dibatalkan': return 'Dibatalkan (Halaman Proyek Batal)';
+            default:           return statusKey;
+        }
+    }
+
+    function escapeHtml(str){
+        return String(str ?? '')
+            .replaceAll('&','&amp;')
+            .replaceAll('<','&lt;')
+            .replaceAll('>','&gt;')
+            .replaceAll('"','&quot;')
+            .replaceAll("'","&#039;");
+    }
+
+    async function getProjectFiles(projectId) {
+        try {
+            const response = await fetch(API_PROJECT_FILES(projectId), {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true',
+                    'Accept': 'application/json'
+                }
+            });
+            if (!response.ok) return { allFiles: [], mouFiles: [], rabFiles: [] };
+
+            const res = await response.json();
+            let allFiles = [];
+            if (Array.isArray(res.desain)) allFiles = allFiles.concat(res.desain);
+            if (Array.isArray(res.progres_lapangan)) allFiles = allFiles.concat(res.progres_lapangan);
+            if (Array.isArray(res.dokumen_legal)) allFiles = allFiles.concat(res.dokumen_legal);
+
+            const toLower = (v) => String(v || '').toLowerCase();
+            const mouFiles = allFiles.filter(f => toLower(f.kategori_asli || f.kategori || '').includes('mou'));
+            const rabFiles = allFiles.filter(f => toLower(f.kategori_asli || f.kategori || '').includes('rab'));
+
+            return { allFiles, mouFiles, rabFiles };
+        } catch (e) {
+            return { allFiles: [], mouFiles: [], rabFiles: [] };
+        }
+    }
+
+    // ================= MULTI SELECT TIM (LEADS STYLE) =================
+    function initUserDropdown() {
+        const userListContainer = document.getElementById("userListContainer");
+        if (!userListContainer) return;
+
+        userListContainer.innerHTML = "";
+
+        usersList.forEach(user => {
+            const userId = user.id || user.user_id;
+            if (!userId) return;
+
+            const div = document.createElement("div");
+            div.className = "dropdown-item";
+            const checkboxId = `user_chk_${userId}`;
+            const name = user.name || user.nama || ("User #" + userId);
+
+            div.innerHTML = `
+                <input type="checkbox" id="${checkboxId}" value="${userId}" data-name="${escapeHtml(name)}">
+                <label for="${checkboxId}">${escapeHtml(name)}</label>
+            `;
+
+            const chk = div.querySelector("input");
+            if (chk) chk.checked = !!selectedUsers.find(u => parseInt(u.id) === parseInt(userId));
+
+            div.onclick = (e) => {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+                    const c = div.querySelector("input");
+                    c.checked = !c.checked;
+                    handleUserSelection(c);
+                }
+            };
+            div.querySelector("input").onchange = (e) => handleUserSelection(e.target);
+            userListContainer.appendChild(div);
+        });
+    }
+
+    function handleUserSelection(checkbox) {
+        const id = parseInt(checkbox.value);
+        const name = checkbox.getAttribute('data-name') || ("User #" + id);
+
+        if (checkbox.checked) {
+            if (!selectedUsers.find(u => parseInt(u.id) === id)) selectedUsers.push({ id, name });
+        } else {
+            selectedUsers = selectedUsers.filter(u => parseInt(u.id) !== id);
+        }
+        renderSelectedUsers();
+    }
+
+    function renderSelectedUsers() {
+        const selectDisplay = document.getElementById("selectDisplay");
+        if (!selectDisplay) return;
+
+        selectDisplay.innerHTML = selectedUsers.length === 0
+            ? '<span class="placeholder-text">Pilih Tim Proyek...</span>'
+            : '';
+
+        selectedUsers.forEach(user => {
+            const tag = document.createElement("div");
+            tag.className = "user-tag";
+            tag.innerHTML = `${escapeHtml(user.name)} <span onclick="event.stopPropagation(); removeUser(${user.id})">&times;</span>`;
+            selectDisplay.appendChild(tag);
+        });
+    }
+
+    function removeUser(id) {
+        selectedUsers = selectedUsers.filter(u => parseInt(u.id) !== parseInt(id));
+        renderSelectedUsers();
+        const chk = document.getElementById(`user_chk_${id}`);
+        if (chk) chk.checked = false;
+    }
+
+    function toggleDropdown() {
+        const dropdownList = document.getElementById("dropdownList");
+        const selectDisplay = document.getElementById("selectDisplay");
+        if (!dropdownList || !selectDisplay) return;
+
+        dropdownList.classList.toggle("show");
+        selectDisplay.classList.toggle("active");
+
+        const s = document.getElementById("userSearchInput");
+        if (dropdownList.classList.contains("show") && s) {
+            setTimeout(() => s.focus(), 0);
+        }
+    }
+
+    function filterUsers(keyword) {
+        const userListContainer = document.getElementById("userListContainer");
+        if (!userListContainer) return;
+
+        const items = userListContainer.querySelectorAll(".dropdown-item");
+        items.forEach(item => {
+            item.style.display = item.innerText.toLowerCase().includes((keyword||"").toLowerCase()) ? "flex" : "none";
+        });
+    }
+
+    function initTeamSelectListeners() {
+        window.addEventListener("click", (e) => {
+            if (!e.target.closest(".custom-select-wrapper")) {
+                const dropdownList = document.getElementById("dropdownList");
+                const selectDisplay = document.getElementById("selectDisplay");
+                if (dropdownList) dropdownList.classList.remove("show");
+                if (selectDisplay) selectDisplay.classList.remove("active");
+            }
+        });
+    }
+
+    // ================= FETCH USERS (DIPERSISKAN DENGAN LEADS) =================
+    async function fetchUsers() {
+        const tryFetch = async (url) => {
+            const res = await fetch(url, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true',
+                    'Accept': 'application/json'
+                }
+            });
+            return res;
+        };
+
+        try {
+            let res = await tryFetch(API_USERS_ADMIN);
+            if (!res.ok) res = await tryFetch(API_USERS_FALLBACK);
+
+            if (!res.ok) {
+                console.warn("Gagal fetch users:", res.status);
+                usersList = [];
+                initUserDropdown();
+                return;
+            }
+
+            const data = await res.json();
+            let raw = Array.isArray(data) ? data : (data.data || []);
+            if (!Array.isArray(raw) && raw && Array.isArray(raw.data)) raw = raw.data;
+            if (!Array.isArray(raw)) raw = [];
+
+            usersList = raw.map(u => {
+                const id = u.id ?? u.user_id ?? u.users_id ?? u.id_user ?? u.uid;
+                const name = u.name ?? u.nama ?? u.full_name ?? u.username ?? u.nama_user ?? u.nama_lengkap ?? (id ? ("User #" + id) : "User");
+                return { id: Number(id), name: String(name) };
+            }).filter(u => u.id && !isNaN(u.id));
+
+            initUserDropdown();
+
+        } catch (e) {
+            console.warn("fetchUsers error:", e);
+            usersList = [];
+            initUserDropdown();
+        }
+    }
+
+    // ================= FETCH PROJECTS =================
+    async function fetchProjects(searchTerm = "") {
+        try {
+            currentSearchTerm = (searchTerm || "").trim();
+            const isSearch = currentSearchTerm.length > 0;
+            const url = isSearch ? API_SEARCH_PROJECTS(currentSearchTerm) : API_ACTIVE_PROJECTS;
+
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            if (!response.ok) throw new Error("Gagal mengambil data proyek");
+
+            const result = await response.json();
+            const rawData = Array.isArray(result) ? result : (result.data || []);
+
+            projects = rawData.map(p => {
+                let teamRaw = p.assigned_users || p.users || p.team_members || [];
+                if (teamRaw && !Array.isArray(teamRaw) && Array.isArray(teamRaw.data)) teamRaw = teamRaw.data;
+                return {
+                    id: p.id,
+                    nama: p.nama_proyek || p.nama || 'Tanpa Nama',
+                    klien: p.nama_klien || p.klien || 'Tanpa Klien',
+                    lokasi: p.alamat_proyek || p.lokasi || '-',
+                    tglMulai: p.tanggal_mulai || p.tgl_mulai || '',
+                    tglSelesai: p.tanggal_selesai || p.tgl_selesai || p.selesai || '',
+                    status: p.status || 'Negosiasi',
+                    deskripsi: p.deskripsi || '',
+                    total_rab: p.total_rab || 0,
+                    perkiraan_margin: p.perkiraan_margin || 0,
+                    team_members: teamRaw || []
+                };
+            });
+
+            currentPage = 1;
+            renderProjects();
+        } catch (error) {
+            console.error("Error:", error);
+            tampilkanAlert("Gagal memuat data proyek aktif/on hold.", "danger");
+        }
+    }
+
+    // ================= RENDER TABLE + PAGINATION =================
+    function renderProjects() {
+        const tbody = document.getElementById("projectsTableBody");
+        const emptyLabel = document.getElementById("tableEmpty");
+        const tableHint = document.getElementById("tableHint");
+        if (!tbody) return;
+
+        tbody.innerHTML = "";
+        emptyLabel.style.display = "none";
+        tableHint.textContent = "";
+
+        let list = projects.slice();
+
+        list.sort((a, b) => {
+            const dateA = a.tglMulai ? new Date(a.tglMulai) : new Date(0);
+            const dateB = b.tglMulai ? new Date(b.tglMulai) : new Date(0);
+            return sortFilter && sortFilter.value === 'terbaru' ? (dateB - dateA) : (dateA - dateB);
+        });
+
+        const isSearch = !!(currentSearchTerm && currentSearchTerm.length);
+
+        if (!isSearch) {
+            list = list.filter(p => normalizeStatusKey(p.status) === currentTab);
+        } else {
+            const main = list.filter(p => normalizeStatusKey(p.status) === currentTab);
+            const others = list.filter(p => {
+                const key = normalizeStatusKey(p.status);
+                return key !== 'aktif' && key !== 'onhold';
+            });
+            list = [...main, ...others];
+            tableHint.textContent = `Hasil pencarian untuk "${currentSearchTerm}". Proyek di luar status tab utama akan ditandai lokasinya.`;
+        }
+
+        lastRenderedListLength = list.length;
+        updatePaginationUI(lastRenderedListLength);
+
+        if (!list.length) {
+            if (isSearch) {
+                emptyLabel.innerHTML = `Tidak ada proyek yang cocok dengan kata kunci <strong>"${currentSearchTerm}"</strong> pada tab <strong>${currentTab === 'aktif' ? 'Proyek Aktif' : 'Proyek On Hold'}</strong>.`;
+            } else {
+                const statusText = currentTab === 'aktif' ? 'Aktif' : 'On Hold';
+                emptyLabel.innerHTML = `Belum ada proyek dengan status <strong>${statusText}</strong>.`;
+            }
+            emptyLabel.style.display = "block";
+            return;
+        }
+
+        const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        const startIndex = (currentPage - 1) * PAGE_SIZE;
+        const pageItems = list.slice(startIndex, startIndex + PAGE_SIZE);
+
+        pageItems.forEach((p, index) => {
+            const globalIndex = startIndex + index;
+            const statusKey = normalizeStatusKey(p.status);
+            const statusLabel = p.status || '-';
+            const statusInfo = getStatusLocationInfo(statusKey);
+            const isOutsideMain = (statusKey !== 'aktif' && statusKey !== 'onhold');
+
+            const tr = document.createElement("tr");
+            if (isOutsideMain && isSearch) tr.classList.add("row-outside-main");
+
+            const statusClass = `status-badge status-${statusKey}`;
+
+            tr.innerHTML = `
+                <td>${globalIndex + 1}</td>
+                <td title="${escapeHtml(p.nama)}">${escapeHtml(p.nama)}</td>
+                <td title="${escapeHtml(p.klien)}">${escapeHtml(p.klien)}</td>
+                <td title="${escapeHtml(p.lokasi)}">${escapeHtml(p.lokasi)}</td>
+                <td>
+                    <div class="status-cell">
+                        <span class="${statusClass}" title="${escapeHtml(statusLabel)}">${escapeHtml(statusLabel)}</span>
+                        <span class="status-location-text" title="${escapeHtml(statusInfo)}">${escapeHtml(statusInfo)}</span>
+                    </div>
+                </td>
+                <td title="${escapeHtml(p.tglMulai || '-')}">${escapeHtml(p.tglMulai || '-')}</td>
+                <td>
+                    <button type="button" class="btn-table-info">
+                        <i class='bx bx-info-circle'></i> Detail
+                    </button>
+                </td>
+            `;
+
+            const btnDetail = tr.querySelector(".btn-table-info");
+            if (btnDetail) {
+                btnDetail.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    showProjectDetails(p);
+                });
+            }
+
+            tr.addEventListener("click", (e) => {
+                if (e.target.closest(".btn-table-info")) return;
+                showProjectDetails(p);
+            });
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    function updatePaginationUI(totalItems) {
+        const paginationContainer = document.getElementById("paginationContainer");
+        const pageInfo = document.getElementById("pageInfo");
+        if (!paginationContainer || !pageInfo) return;
+
+        if (totalItems <= PAGE_SIZE) { paginationContainer.style.display = "none"; return; }
+
+        const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        paginationContainer.style.display = "flex";
+        pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+
+        const prevBtn = paginationContainer.querySelector('[data-direction="prev"]');
+        const nextBtn = paginationContainer.querySelector('[data-direction="next"]');
+        if (prevBtn) prevBtn.disabled = (currentPage <= 1);
+        if (nextBtn) nextBtn.disabled = (currentPage >= totalPages);
+    }
+
+    function initPaginationControls() {
+        const paginationContainer = document.getElementById("paginationContainer");
+        if (!paginationContainer) return;
+
+        paginationContainer.addEventListener("click", (e) => {
+            const btn = e.target.closest(".page-btn");
+            if (!btn || btn.disabled) return;
+
+            const direction = btn.dataset.direction;
+            const totalPages = Math.max(1, Math.ceil(lastRenderedListLength / PAGE_SIZE));
+
+            if (direction === "prev" && currentPage > 1) currentPage--;
+            else if (direction === "next" && currentPage < totalPages) currentPage++;
+            else return;
+
+            renderProjects();
+        });
+    }
+
+    // ================= MODAL DETAIL (VIEW MODE -> EDIT MODE) =================
+    async function showProjectDetails(p) {
+        let detail = { ...p };
+
+        try {
+            const response = await fetch(API_PROJECT_DETAIL(p.id), {
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const d = data.data || data;
+
+                let teamRaw = d.assigned_users || d.users || d.team_members || detail.team_members || [];
+                if (teamRaw && !Array.isArray(teamRaw) && Array.isArray(teamRaw.data)) teamRaw = teamRaw.data;
+
+                detail = {
+                    ...detail,
+                    nama: d.nama_proyek || d.nama || detail.nama,
+                    klien: d.nama_klien || d.klien || detail.klien,
+                    lokasi: d.alamat_proyek || d.lokasi || detail.lokasi,
+                    tglMulai: d.tanggal_mulai || d.tgl_mulai || detail.tglMulai,
+                    tglSelesai: d.tanggal_selesai || d.tgl_selesai || d.selesai || detail.tglSelesai,
+                    status: d.status || detail.status,
+                    deskripsi: d.deskripsi || detail.deskripsi,
+                    total_rab: d.total_rab != null ? d.total_rab : detail.total_rab,
+                    perkiraan_margin: d.perkiraan_margin != null ? d.perkiraan_margin : detail.perkiraan_margin,
+                    team_members: teamRaw || []
+                };
+            }
+        } catch (error) {
+            console.error("Detail project error:", error);
+        }
+
+        currentDetailProject = detail;
+        document.getElementById("detailTitle").textContent = detail.nama;
+
+        const fileInfo = await getProjectFiles(detail.id);
+        currentDetailHasMou = !!(fileInfo.mouFiles && fileInfo.mouFiles.length);
+
+        selectedUsers = [];
+        const arr = Array.isArray(detail.team_members) ? detail.team_members : [];
+        arr.forEach(tm => {
+            const id = extractUserId(tm);
+            const nm = extractUserName(tm);
+            if (id) {
+                const fromUsers = usersList.find(u => parseInt(u.id) === parseInt(id));
+                selectedUsers.push({ id: parseInt(id), name: fromUsers ? fromUsers.name : (nm || ("User #" + id)) });
+            } else if (nm) {
+                selectedUsers.push({ id: NaN, name: nm });
+            }
+        });
+
+        const seen = new Set();
+        selectedUsers = selectedUsers.filter(u => {
+            const key = isNaN(u.id) ? ("n:" + (u.name||"").toLowerCase()) : ("i:" + u.id);
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+
+        modalMode = 'view';
+        renderDetailViewMode();
+        openModal('modalDetail');
+    }
+
+    function renderDetailViewMode() {
+        if (!currentDetailProject) return;
+        const d = currentDetailProject;
+
+        const modalContent = document.getElementById("modalContent");
+        if (modalContent) modalContent.classList.remove("edit-mode");
+
+        let teamNamesArr = [];
+        if (d.team_members && Array.isArray(d.team_members)) {
+            teamNamesArr = d.team_members.map(extractUserName).filter(Boolean);
+            teamNamesArr = [...new Set(teamNamesArr)];
+        }
+        const teamHtml = teamNamesArr.length
+            ? teamNamesArr.map(n => `<span class="team-chip">${escapeHtml(n)}</span>`).join("")
+            : "-";
+
+        const statusKey = normalizeStatusKey(d.status);
+        const statusInfo = getStatusLocationInfo(statusKey);
+
+        let rabDisplay = '-';
+        if (d.total_rab && Number(d.total_rab) > 0) rabDisplay = `Rp ${Number(d.total_rab).toLocaleString('id-ID')}`;
+
+        const detailList = document.getElementById("detailList");
+        detailList.innerHTML = `
+            <li class="detail-item"><span class="detail-label">ID Proyek</span><span class="detail-value">${escapeHtml(d.id)}</span></li>
+            <li class="detail-item"><span class="detail-label">Nama Proyek</span><span class="detail-value">${escapeHtml(d.nama || '-')}</span></li>
+            <li class="detail-item"><span class="detail-label">Klien</span><span class="detail-value">${escapeHtml(d.klien || '-')}</span></li>
+            <li class="detail-item"><span class="detail-label">Lokasi</span><span class="detail-value">${escapeHtml(d.lokasi || '-')}</span></li>
+            <li class="detail-item"><span class="detail-label">Mulai</span><span class="detail-value">${escapeHtml(d.tglMulai || '-')}</span></li>
+            <li class="detail-item"><span class="detail-label">Selesai</span><span class="detail-value">${escapeHtml(d.tglSelesai || '-')}</span></li>
+            <li class="detail-item"><span class="detail-label">Status</span><span class="detail-value">${escapeHtml(d.status || '-')}</span></li>
+            <li class="detail-item"><span class="detail-label">Lokasi Status</span><span class="detail-value">${escapeHtml(statusInfo)}</span></li>
+            <li class="detail-item"><span class="detail-label">Tim</span><span class="detail-value"><div class="team-container">${teamHtml}</div></span></li>
+            <li class="detail-item"><span class="detail-label">Nilai RAB</span><span class="detail-value">${escapeHtml(rabDisplay)}</span></li>
+            <li class="detail-item comment">
+                <span class="detail-label">Deskripsi</span>
+                <div class="detail-value">${escapeHtml(d.deskripsi || '-')}</div>
+            </li>
+        `;
+
+        const footer = document.getElementById("detailFooter");
+        footer.innerHTML = "";
+
+        const btnDetailFull = document.createElement("button");
+        btnDetailFull.type = "button";
+        btnDetailFull.className = "btn-detailfull";
+        btnDetailFull.dataset.allowNavigate = "true";
+        btnDetailFull.innerHTML = "<i class='bx bx-link-external'></i> Detail Penuh";
+        btnDetailFull.onclick = () => { window.location.href = `detail_proyek.html?id=${encodeURIComponent(d.id)}`; };
+
+        const btnEdit = document.createElement("button");
+        btnEdit.type = "button";
+        btnEdit.className = "btn-edit";
+        btnEdit.innerHTML = "<i class='bx bx-edit'></i> Edit";
+        btnEdit.onclick = async () => {
+            await fetchUsers();
+            modalMode = 'edit';
+            renderDetailEditMode();
+        };
+
+        const btnDelete = document.createElement("button");
+        btnDelete.type = "button";
+        btnDelete.className = "btn-danger";
+        btnDelete.innerHTML = "<i class='bx bx-trash'></i> Hapus";
+        btnDelete.onclick = () => deleteCurrentProject();
+
+        const btnClose = document.createElement("button");
+        btnClose.type = "button";
+        btnClose.className = "btn-closewhite";
+        btnClose.innerHTML = " Tutup";
+        btnClose.onclick = () => closeModal('modalDetail');
+
+        footer.appendChild(btnDetailFull);
+        footer.appendChild(btnEdit);
+        footer.appendChild(btnDelete);
+        footer.appendChild(btnClose);
+    }
+
+    function renderDetailEditMode() {
+        if (!currentDetailProject) return;
+        const d = currentDetailProject;
+
+        const modalContent = document.getElementById("modalContent");
+        if (modalContent) modalContent.classList.add("edit-mode");
+
+        const titleEl = document.getElementById("detailTitle");
+        if (titleEl) titleEl.textContent = "Edit Proyek";
+
+        const detailList = document.getElementById("detailList");
+
+        detailList.innerHTML = `
+            <li style="list-style:none;">
+                <div class="edit-form">
+
+                    <div class="form-group">
+                        <label for="editProjectName">Nama Proyek<span class="req">*</span></label>
+                        <input type="text" id="editProjectName" value="${escapeHtml(d.nama || '')}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nama Klien</label>
+                        <input type="text" value="${escapeHtml(d.klien || '')}" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Lokasi Proyek</label>
+                        <input type="text" value="${escapeHtml(d.lokasi || '')}" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editStartDate">Tanggal Mulai</label>
+                        <div class="input-icon">
+                            <input type="date" id="editStartDate" value="${d.tglMulai ? String(d.tglMulai).substring(0,10) : ''}">
+                            <i class='bx bx-calendar'></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEndDate">Tanggal Selesai</label>
+                        <div class="input-icon">
+                            <input type="date" id="editEndDate" value="${d.tglSelesai ? String(d.tglSelesai).substring(0,10) : ''}">
+                            <i class='bx bx-calendar'></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editStatus">Status Proyek<span class="req">*</span></label>
+                        <select id="editStatus">
+                            <option value="Negosiasi">Negosiasi</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="On Hold">On Hold</option>
+                            <option value="Selesai">Selesai</option>
+                            <option value="Dibatalkan">Dibatalkan</option>
+                        </select>
+
+                        <div class="edit-hint">
+                            Saat tambah proyek baru, status otomatis <strong>Negosiasi</strong>.
+                            Ubah ke <strong>Aktif</strong> melalui menu Edit dengan mengunggah MoU (<strong>wajib</strong>).
+                        </div>
+
+                        <!-- ✅ KETERANGAN MoU (untuk proyek yang sudah Aktif, cukup info saja) -->
+                        <div class="mou-hint" id="mouActiveInfo"></div>
+                    </div>
+
+                    <div class="form-group" id="mouRequiredRow" style="display:none;">
+                        <label>MoU (Wajib)</label>
+                        <div class="mou-inline">
+                            <input type="file" id="mouStatusFile" accept=".pdf,.jpg,.jpeg,.png">
+                        </div>
+                        <div class="mou-hint" id="mouStatusText">Wajib upload MoU untuk status Aktif</div>
+                    </div>
+
+                    <!-- ✅ TIM -->
+                    <div class="form-group">
+                        <label>Tim yang Ditugaskan</label>
+
+                        <div class="custom-select-wrapper" id="teamSelectWrapper">
+                            <div class="select-display" id="selectDisplay" onclick="toggleDropdown()"></div>
+
+                            <div class="dropdown-list" id="dropdownList">
+                                <div class="dropdown-search">
+                                    <input type="text" id="userSearchInput" placeholder="Cari nama..." oninput="filterUsers(this.value)">
+                                </div>
+                                <div class="dropdown-items" id="userListContainer"></div>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDescription">Deskripsi / Catatan</label>
+                        <textarea id="editDescription" placeholder="Tambahkan detail proyek...">${escapeHtml(d.deskripsi || '')}</textarea>
+                    </div>
+
+                </div>
+            </li>
+        `;
+
+        const statusSelect = document.getElementById("editStatus");
+        if (statusSelect) {
+            const currentStatus = (d.status || '').toLowerCase();
+            Array.from(statusSelect.options).forEach(opt => {
+                if (currentStatus.includes(opt.value.toLowerCase())) opt.selected = true;
+            });
+        }
+
+        initMouStatusVisibility();
+
+        renderSelectedUsers();
+        initUserDropdown();
+
+        const footer = document.getElementById("detailFooter");
+        footer.innerHTML = "";
+
+        const btnSave = document.createElement("button");
+        btnSave.type = "button";
+        btnSave.className = "btn-save";
+        btnSave.innerHTML = "<i class='bx bx-save'></i> Simpan";
+        btnSave.onclick = () => saveProjectEdits();
+
+        const btnCancel = document.createElement("button");
+        btnCancel.type = "button";
+        btnCancel.className = "btn-closewhite";
+        btnCancel.innerHTML = "Batal";
+        btnCancel.onclick = () => {
+            modalMode = 'view';
+            document.getElementById("detailTitle").textContent = d.nama;
+            renderDetailViewMode();
+        };
+
+        footer.appendChild(btnSave);
+        footer.appendChild(btnCancel);
+    }
+
+    // ✅ PERBAIKAN INTI:
+    // - Jika proyek AWAL sudah "Aktif" -> kolom upload MoU TIDAK muncul (cukup info: sudah/belum ada)
+    // - Jika proyek AWAL "On Hold" lalu dipilih jadi "Aktif" -> baru muncul upload MoU (wajib)
+    function initMouStatusVisibility() {
+        const statusEl = document.getElementById("editStatus");
+        const mouRow = document.getElementById("mouRequiredRow");
+        const mouText = document.getElementById("mouStatusText");
+        const mouInfo = document.getElementById("mouActiveInfo");
+        const mouInput = document.getElementById("mouStatusFile");
+        if (!statusEl || !mouRow) return;
+
+        const initialKey = normalizeStatusKey((currentDetailProject && currentDetailProject.status) || "");
+
+        const update = () => {
+            const selected = statusEl.value || "";
+            const toKey = normalizeStatusKey(selected);
+
+            const resetFile = () => {
+                if (mouInput) mouInput.value = null;
+            };
+
+            // info ketersediaan MoU (pakai hasil cek file)
+            if (mouInfo) {
+                if (currentDetailHasMou) {
+                    mouInfo.textContent = "MoU: sudah diunggah";
+                } else {
+                    mouInfo.textContent = "MoU: belum terdeteksi";
+                }
+            }
+
+            if (toKey === "aktif") {
+                // ✅ kalau dari awal sudah aktif: tidak perlu upload lagi + tidak tampil
+                if (initialKey === "aktif") {
+                    mouRow.style.display = "none";
+                    resetFile();
+                    if (mouText) mouText.textContent = currentDetailHasMou ? "MoU sudah ada." : "MoU belum terdeteksi.";
+                    return;
+                }
+
+                // ✅ kalau awalnya bukan aktif (mis: On Hold) lalu dipilih aktif -> wajib upload
+                mouRow.style.display = "flex";
+                if (mouText) mouText.textContent = "Wajib upload MoU untuk status Aktif (karena sebelumnya belum Aktif).";
+                return;
+            }
+
+            // selain aktif -> sembunyikan upload
+            mouRow.style.display = "none";
+            resetFile();
+            if (mouText) mouText.textContent = currentDetailHasMou ? "Sudah ada (lihat di Detail Penuh)" : "Belum ada";
+        };
+
+        statusEl.addEventListener("change", update);
+        update();
+    }
+
+    async function updateStatusOnly(projectId, newStatus) {
+        const toKey = normalizeStatusKey(newStatus);
+
+        const fd = new FormData();
+        fd.append("status", newStatus);
+
+        // ✅ hanya wajib file jika ubah ke aktif dari status awal yang bukan aktif
+        const initialKey = normalizeStatusKey((currentDetailProject && currentDetailProject.status) || "");
+
+        if (toKey === "aktif" && initialKey !== "aktif") {
+            const inp = document.getElementById("mouStatusFile");
+            const fileEl = inp && inp.files ? inp.files[0] : null;
+
+            if (!fileEl) {
+                throw new Error("MoU wajib diunggah saat mengubah status menjadi Aktif dari On Hold/Negosiasi.");
+            }
+
+            const okTypes = ["application/pdf", "image/jpg", "image/jpeg", "image/png"];
+            const ext = (fileEl.name || "").toLowerCase();
+            const okExt = ext.endsWith(".pdf") || ext.endsWith(".jpg") || ext.endsWith(".jpeg") || ext.endsWith(".png");
+            if (!okExt && !okTypes.includes(fileEl.type)) {
+                throw new Error("Format MoU harus pdf/jpg/jpeg/png.");
+            }
+
+            const max = 10 * 1024 * 1024;
+            if (fileEl.size > max) throw new Error("Ukuran file MoU maksimal 10MB.");
+
+            fd.append("mou_file", fileEl);
+        }
+
+        const res = await fetch(API_UPDATE_STATUS(projectId), {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${AUTH_TOKEN}`,
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: fd
+        });
+
+        const txt = await res.text().catch(()=> "");
+        if (!res.ok) {
+            try { throw new Error(JSON.stringify(JSON.parse(txt))); }
+            catch(_) { throw new Error(txt || ("Gagal update status (status " + res.status + ")")); }
+        }
+        return true;
+    }
+
+    async function saveProjectEdits() {
+        if (!currentDetailProject) return;
+
+        const nameEl  = document.getElementById("editProjectName");
+        const statusEl = document.getElementById("editStatus");
+        const startEl = document.getElementById("editStartDate");
+        const endEl   = document.getElementById("editEndDate");
+        const descEl  = document.getElementById("editDescription");
+
+        const newName  = nameEl ? (nameEl.value || "").trim() : currentDetailProject.nama;
+        const newStatus = statusEl ? statusEl.value : currentDetailProject.status;
+        const newStart = startEl ? startEl.value : currentDetailProject.tglMulai;
+        const newEnd   = endEl ? endEl.value : currentDetailProject.tglSelesai;
+        const newDesc  = descEl ? descEl.value : currentDetailProject.deskripsi;
+
+        const toKey   = normalizeStatusKey(newStatus);
+        const initialKey = normalizeStatusKey(currentDetailProject.status || "");
+
+        // ✅ hanya validasi MoU jika dari ONHOLD/NEGOSIASI -> AKTIF
+        if (toKey === "aktif" && initialKey !== "aktif") {
+            const inp = document.getElementById("mouStatusFile");
+            const f = inp && inp.files ? inp.files[0] : null;
+            if (!f) {
+                tampilkanAlert("Mengubah status menjadi Aktif membutuhkan MoU. Silakan unggah file MoU dulu.", "danger");
+                return;
+            }
+        }
+
+        try {
+            const statusChanged = (String(newStatus || '').toLowerCase() !== String(currentDetailProject.status || '').toLowerCase());
+            if (statusChanged) {
+                await updateStatusOnly(currentDetailProject.id, newStatus);
+            }
+
+            const payload = {
+                nama_proyek: newName,
+                tanggal_mulai: newStart || null,
+                tanggal_selesai: newEnd || null,
+                deskripsi: newDesc || ""
+            };
+
+            const metaChanged =
+                (newName !== (currentDetailProject.nama || "")) ||
+                (String(newStart || "") !== String(currentDetailProject.tglMulai || "").substring(0,10)) ||
+                (String(newEnd || "") !== String(currentDetailProject.tglSelesai || "").substring(0,10)) ||
+                (String(newDesc || "") !== String(currentDetailProject.deskripsi || ""));
+
+            if (metaChanged) {
+                const res = await fetch(API_EDIT_PROJECT(currentDetailProject.id), {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${AUTH_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const txt = await res.text().catch(() => "");
+                    throw new Error("Gagal menyimpan perubahan proyek. " + txt);
+                }
+            }
+
+            tampilkanAlert("Perubahan berhasil disimpan.", "success");
+            closeModal('modalDetail');
+
+            if (toKey === 'selesai') { setTimeout(() => { window.location.href = "laporan.html"; }, 600); return; }
+            if (toKey === 'dibatalkan') { setTimeout(() => { window.location.href = "batal.html"; }, 600); return; }
+            if (toKey === 'negosiasi') { setTimeout(() => { window.location.href = "leads.html"; }, 600); return; }
+
+            fetchProjects(currentSearchTerm);
+        } catch (error) {
+            console.error("Edit project error:", error);
+            tampilkanAlert(error.message || "Gagal menyimpan perubahan proyek.", "danger");
+        }
+    }
+
+    async function deleteCurrentProject() {
+        if (!currentDetailProject) return;
+
+        const ok = confirm("Yakin hapus proyek ini? Proyek akan pindah ke halaman Proyek Batal.");
+        if (!ok) return;
+
+        try {
+            const res = await fetch(API_DELETE_PROJECT(currentDetailProject.id), {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+
+            if (!res.ok) {
+                const txt = await res.text().catch(()=> "");
+                throw new Error("Gagal menghapus proyek. " + txt);
+            }
+
+            tampilkanAlert("Proyek berhasil dihapus. Mengarahkan ke Proyek Batal...", "success");
+            closeModal('modalDetail');
+
+            setTimeout(() => { window.location.href = "batal.html"; }, 800);
+
+        } catch (e) {
+            console.error("Delete project error:", e);
+            tampilkanAlert(e.message || "Gagal menghapus proyek.", "danger");
+        }
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("active"); }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove("active");
+        const modalContent = document.getElementById("modalContent");
+        if (modalContent) modalContent.classList.remove("edit-mode");
+    }
+
+    function tampilkanAlert(msg, type) {
+        const div = document.createElement("div");
+        div.className = `alert alert-${type}`;
+        div.innerHTML = `<div>${msg}</div><button class="alert-close-btn" type="button" onclick="this.parentElement.remove()">&times;</button>`;
+        const container = document.querySelector(".alert-container");
+        if (container) container.appendChild(div);
+        setTimeout(() => { if (div && div.parentElement) div.remove(); }, 5000);
+    }
+
+    function initControls() {
+        if (searchInput) {
+            searchInput.addEventListener("input", () => {
+                const term = searchInput.value || "";
+                if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = setTimeout(() => {
+                    fetchProjects(term);
+                }, 500);
+            });
+        }
+        if (sortFilter) {
+            sortFilter.addEventListener("change", () => {
+                currentPage = 1;
+                renderProjects();
+            });
+        }
+    }
+
+    function initStatusTabs() {
+        const tabsContainer = document.getElementById("statusTabs");
+        if (!tabsContainer) return;
+
+        tabsContainer.addEventListener("click", (e) => {
+            const btn = e.target.closest(".status-tab");
+            if (!btn) return;
+            const tab = btn.dataset.tab;
+            if (!tab || tab === currentTab) return;
+
+            currentTab = tab;
+            tabsContainer.querySelectorAll(".status-tab").forEach(b => {
+                b.classList.toggle("active", b === btn);
+            });
+
+            currentPage = 1;
+            renderProjects();
+        });
+    }
+
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const mobileCloseBtn = document.getElementById("mobileCloseBtn");
+    const overlay = document.getElementById("overlay");
+
+    if (toggleBtn) toggleBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+        } else {
+            sidebar.classList.toggle("collapsed");
+        }
+    });
+
+    if (mobileCloseBtn) mobileCloseBtn.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+    });
+
+    if (overlay) overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+    });
+
+    function initSidebarSubmenuToggle() {
+        document.querySelectorAll(".sidebar .has-submenu > a").forEach(trigger => {
+            trigger.addEventListener("click", (e) => {
+                e.preventDefault();
+                const li = trigger.parentElement;
+                li.classList.toggle("open");
+            });
+        });
+    }
+
+    async function logout() {
+        try {
+            await fetch(`${BASE_URL}/api/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+        } catch (error) {
+            console.error("Logout error:", error);
+        } finally {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    }
+
+    function initBurgerScrollEffect() {
+        const btn = document.getElementById("toggleBtn");
+        if (!btn) return;
+
+        const handleScroll = () => {
+            if (window.scrollY > 10) btn.classList.add("scrolled");
+            else btn.classList.remove("scrolled");
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        initThemeToggle();
+        initGlobalButtonDebounce();
+        initSidebarSubmenuToggle();
+        initControls();
+        initPaginationControls();
+        initBurgerScrollEffect();
+        initStatusTabs();
+        initTeamSelectListeners();
+
+        await fetchUsers();
+        fetchProjects();
+    });
+</script>
+</body>
+</html>

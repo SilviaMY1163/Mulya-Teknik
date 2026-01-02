@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Laporan Proyek | Mulya Teknik</title>
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<!-- ✅ MASTER SHELL CSS (SIDEBAR + JUDUL + TOGGLE + OVERLAY) – SAMA DENGAN USER -->
+<link rel="stylesheet" href="assets/css/master-shell.dashboard.css" />
+
+<style>
+  /* =========================================================
+     ✅ THEME TOKENS (dibuat konsisten light vs dark)
+     - tidak "lompat konsep"
+     - tombol konsisten dengan halaman lain
+  ========================================================= */
+  :root{
+    color-scheme: light;
+
+    /* BRAND & CORE (SAMA USER) */
+    --primary-color: #0a4a80;
+    --secondary-color: #00bcd4;
+
+    /* TEXT (SAMA USER) */
+    --text-color: #1f2933;
+    --text-soft: #6b7280;
+
+    /* BACKGROUND / SURFACE (SAMA USER) */
+    --background-light: #f3f7fb;
+    --background-dark: #e3eefc;
+    --bg-body: radial-gradient(circle at top left, #e0f2ff 0, #f3f7fb 35%, #eef2ff 100%);
+    --bg-sidebar: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-elevated-soft: #f4f7fa;
+
+    /* Alias kompatibel dengan CSS laporan yang sudah ada */
+    --bg-card: var(--bg-elevated);
+    --bg-soft: var(--bg-elevated-soft);
+
+    /* Border & glass */
+    --border-subtle: #e5e7eb;
+    --glass-border: rgba(148,163,184,0.35);
+
+    /* Shadow (SAMA USER) */
+    --shadow-deep: 0 20px 50px rgba(15, 23, 42, 0.18);
+    --shadow-soft: 0 8px 24px rgba(15,23,42,0.06);
+
+    --input-button-shadow: 0 10px 30px rgba(0, 188, 212, 0.35);
+
+    --sidebar-width:250px;
+
+    /* ✅ gradasi header tabel (LIGHT) */
+    --thead-grad-1: #0a4a80;
+    --thead-grad-2: #1e88e5;
+
+    /* ✅ gradasi tombol (LIGHT) */
+    --btn-print-1: #16a34a;
+    --btn-print-2: #22c55e;
+
+    --btn-zip-1: #2563eb;
+    --btn-zip-2: #22d3ee;
+
+    /* ✅ opsi fine-tune head text */
+    --thead-text: rgba(255,255,255,0.96);
+    --thead-text-shadow: 0 1px 0 rgba(0,0,0,0.22);
+
+    /* ✅ mobile tuning */
+    --sbw: 280px;
+    --tap: 40px;
+    --btn-font: 12px;
+    --btn-pad-y: 8px;
+    --btn-pad-x: 14px;
+    --ring: 0 0 0 3px rgba(0,188,212,0.22);
+  }
+
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+
+    /* BRAND & CORE (SAMA USER) */
+    --primary-color: #38bdf8;
+    --secondary-color: #22d3ee;
+
+    /* TEXT (SAMA USER) */
+    --text-color: #e5e7eb;
+    --text-soft: #9ca3af;
+
+    /* BACKGROUND / SURFACE (SAMA USER) */
+    --background-light: #020617;
+    --background-dark: #020617;
+    --bg-body: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #020617 100%);
+    --bg-sidebar: rgba(15,23,42,0.98);
+    --bg-elevated: rgba(15,23,42,0.97);
+    --bg-elevated-soft: rgba(15,23,42,0.9);
+
+    /* Alias kompatibel */
+    --bg-card: var(--bg-elevated);
+    --bg-soft: var(--bg-elevated-soft);
+
+    /* Border & glass (SAMA USER) */
+    --border-subtle: rgba(148,163,184,0.5);
+    --glass-border: rgba(56,189,248,0.35);
+
+    /* Shadow (SAMA USER) */
+    --shadow-deep: 0 28px 80px rgba(15,23,42,0.9);
+    --shadow-soft: 0 20px 60px rgba(15,23,42,0.85);
+
+    --input-button-shadow: 0 20px 60px rgba(8,47,73,0.9);
+
+    /* =========================================================
+       ✅ PERBAIKAN DARK:
+       - judul kolom & tombol lebih "deep", tidak terlalu neon
+       - gradasi lebih halus + ada depth (overlay)
+    ========================================================= */
+    --thead-grad-1: rgba(11,17,32,0.92);
+    --thead-grad-2: rgba(30,64,175,0.62);
+
+    --btn-print-1: rgba(20,83,45,0.95);
+    --btn-print-2: rgba(34,197,94,0.70);
+
+    --btn-zip-1: rgba(30,41,59,0.96);
+    --btn-zip-2: rgba(6,182,212,0.70);
+
+    /* ✅ diminta: judul kolom sedikit lebih terang saat dark */
+    --thead-text: rgba(255,255,255,0.985);
+    --thead-text-shadow: 0 1px 0 rgba(0,0,0,0.28);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+  html,body{overflow-x:hidden;}
+  body{background:var(--bg-body);color:var(--text-color);min-height:100vh;}
+
+  /* ✅ PROGRES + STATUS SELESAI = INVISIBLE */
+  .col-progress, .badge-100, .badge-status{display:none !important;}
+  #completedTableBody tr:not(.empty-row) td.col-progress::before{display:none !important;}
+
+  /* Hide scrollbars */
+  ::-webkit-scrollbar{width:0;background:transparent;display:none;}
+  html,body{scrollbar-width:none;-ms-overflow-style:none;}
+
+  button.is-waiting{opacity:.7;cursor:wait;}
+
+  /* =========================================================
+     ✅ GUARD: Pastikan master-shell TIDAK mengubah table/modal kamu
+  ========================================================= */
+  .card, .card-header, .filters, .filter-group,
+  .table-wrapper, table, thead, tbody, tr, td, th,
+  .modal, .modal-content, .modal-body, .modal-footer,
+  .report-wrap, .report-section, .kv, .li {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* =========================================================
+     ✅ CSS KHUSUS KONTEN LAPORAN (TETAP)
+  ========================================================= */
+  .header-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+
+  .theme-toggle{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:8px 14px;border-radius:999px;
+    border:1px solid var(--glass-border);
+    background: radial-gradient(circle at top left,
+              rgba(255,255,255,0.96),
+              rgba(226,232,240,0.9));
+    color: var(--text-color);
+    font-size:12px;font-weight:500;
+    cursor:pointer;
+    box-shadow: 0 10px 26px rgba(15,23,42,0.16);
+    transition: all .25s ease;
+    -webkit-tap-highlight-color: transparent;
+    min-height: var(--tap);
+  }
+  .theme-toggle i{font-size:16px;}
+  .theme-toggle:hover{transform:translateY(-1px);box-shadow:0 16px 40px rgba(15,23,42,0.22);}
+  .theme-toggle:focus-visible{outline:none;box-shadow:0 16px 40px rgba(15,23,42,0.22), var(--ring);}
+  .theme-toggle.is-dark{
+    background: radial-gradient(circle at top left,
+              rgba(15,23,42,0.9),
+              rgba(37,99,235,0.5));
+    color:#e5e7eb;
+    border-color: rgba(129,140,248,0.7);
+  }
+
+  .summary-pill{
+    padding:8px 16px;border-radius:999px;
+    background:rgba(82,196,26,.16);
+    color:var(--text-color);
+    font-weight:800;font-size:13px;
+    display:inline-flex;align-items:center;gap:6px;
+    white-space:nowrap;border:1px solid rgba(82,196,26,.45);
+    min-height: var(--tap);
+  }
+  .summary-pill i{font-size:18px;color:var(--success);}
+
+  .card{
+    background:var(--bg-card);
+    border-radius:16px;
+    box-shadow:var(--shadow-deep);
+    padding:20px 24px;margin-bottom:20px;
+    border:1px solid var(--border-subtle);
+  }
+  .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:16px;flex-wrap:wrap;}
+  .card-header h2{font-size:18px;font-weight:800;color:var(--primary-color);}
+  .card-header .desc{font-size:13px;color:var(--text-soft);max-width:720px;}
+  .filters{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:flex-end;}
+  .filter-group{display:flex;flex-direction:column;}
+  .filter-group label{font-size:11px;color:var(--text-soft);margin-bottom:4px;font-weight:700;}
+  .filter-group input{
+    padding:8px 12px;border-radius:999px;border:1px solid var(--border-subtle);
+    font-size:12px;min-width:170px;outline:none;
+    background:var(--bg-soft);color:var(--text-color);
+    transition:.25s;
+    min-height: var(--tap);
+  }
+  .filter-group input:focus{border-color: var(--secondary-color); box-shadow: var(--ring);}
+
+  .table-wrapper{width:100%;overflow-x:auto;-webkit-overflow-scrolling: touch;}
+  table{width:100%;border-collapse:collapse;font-size:13px;border-radius:12px;overflow:hidden;}
+
+  /* ✅ Header tabel */
+  thead{
+    background: linear-gradient(90deg, var(--thead-grad-1), var(--thead-grad-2));
+    color:var(--thead-text);
+    position:relative;
+  }
+  thead::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(0,0,0,0.10));
+    opacity: 0.55;
+  }
+  :root[data-theme="light"] thead::after{ opacity: 0.22; }
+
+  thead th{
+    position:relative;
+    z-index:1;
+    padding:10px 12px;
+    text-align:center;
+    font-weight:900;
+    white-space:nowrap;
+    font-size:12px;
+    letter-spacing:.02em;
+    text-shadow: var(--thead-text-shadow);
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+  }
+  thead th + th{border-left: 1px solid rgba(255,255,255,0.08);}
+
+  tbody td{
+    padding:9px 12px;border-bottom:1px solid rgba(148,163,184,.25);
+    vertical-align:top;background:var(--bg-card);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  tbody tr:nth-child(even) td{background:var(--bg-soft);}
+  tbody tr.empty-row td{background:transparent;}
+  .empty-row td{text-align:center;color:var(--text-soft);font-style:italic;padding:20px 10px;}
+
+  /* BUTTONS */
+  .btn-action{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:8px 14px;border-radius:999px;border:none;
+    cursor:pointer;font-size:12px;font-weight:800;margin:2px 0;
+    transition:.2s;white-space:nowrap;
+    position:relative;overflow:hidden;
+    -webkit-tap-highlight-color: transparent;
+    min-height: var(--tap);
+  }
+  .btn-action i{font-size:16px;}
+
+  .btn-view{
+    background: linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+    color:#fff;
+    box-shadow:0 10px 22px rgba(10,74,128,.22);
+  }
+  .btn-print{
+    background: linear-gradient(135deg, var(--btn-print-1), var(--btn-print-2));
+    color:#fff;
+    box-shadow:0 10px 22px rgba(34,197,94,.18);
+  }
+  .btn-zip{
+    background: linear-gradient(135deg, var(--btn-zip-1), var(--btn-zip-2));
+    color:#fff;
+    box-shadow:0 10px 22px rgba(6,182,212,.16);
+  }
+
+  .btn-action::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(0,0,0,0.12));
+    opacity: 0.0;
+    transition: opacity .2s ease;
+  }
+  :root[data-theme="dark"] .btn-action::after{opacity:.32;}
+  .btn-action:hover{transform:translateY(-1px);filter:saturate(1.03);}
+  :root[data-theme="dark"] .btn-action:hover{filter:saturate(1.02) brightness(.98);}
+
+  .pagination-controls{
+    margin-top:12px;display:none;align-items:center;justify-content:flex-end;
+    gap:12px;font-size:12px;color:var(--text-soft);flex-wrap:wrap;
+  }
+  .btn-pagination{
+    padding:8px 14px;border-radius:999px;border:1px solid var(--border-subtle);
+    background:var(--bg-soft);color:var(--text-color);
+    font-size:12px;font-weight:900;cursor:pointer;
+    min-height: var(--tap);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .alert-container{width:100%;max-width:520px;position:fixed;top:20px;right:20px;z-index:1500;}
+  .alert{
+    padding:12px 16px;border-radius:12px;font-weight:700;
+    display:flex;justify-content:space-between;align-items:center;
+    box-shadow:var(--shadow-deep);
+    border:1px solid var(--border-subtle);
+    margin-bottom:10px;font-size:14px;
+    background:var(--bg-card);color:var(--text-color);
+  }
+  .alert-danger{border-left:5px solid var(--danger);}
+  .alert-success{border-left:5px solid var(--success);}
+  .alert-close-btn{background:transparent;border:none;font-size:20px;cursor:pointer;opacity:.8;color:inherit;}
+
+  .modal{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+    z-index:1500;justify-content:center;align-items:flex-start;padding-top:40px;
+  }
+  .modal.active{display:flex;}
+  .modal-content{
+    background:var(--bg-card);
+    border-radius:16px;width:980px;max-width:95%;
+    max-height:90vh;overflow:hidden;
+    box-shadow:var(--shadow-deep);
+    display:flex;flex-direction:column;
+    border:1px solid var(--border-subtle);
+  }
+  .modal-header-custom{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--border-subtle);gap:10px;}
+  .modal-header-custom h2{margin:0;font-size:18px;font-weight:900;color:var(--primary-color);line-height:1.2;}
+  .close-modal-icon{background:none;border:none;font-size:26px;color:var(--text-soft);cursor:pointer;padding:0;flex:0 0 auto;}
+  .modal-body{padding:16px 22px 12px;overflow-y:auto;background:var(--bg-soft);}
+  .modal-footer{padding:10px 22px 16px;border-top:1px solid var(--border-subtle);display:flex;justify-content:flex-end;gap:10px;background:var(--bg-card);flex-wrap:wrap;}
+
+  .report-wrap{
+    background:var(--bg-card);
+    border:1px solid var(--border-subtle);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:var(--shadow-soft);
+  }
+  .report-head{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 14px;
+    background: linear-gradient(135deg, rgba(10,74,128,.14), rgba(0,188,212,.10));
+    border-bottom:1px solid rgba(148,163,184,.35);
+  }
+  .report-logo{
+    width:28px;height:28px;object-fit:contain;border-radius:8px;
+    background:#fff;border:1px solid rgba(148,163,184,.35);
+    padding:4px;
+  }
+  :root[data-theme="dark"] .report-logo{background:rgba(255,255,255,.92);}
+  .report-title{display:flex;flex-direction:column;gap:2px;}
+  .report-title h3{font-size:14px;font-weight:900;color:var(--primary-color);line-height:1.2;}
+  .report-title p{font-size:11px;color:var(--text-soft);}
+
+  .report-section{
+    padding:14px 18px;
+    border-bottom: 1px dashed rgba(148,163,184,.45);
+    background: var(--bg-card);
+  }
+  .report-section:last-child{border-bottom:none;}
+  .sec-title{
+    font-weight:900;color:var(--primary-color);font-size:13px;margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .sec-grid{display:grid;grid-template-columns: 1fr 1fr;gap:10px 14px;}
+  .kv{
+    background: var(--bg-soft);
+    border:1px solid rgba(148,163,184,.35);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .kv .k{font-size:11px;color:var(--text-soft);margin-bottom:3px;font-weight:800;}
+  .kv .v{font-size:13px;font-weight:800;color:var(--text-color);word-break:break-word;}
+
+  .list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}
+  .li{
+    background: var(--bg-soft);
+    border:1px solid rgba(148,163,184,.35);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .li .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .li .name{font-weight:900;color:var(--text-color);}
+  .li .meta{font-size:12px;color:var(--text-soft);font-weight:700;}
+  .li .desc{margin-top:6px;font-size:12px;color:var(--text-color);opacity:.95;line-height:1.4;}
+
+  @media (max-width:1024px){
+    .main-content{padding:80px 20px 30px;}
+  }
+
+  /* =========================================================
+     ✅ MOBILE (rapih seperti user/design)
+     - sidebar ramping + tombol X di luar sidebar
+     - header/filters stack rapi
+     - tabel jadi card (label/value)
+     - tombol aksi jadi full width & tidak berantakan
+     - modal jadi bottom-sheet
+  ========================================================= */
+  @media (max-width:768px){
+    :root{
+      --sbw: 235px;
+      --tap: 34px;
+      --btn-font: 11px;
+      --btn-pad-y: 6px;
+      --btn-pad-x: 10px;
+    }
+
+    /* ✅ sidebar mirip user/design */
+    .sidebar{
+      width: var(--sbw) !important;
+      max-width: 82vw !important;
+    }
+    .sidebar .sidebar-header{ padding: 12px 12px !important; }
+    .sidebar .sidebar-header img{ width:34px !important; height:34px !important; }
+    .sidebar .brand-text{ font-size:13px !important; font-weight:800 !important; }
+    .sidebar .menu a{ padding:10px 12px !important; font-size:12.5px !important; }
+    .sidebar .menu a i{ font-size:18px !important; }
+    .sidebar .submenu a{ padding:9px 12px !important; font-size:12px !important; }
+    .sidebar .sidebar-footer{ padding:12px !important; }
+    .sidebar .btn-logout{
+      min-height: 36px !important;
+      padding:8px 12px !important;
+      border-radius:14px !important;
+      font-size:12px !important;
+    }
+
+    /* ✅ burger lebih kecil */
+    #toggleBtn.toggle-btn{
+      width:40px !important;height:40px !important;border-radius:14px !important;
+    }
+    #toggleBtn.toggle-btn i{ font-size:20px !important; }
+
+    /* ✅ tombol X di LUAR sidebar (muncul hanya saat sidebar active) */
+    #mobileCloseBtn{
+      position: fixed !important;
+      top: 12px !important;
+      left: calc(var(--sbw) + 10px) !important;
+      width: 34px !important;
+      height: 34px !important;
+      min-width: 34px !important;
+      min-height: 34px !important;
+      border-radius: 12px !important;
+      padding: 0 !important;
+      display: none !important;
+      align-items:center !important;
+      justify-content:center !important;
+      z-index: 3000 !important;
+      box-shadow: 0 14px 30px rgba(15,23,42,0.22) !important;
+      border: 1px solid rgba(148,163,184,0.55) !important;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.9)) !important;
+      color: var(--text-color) !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #mobileCloseBtn i{ font-size:20px !important; }
+    .sidebar.active ~ #mobileCloseBtn{ display:inline-flex !important; }
+    .sidebar:not(.active) ~ #mobileCloseBtn{ display:none !important; }
+
+    /* ✅ alert full width */
+    .alert-container{ right: 12px; left: 12px; top: 12px; max-width:none; }
+
+    /* ✅ header kanan rapih */
+    .header-right{
+      width:100%;
+      justify-content:flex-end;
+      gap:10px;
+    }
+    /* theme toggle jadi ikon saja */
+    .theme-toggle{
+      width: 40px;
+      min-width: 40px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      border-radius: 13px;
+      justify-content:center;
+    }
+    .theme-toggle span{ display:none; }
+
+    .summary-pill{
+      font-size: 12px;
+      padding: 7px 12px;
+      border-radius: 14px;
+      min-height: 34px;
+    }
+    .summary-pill i{ font-size: 16px; }
+
+    /* ✅ card padding lebih aman */
+    .card{ padding: 14px 14px; border-radius: 18px; }
+
+    /* ✅ card header stack */
+    .card-header{
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .card-header h2{ font-size: 15.5px; }
+    .card-header .desc{ font-size: 12px; }
+    .filters{
+      width:100%;
+      margin-left: 0;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .filter-group input{
+      width:100%;
+      min-width: 0;
+      border-radius: 14px;
+      padding: 9px 12px;
+      font-size: 12.5px;
+      min-height: 34px;
+    }
+
+    /* ✅ table -> card list (rapih seperti design.html) */
+    .table-wrapper{ overflow: visible; }
+    .table-wrapper thead{display:none;}
+
+    #completedTableBody{ display:block; }
+    #completedTableBody tr{
+      display:block;
+      margin-bottom: 12px;
+      border-radius: 18px;
+      background: var(--bg-card);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+      border: 1px solid rgba(148,163,184,0.22);
+      overflow:hidden;
+    }
+    #completedTableBody tr.empty-row{
+      box-shadow:none;
+      border:none;
+      background:transparent;
+      margin-bottom:0;
+    }
+
+    #completedTableBody tr:not(.empty-row) td{
+      display:grid;
+      grid-template-columns: minmax(110px, 44%) 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px 12px;
+      border-bottom: 1px dashed rgba(148,163,184,.35);
+      background: transparent !important;
+      text-align: right;
+    }
+    #completedTableBody tr:not(.empty-row) td::before{
+      content: attr(data-label);
+      font-weight: 900;
+      font-size: 12px;
+      color: var(--text-soft);
+      text-align: left;
+    }
+    #completedTableBody tr:not(.empty-row) td:last-child{
+      border-bottom: none;
+      grid-template-columns: 1fr;
+      text-align: left;
+      gap: 8px;
+      padding-top: 12px;
+    }
+    #completedTableBody tr:not(.empty-row) td:last-child::before{
+      margin-bottom: 2px;
+      display:block;
+    }
+
+    /* ✅ tombol aksi mobile: full width, tidak numpuk horizontal */
+    #completedTableBody .btn-action{
+      width: 100%;
+      justify-content: center;
+      border-radius: 14px;
+      padding: 9px 12px;
+      font-size: 11.2px;
+      min-height: 34px;
+      margin: 0;
+    }
+    #completedTableBody .btn-action i{ font-size: 16px; }
+
+    /* ✅ pagination center */
+    .pagination-controls{
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn-pagination{
+      border-radius: 14px;
+      min-height: 34px;
+      padding: 9px 12px;
+    }
+    .pagination-info{
+      width: 100%;
+      text-align:center;
+    }
+
+    /* ✅ report detail: grid 1 kolom */
+    .sec-grid{ grid-template-columns: 1fr; }
+
+    /* ✅ modal jadi bottom sheet */
+    .modal{
+      align-items: flex-end;
+      padding-top: 0;
+    }
+    .modal-content{
+      width: 100%;
+      max-width: 100%;
+      border-radius: 16px 16px 0 0;
+      max-height: 76vh;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+    }
+    .modal-header-custom{
+      padding: 12px 14px;
+    }
+    .modal-header-custom h2{
+      font-size: 13.8px;
+      max-width: calc(100% - 44px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .close-modal-icon{ font-size: 22px; }
+    .modal-body{
+      padding: 12px 14px 10px;
+    }
+    .modal-footer{
+      padding: 10px 14px 14px;
+      gap: 8px;
+    }
+  }
+
+  @media (max-width:480px){
+    :root{ --sbw: 220px; }
+
+    .sidebar{ width: var(--sbw) !important; max-width: 84vw !important; }
+
+    #mobileCloseBtn{
+      top: 10px !important;
+      left: calc(var(--sbw) + 10px) !important;
+      width: 32px !important;
+      height: 32px !important;
+      min-width: 32px !important;
+      min-height: 32px !important;
+    }
+    #mobileCloseBtn i{ font-size: 19px !important; }
+
+    .card{ padding: 12px; }
+    .card-header h2{ font-size: 15px; }
+    #completedTableBody tr:not(.empty-row) td{
+      padding: 9px 11px;
+      grid-template-columns: minmax(100px, 44%) 1fr;
+      gap: 10px;
+    }
+    #completedTableBody .btn-action{
+      font-size: 11px;
+      padding: 9px 10px;
+    }
+    .modal-content{ max-height: 72vh; }
+  }
+
+  @media (max-width:350px){
+    :root{ --sbw: 210px; }
+    #mobileCloseBtn{ left: calc(var(--sbw) + 8px) !important; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
+      <span class="brand-text">Mulya Teknik</span>
+    </div>
+    <ul class="menu">
+      <li><a href="dashboard.html"><i class='bx bxs-dashboard'></i> <span class="menu-text">Dashboard</span></a></li>
+      <li><a href="design.html"><i class='bx bxs-color-fill'></i> <span class="menu-text">Design</span></a></li>
+      <li class="active"><a href="laporan.html"><i class='bx bxs-bar-chart-alt-2'></i> <span class="menu-text">Laporan</span></a></li>
+      <li><a href="user.html"><i class='bx bxs-group'></i> <span class="menu-text">Pengguna</span></a></li>
+      <li class="has-submenu">
+        <a href="javascript:void(0);">
+          <i class='bx bxs-buildings'></i>
+          <span class="menu-text">Proyek</span>
+          <i class='bx bx-chevron-down submenu-toggle-icon'></i>
+        </a>
+        <ul class="submenu">
+          <li><a href="leads.html">Leads</a></li>
+          <li><a href="daftar_proyek.html">Daftar Proyek</a></li>
+          <li><a href="proyek_batal.html">Proyek Batal</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()">
+        <i class='bx bx-log-out'></i> <span>Keluar</span>
+      </button>
+    </div>
+  </div>
+
+  <button class="toggle-btn" id="toggleBtn"><i class='bx bx-menu'></i></button>
+  <button class="mobile-close-btn" id="mobileCloseBtn"><i class='bx bx-x'></i></button>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="main-content">
+    <div class="alert-container"></div>
+
+    <div class="page-header">
+      <div class="user-welcome">
+        <h1>Laporan Proyek</h1>
+        <p>Proyek yang sudah selesai akan otomatis dibuatkan laporan</p>
+      </div>
+      <div class="header-right">
+        <button class="theme-toggle" id="themeToggle" type="button">
+          <i class='bx bx-moon'></i><span>Dark</span>
+        </button>
+        <div class="summary-pill">
+          <i class='bx bx-check-shield'></i>
+          <span><span id="totalCompleted">0</span> Proyek Selesai</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2>Daftar Proyek Selesai</h2>
+          <div class="desc"></div>
+        </div>
+
+        <div class="filters">
+          <div class="filter-group">
+            <label for="searchReport">Cari</label>
+            <input type="text" id="searchReport" placeholder="Nama / Klien / Lokasi">
+          </div>
+          <div class="filter-group">
+            <label for="filterMonth">Filter bulan</label>
+            <input type="month" id="filterMonth">
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Proyek</th>
+              <th>Klien</th>
+              <th>Lokasi</th>
+              <th>Mulai</th>
+              <th>Selesai</th>
+              <th class="col-progress">Progres</th>
+              <th style="min-width: 320px;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="completedTableBody">
+            <tr class="empty-row"><td colspan="8">Memuat data proyek selesai...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-controls" id="paginationControls">
+        <button type="button" class="btn-pagination" id="prevPageBtn">&laquo; Sebelumnya</button>
+        <span class="pagination-info" id="paginationInfo">Halaman 1 dari 1</span>
+        <button type="button" class="btn-pagination" id="nextPageBtn">Berikutnya &raquo;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modalReportDetail">
+    <div class="modal-content">
+      <div class="modal-header-custom">
+        <h2 id="modalReportTitle">Dokumen Laporan Proyek</h2>
+        <button class="close-modal-icon" onclick="closeModalWithCooldown('modalReportDetail')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="reportDetailContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-action btn-zip" onclick="closeModalWithCooldown('modalReportDetail')">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/master-shell.dashboard.js"></script>
+
+<script>
+  const BASE_URL = "https://mt-optima-api-176148115028.asia-southeast2.run.app";
+  const THEME_KEY = "mt-theme";
+  const AUTH_TOKEN = localStorage.getItem('token') || localStorage.getItem('access_token') || '';
+  const CLICK_COOLDOWN_MS = 3000;
+
+  if (!AUTH_TOKEN) {
+    alert("Sesi login berakhir / token tidak ditemukan. Silakan login lagi.");
+    window.location.href = "login.html";
+  }
+
+  /* ===== THEME ===== */
+  function applyTheme(theme){
+    if (theme !== 'dark' && theme !== 'light') theme = 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+    updateThemeToggleUI(theme);
+  }
+  function updateThemeToggleUI(theme){
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+    const icon = toggle.querySelector('i');
+    const label = toggle.querySelector('span');
+    if (theme === 'dark'){
+      toggle.classList.add('is-dark');
+      if (icon){ icon.classList.remove('bx-moon'); icon.classList.add('bx-sun'); }
+      if (label) label.textContent = 'Light';
+    } else {
+      toggle.classList.remove('is-dark');
+      if (icon){ icon.classList.remove('bx-sun'); icon.classList.add('bx-moon'); }
+      if (label) label.textContent = 'Dark';
+    }
+  }
+  function initThemeToggle(){
+    applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(current === 'light' ? 'dark' : 'light');
+    });
+  }
+
+  /* ===== LOGOUT ===== */
+  async function logout(){
+    try{
+      await fetch(`${BASE_URL}/api/logout`,{
+        method:'POST',
+        headers:{
+          'Authorization': `Bearer ${AUTH_TOKEN}`,
+          'ngrok-skip-browser-warning': 'true',
+          'Accept': 'application/json'
+        }
+      });
+    } catch(_){}
+    finally{
+      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      window.location.href = "login.html";
+    }
+  }
+
+  /* ===== ALERT ===== */
+  function tampilkanAlert(msg, type){
+    const container = document.querySelector(".alert-container");
+    if (!container) return;
+    const div = document.createElement("div");
+    div.className = `alert alert-${type}`;
+    div.innerHTML = `<div>${msg}</div><button class="alert-close-btn" onclick="this.parentElement.remove()">&times;</button>`;
+    container.appendChild(div);
+    setTimeout(() => { if (div && div.parentElement) div.remove(); }, 6500);
+  }
+
+  /* ===== API HELPERS ===== */
+  async function apiFetch(url, options = {}){
+    const headers = Object.assign({
+      'Authorization': `Bearer ${AUTH_TOKEN}`,
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    }, (options.headers || {}));
+    return fetch(url, Object.assign({}, options, { headers }));
+  }
+
+  async function readErrorBody(res){
+    try{
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      if (ct.includes('application/json')){
+        const j = await res.json();
+        return JSON.stringify(j);
+      }
+      return await res.text();
+    } catch(_){ return ''; }
+  }
+
+  function safeText(v, fallback='-'){
+    if (v === null || v === undefined) return fallback;
+    const s = String(v).trim();
+    return s ? s : fallback;
+  }
+
+  function formatDateID(value){
+    if (!value || value === '-') return '-';
+    const v = String(value);
+    const datePart = v.split('T')[0];
+    const parts = datePart.split('-');
+    if (parts.length !== 3) return v;
+    const [y,m,d] = parts;
+    return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}/${y}`;
+  }
+
+  function extractMonthKeyAny(value){
+    if (!value || value === '-') return null;
+    const v = String(value);
+    const datePart = v.split('T')[0];
+    const parts = datePart.split('-');
+    if (parts.length !== 3) return null;
+    const [y,m] = parts;
+    return `${y}-${String(m).padStart(2,'0')}`;
+  }
+
+  function parsePercentage(val){
+    if (val === null || val === undefined) return NaN;
+    if (typeof val === 'number') return val;
+    const s = String(val).replace('%','').trim();
+    const n = Number(s);
+    return Number.isNaN(n) ? NaN : n;
+  }
+
+  function isStatusSelesai(v){
+    const s = String(v || '').trim().toLowerCase();
+    return s === 'selesai' || s === 'completed' || s === 'finish' || s === 'done';
+  }
+
+  /* ===== MODAL ===== */
+  function closeModal(id){
+    const m = document.getElementById(id);
+    if (m) m.classList.remove('active');
+  }
+  function openModal(id){
+    const m = document.getElementById(id);
+    if (m) m.classList.add('active');
+  }
+  let isModalCloseCooldown = false;
+  function closeModalWithCooldown(id){
+    if (isModalCloseCooldown) return;
+    isModalCloseCooldown = true;
+    closeModal(id);
+    setTimeout(() => { isModalCloseCooldown = false; }, 700);
+  }
+
+  /* ===== DATA STATE ===== */
+  let allProjects = [];
+  let reportsByProjectId = {};
+  let completedProjects = [];
+  let filtered = [];
+
+  let pagination = { current_page: 1, last_page: 1, total: 0, per_page: 10 };
+  let searchKeyword = "";
+  let filterMonth = "";
+
+  /* ===== LOAD PROJECTS + REPORTS ===== */
+  async function fetchProjects(){
+    const res = await apiFetch(`${BASE_URL}/api/projects`, { method:'GET' });
+    if (!res.ok){
+      const body = await readErrorBody(res);
+      throw new Error(`Gagal GET /api/projects (status ${res.status}). ${body}`);
+    }
+    const json = await res.json().catch(() => ({}));
+    const list = Array.isArray(json) ? json : (Array.isArray(json.data) ? json.data : (Array.isArray(json.projects) ? json.projects : []));
+    allProjects = list || [];
+  }
+
+  async function fetchProjectReport(projectId){
+    const res = await apiFetch(`${BASE_URL}/api/projects/${projectId}/report`, { method:'GET' });
+    if (!res.ok){
+      return { ok:false, status: res.status, body: await readErrorBody(res) };
+    }
+    const json = await res.json().catch(() => ({}));
+    return { ok:true, data: json?.data ? json.data : json };
+  }
+
+  async function fetchAllReports(){
+    reportsByProjectId = {};
+    const concurrency = 6;
+    let idx = 0;
+
+    async function worker(){
+      while (idx < allProjects.length){
+        const my = idx++;
+        const p = allProjects[my];
+        const pid = p?.id;
+        if (!pid) continue;
+
+        const rr = await fetchProjectReport(pid);
+        reportsByProjectId[pid] = rr.ok ? rr.data : null;
+      }
+    }
+
+    const workers = Array.from({ length: Math.min(concurrency, Math.max(1, allProjects.length)) }, worker);
+    await Promise.all(workers);
+  }
+
+  function isCompletedByReportOrStatus(projectId){
+    const r = reportsByProjectId[projectId];
+    const info = r?.info_proyek || null;
+
+    const perc = parsePercentage(info?.persentase_selesai);
+    const byPerc = !Number.isNaN(perc) && perc >= 100;
+
+    const p = allProjects.find(x => String(x.id) === String(projectId)) || {};
+    const st = info?.status ?? p?.status;
+    const byStatus = isStatusSelesai(st);
+
+    return byPerc || byStatus;
+  }
+
+  function projectMonthKey(p){
+    const r = reportsByProjectId[p.id];
+    const info = r?.info_proyek || {};
+    const raw =
+      info.tanggal_selesai ||
+      info.tanggal_mulai ||
+      p.tanggal_selesai ||
+      p.tanggal_mulai ||
+      p.selesai_proyek ||
+      p.mulai_proyek ||
+      p.tgl_selesai ||
+      p.tgl_mulai ||
+      null;
+    return extractMonthKeyAny(raw);
+  }
+
+  function buildCompletedList(){
+    completedProjects = allProjects.filter(p => {
+      if (!p?.id) return false;
+      const st = String(p?.status || '').toLowerCase();
+      if (isStatusSelesai(st)) return true;
+      return isCompletedByReportOrStatus(p.id);
+    });
+  }
+
+  function applyFilters(page = 1){
+    let list = completedProjects.slice();
+
+    if (searchKeyword){
+      list = list.filter(p => {
+        const r = reportsByProjectId[p.id];
+        const info = r?.info_proyek || {};
+        const nama = (info.nama || p.nama_proyek || p.name || '').toLowerCase();
+        const klien = (info.klien || p.nama_klien || p.client || '').toLowerCase();
+        const lokasi = (info.lokasi || p.alamat_proyek || p.lokasi || '').toLowerCase();
+        return nama.includes(searchKeyword) || klien.includes(searchKeyword) || lokasi.includes(searchKeyword);
+      });
+    }
+    if (filterMonth){
+      list = list.filter(p => projectMonthKey(p) === filterMonth);
+    }
+
+    filtered = list;
+
+    pagination.per_page = 10;
+    pagination.total = filtered.length;
+    pagination.current_page = Math.max(1, Number(page || 1));
+    pagination.last_page = Math.max(1, Math.ceil(pagination.total / pagination.per_page));
+    if (pagination.current_page > pagination.last_page) pagination.current_page = pagination.last_page;
+
+    const start = (pagination.current_page - 1) * pagination.per_page;
+    const pageList = filtered.slice(start, start + pagination.per_page);
+
+    renderTable(pageList);
+    updatePaginationControls();
+  }
+
+  function renderTable(list){
+    const tbody = document.getElementById("completedTableBody");
+    if (!tbody) return;
+
+    const totalEl = document.getElementById("totalCompleted");
+    if (totalEl) totalEl.textContent = String(pagination.total || 0);
+
+    tbody.innerHTML = "";
+    if (!list.length){
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Belum ada proyek selesai.</td></tr>`;
+      return;
+    }
+
+    list.forEach((p, i) => {
+      const pid = p.id;
+      const r = reportsByProjectId[pid] || {};
+      const info = r.info_proyek || {};
+
+      const nama = safeText(info.nama || p.nama_proyek || p.name, "Tanpa Nama");
+      const klien = safeText(info.klien || p.nama_klien || p.client);
+      const lokasi = safeText(info.lokasi || p.alamat_proyek || p.lokasi);
+
+      const mulaiRaw = info.tanggal_mulai || p.tanggal_mulai || p.mulai_proyek || p.tgl_mulai || '-';
+      const selesaiRaw = info.tanggal_selesai || p.tanggal_selesai || p.selesai_proyek || p.tgl_selesai || '-';
+
+      const rowNo = i + 1 + ((pagination.current_page - 1) * pagination.per_page);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td data-label="No">${rowNo}</td>
+        <td data-label="Nama Proyek">${nama}</td>
+        <td data-label="Klien">${klien}</td>
+        <td data-label="Lokasi">${lokasi}</td>
+        <td data-label="Mulai">${formatDateID(mulaiRaw)}</td>
+        <td data-label="Selesai">${selesaiRaw && selesaiRaw !== '-' ? formatDateID(selesaiRaw) : '-'}</td>
+        <td class="col-progress" data-label="Progres"></td>
+        <td data-label="Aksi">
+          <button class="btn-action btn-view" onclick="safeViewReport(${pid})">
+            <i class='bx bx-show'></i> Lihat Dokumen
+          </button>
+          <button class="btn-action btn-print" onclick="safePrintReport(${pid})">
+            <i class='bx bx-printer'></i> Print
+          </button>
+          <button class="btn-action btn-zip" onclick="safeDownloadZip(${pid})">
+            <i class='bx bx-archive'></i> Lampiran ZIP
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* =========================================================
+     ✅ FIX ZIP DOWNLOAD (TANPA UBAH FITUR LAIN)
+  ========================================================= */
+  function getFilenameFromDisposition(res, fallbackName){
+    try{
+      const cd = res.headers.get('content-disposition') || res.headers.get('Content-Disposition') || '';
+      if (!cd) return fallbackName;
+
+      const mStar = cd.match(/filename\*\s*=\s*([^;]+)/i);
+      if (mStar){
+        const raw = mStar[1].trim();
+        const v = raw.replace(/^UTF-8''/i,'').replace(/^["']|["']$/g,'');
+        return decodeURIComponent(v);
+      }
+
+      const m = cd.match(/filename\s*=\s*([^;]+)/i);
+      if (m){
+        return m[1].trim().replace(/^["']|["']$/g,'');
+      }
+    }catch(_){}
+    return fallbackName;
+  }
+
+  function isZipSignature(bytes){
+    if (!bytes || bytes.length < 4) return false;
+    return (
+      bytes[0] === 0x50 && bytes[1] === 0x4B &&
+      (
+        (bytes[2] === 0x03 && bytes[3] === 0x04) ||
+        (bytes[2] === 0x05 && bytes[3] === 0x06) ||
+        (bytes[2] === 0x07 && bytes[3] === 0x08)
+      )
+    );
+  }
+
+  async function fetchZipResponse(url){
+    return apiFetch(url, { method:'GET', headers: { 'Accept': '*/*' } });
+  }
+
+  async function downloadZip(projectId){
+    const primary = `${BASE_URL}/api/projects/${projectId}/download-all-documents`;
+    const fallback = `${BASE_URL}/api/projects/${projectId}/download-attachments`;
+
+    let res = await fetchZipResponse(primary);
+
+    if (res.status === 404){
+      res = await fetchZipResponse(fallback);
+    } else if (!res.ok){
+      const tryFallback = await fetchZipResponse(fallback);
+      if (tryFallback.ok) res = tryFallback;
+    }
+
+    if (!res.ok){
+      const raw = await readErrorBody(res);
+      const msg =
+        res.status === 500
+          ? `Server Error (500) saat download ZIP. (Bug di backend endpoint ZIP)`
+          : `Gagal download ZIP (status ${res.status}).`;
+      tampilkanAlert(`${msg}`, "danger");
+      console.error("ZIP ERROR:", res.status, raw);
+      try{ window.open(fallback, "_blank"); }catch(_){}
+      return;
+    }
+
+    let buf;
+    try{ buf = await res.arrayBuffer(); }
+    catch(e){
+      tampilkanAlert("Gagal membaca file ZIP dari server.", "danger");
+      console.error(e);
+      return;
+    }
+
+    const head = new Uint8Array(buf.slice(0, 8));
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+
+    if (!isZipSignature(head)){
+      let preview = '';
+      try{
+        const txt = new TextDecoder('utf-8').decode(new Uint8Array(buf.slice(0, 300)));
+        preview = txt.replace(/\s+/g,' ').trim();
+      }catch(_){}
+
+      tampilkanAlert("ZIP tidak valid (server tidak mengembalikan file ZIP). Backend endpoint ZIP perlu diperbaiki.", "danger");
+      console.error("ZIP NOT ZIP:", { contentType: ct, preview });
+      return;
+    }
+
+    const filename = getFilenameFromDisposition(res, `dokumen_proyek_${projectId}.zip`);
+    const blob = new Blob([buf], { type: 'application/zip' });
+
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
+  }
+
+  let zipCooldown=false;
+  async function safeDownloadZip(pid){
+    if (zipCooldown) return;
+    zipCooldown=true;
+    await downloadZip(pid);
+    setTimeout(()=> zipCooldown=false, 700);
+  }
+
+  /* ===== BUILD REPORT (VIEW) ===== */
+  function buildReportHtml(projectId){
+    const reportPayload = reportsByProjectId[projectId];
+    const project = allProjects.find(x => String(x.id) === String(projectId)) || {};
+    const info = reportPayload?.info_proyek || null;
+    const keu = reportPayload?.keuangan || {};
+    const tim = Array.isArray(reportPayload?.tim_proyek) ? reportPayload.tim_proyek : [];
+    const riw = Array.isArray(reportPayload?.riwayat_pekerjaan) ? reportPayload.riwayat_pekerjaan : [];
+    const disk = Array.isArray(reportPayload?.diskusi) ? reportPayload.diskusi : [];
+
+    const nama = safeText(info?.nama || project.nama_proyek || project.name, "Tanpa Nama");
+    const klien = safeText(info?.klien || project.nama_klien || project.client);
+    const lokasi = safeText(info?.lokasi || project.alamat_proyek || project.lokasi);
+    const status = safeText(info?.status || project.status);
+    const mulai = formatDateID(info?.tanggal_mulai || project.tanggal_mulai || project.mulai_proyek || project.tgl_mulai || "-");
+    const selesai = formatDateID(info?.tanggal_selesai || project.tanggal_selesai || project.selesai_proyek || project.tgl_selesai || "-");
+
+    const riwHtml = riw.length ? riw.map((x, idx) => {
+      const u = x?.user?.name || "-";
+      const kat = x?.kategori || "-";
+      const tgl = formatDateID(x?.tanggal_update || x?.created_at || "-");
+      const desc = safeText(x?.deskripsi);
+      return `
+        <li class="li">
+          <div class="top">
+            <div class="name">${idx+1}. ${kat} <span class="meta">• ${tgl}</span></div>
+            <div class="meta">Oleh: <b>${u}</b></div>
+          </div>
+          <div class="desc">${desc}</div>
+        </li>
+      `;
+    }).join('') : `<div class="li"><div class="meta">Belum ada riwayat pekerjaan.</div></div>`;
+
+    const timHtml = tim.length ? tim.map(m => {
+      const nm = m?.name || "-";
+      const un = m?.username ? `(@${m.username})` : "";
+      const tel = m?.telepon ? ` • ${m.telepon}` : "";
+      return `<li class="li"><div class="top"><div class="name">${nm} <span class="meta">${un}${tel}</span></div></div></li>`;
+    }).join('') : `<div class="li"><div class="meta">Belum ada tim proyek.</div></div>`;
+
+    const diskHtml = disk.length ? disk.map(d => {
+      const u = d?.user?.name || "-";
+      const tgl = formatDateID(d?.created_at || "-");
+      const msg = safeText(d?.message || d?.isi || d?.komentar);
+      return `<li class="li"><div class="top"><div class="name">${u} <span class="meta">• ${tgl}</span></div></div><div class="desc">${msg}</div></li>`;
+    }).join('') : `<div class="li"><div class="meta">Belum ada diskusi.</div></div>`;
+
+    const rabAwal = keu?.rab_awal ?? 0;
+    const marginAwal = keu?.margin_awal ?? 0;
+    const perubahan = keu?.total_perubahan_anggaran ?? 0;
+    const estimasi = keu?.estimasi_anggaran_akhir ?? 0;
+
+    return `
+      <div class="report-wrap">
+        <div class="report-head">
+          <img class="report-logo" src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
+          <div class="report-title">
+            <h3>Laporan Proyek</h3>
+            <p>Ringkasan proyek • Lampiran lengkap via tombol ZIP</p>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <div class="sec-title"><i class='bx bx-info-circle'></i> Informasi Proyek</div>
+          <div class="sec-grid">
+            <div class="kv"><div class="k">Nama</div><div class="v">${nama}</div></div>
+            <div class="kv"><div class="k">Klien</div><div class="v">${klien}</div></div>
+            <div class="kv"><div class="k">Lokasi</div><div class="v">${lokasi}</div></div>
+            <div class="kv"><div class="k">Status</div><div class="v">${status}</div></div>
+            <div class="kv"><div class="k">Tanggal Mulai</div><div class="v">${mulai}</div></div>
+            <div class="kv"><div class="k">Tanggal Selesai</div><div class="v">${selesai}</div></div>
+            <div class="kv"><div class="k">Project ID</div><div class="v">${projectId}</div></div>
+            <div class="kv"><div class="k">Lampiran</div><div class="v">Unduh via tombol ZIP</div></div>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <div class="sec-title"><i class='bx bx-wallet'></i> Keuangan</div>
+          <div class="sec-grid">
+            <div class="kv"><div class="k">RAB Awal</div><div class="v">${rabAwal}</div></div>
+            <div class="kv"><div class="k">Margin Awal</div><div class="v">${marginAwal}</div></div>
+            <div class="kv"><div class="k">Total Perubahan Anggaran</div><div class="v">${perubahan}</div></div>
+            <div class="kv"><div class="k">Estimasi Anggaran Akhir</div><div class="v">${estimasi}</div></div>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <div class="sec-title"><i class='bx bx-group'></i> Tim Proyek</div>
+          <ul class="list">${timHtml}</ul>
+        </div>
+
+        <div class="report-section">
+          <div class="sec-title"><i class='bx bx-history'></i> Riwayat Pekerjaan</div>
+          <ul class="list">${riwHtml}</ul>
+        </div>
+
+        <div class="report-section">
+          <div class="sec-title"><i class='bx bx-message-square-detail'></i> Diskusi</div>
+          <ul class="list">${diskHtml}</ul>
+        </div>
+
+        <div class="report-section">
+          <div class="sec-title"><i class='bx bx-paperclip'></i> Lampiran</div>
+          <div class="li">
+            <div class="meta">
+              Unduh semua dokumen proyek melalui tombol <b>Lampiran ZIP</b>.
+              Jika error 500, artinya backend endpoint ZIP sedang bermasalah.
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function viewReport(projectId){
+    const payload = reportsByProjectId[projectId];
+    if (!payload){
+      tampilkanAlert("Data report proyek tidak ditemukan / report kosong.", "danger");
+      return;
+    }
+    const titleEl = document.getElementById("modalReportTitle");
+    if (titleEl) titleEl.textContent = `Dokumen Laporan Proyek (ID ${projectId})`;
+
+    const contentEl = document.getElementById("reportDetailContent");
+    if (!contentEl) return;
+
+    contentEl.innerHTML = buildReportHtml(projectId);
+    openModal("modalReportDetail");
+  }
+
+  let viewCooldown = false;
+  async function safeViewReport(pid){
+    if (viewCooldown) return;
+    viewCooldown = true;
+    await viewReport(pid);
+    setTimeout(()=> viewCooldown=false, 700);
+  }
+
+  /* ===== PRINT ===== */
+  function getPrintStyles(){
+    return `
+      @page { size: A4; margin: 12mm; }
+      html, body { background:#fff !important; color:#0f172a !important; }
+      body{ font-family:'Poppins',sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .doc-header{display:flex;gap:12px;align-items:center;border:2px solid #0f172a;padding:10px 12px;}
+      .logo-wrap{width:56px;height:56px;border:1px solid #0f172a;display:flex;align-items:center;justify-content:center;}
+      .logo-wrap img{max-width:48px;max-height:48px;display:block;}
+      .head-text{flex:1;text-align:center;}
+      .org{font-weight:900;font-size:16px;letter-spacing:.06em;}
+      .title{font-weight:900;font-size:14px;margin-top:2px;text-decoration:underline;}
+      .sub{font-size:11px;margin-top:4px;color:#111827;}
+      .meta-table,.grid{width:100%;border-collapse:collapse;border:1px solid #0f172a;font-size:11px;}
+      .meta-table td,.grid th,.grid td{border:1px solid #0f172a;padding:6px 8px;vertical-align:top;}
+      .meta-table .k{width:18%;font-weight:900;background:#f3f4f6;}
+      .meta-table .v{width:32%;font-weight:700;}
+      .section{margin-top:12px;}
+      .sec-title{font-weight:900;font-size:12px;border:1px solid #0f172a;padding:6px 8px;background:#e5e7eb;}
+      .grid thead th{background:#f3f4f6;font-weight:900;text-align:left;}
+      .note-box{border:1px solid #0f172a;padding:8px 10px;font-size:11px;line-height:1.45;}
+      .sign{margin-top:18px;display:flex;justify-content:space-between;gap:16px;}
+      .sign-col{width:48%;text-align:center;font-size:11px;}
+      .sign-title{font-weight:900;margin-bottom:26px;}
+      .sign-line{border-bottom:1px solid #0f172a;height:1px;margin:0 18px 6px;}
+      .sign-name{font-weight:700;}
+      a{color:#0f172a;text-decoration:none;}
+    `;
+  }
+
+  function buildPrintDocHtml(projectId){
+    const reportPayload = reportsByProjectId[projectId] || {};
+    const project = allProjects.find(x => String(x.id) === String(projectId)) || {};
+    const info = reportPayload?.info_proyek || {};
+    const keu = reportPayload?.keuangan || {};
+    const tim = Array.isArray(reportPayload?.tim_proyek) ? reportPayload.tim_proyek : [];
+    const riw = Array.isArray(reportPayload?.riwayat_pekerjaan) ? reportPayload.riwayat_pekerjaan : [];
+    const disk = Array.isArray(reportPayload?.diskusi) ? reportPayload.diskusi : [];
+
+    const nama = safeText(info.nama || project.nama_proyek || project.name, "Tanpa Nama");
+    const klien = safeText(info.klien || project.nama_klien || project.client);
+    const lokasi = safeText(info.lokasi || project.alamat_proyek || project.lokasi);
+    const status = safeText(info.status || project.status);
+    const mulai = formatDateID(info.tanggal_mulai || project.tanggal_mulai || project.mulai_proyek || project.tgl_mulai || "-");
+    const selesai = formatDateID(info.tanggal_selesai || project.tanggal_selesai || project.selesai_proyek || project.tgl_selesai || "-");
+
+    const rabAwal = keu?.rab_awal ?? "-";
+    const marginAwal = keu?.margin_awal ?? "-";
+    const perubahan = keu?.total_perubahan_anggaran ?? "-";
+    const estimasi = keu?.estimasi_anggaran_akhir ?? "-";
+
+    const timRows = tim.length ? tim.map((m, i) => `
+      <tr>
+        <td style="width:40px">${i+1}</td>
+        <td>${safeText(m?.name)}</td>
+        <td>${safeText(m?.username ? '@'+m.username : '-')}</td>
+        <td>${safeText(m?.telepon || '-')}</td>
+      </tr>
+    `).join('') : `<tr><td colspan="4" style="text-align:center;font-style:italic;">Tidak ada data tim.</td></tr>`;
+
+    const riwRows = riw.length ? riw.map((x, i) => `
+      <tr>
+        <td style="width:40px">${i+1}</td>
+        <td>${safeText(x?.kategori)}</td>
+        <td style="width:110px">${formatDateID(x?.tanggal_update || x?.created_at || '-')}</td>
+        <td>${safeText(x?.deskripsi)}</td>
+        <td style="width:140px">${safeText(x?.user?.name || '-')}</td>
+      </tr>
+    `).join('') : `<tr><td colspan="5" style="text-align:center;font-style:italic;">Tidak ada riwayat pekerjaan.</td></tr>`;
+
+    const diskRows = disk.length ? disk.map((d, i) => `
+      <tr>
+        <td style="width:40px">${i+1}</td>
+        <td style="width:160px">${safeText(d?.user?.name || '-')}</td>
+        <td style="width:110px">${formatDateID(d?.created_at || '-')}</td>
+        <td>${safeText(d?.message || d?.isi || d?.komentar)}</td>
+      </tr>
+    `).join('') : `<tr><td colspan="4" style="text-align:center;font-style:italic;">Tidak ada diskusi.</td></tr>`;
+
+    return `
+      <div class="doc">
+        <div class="doc-header">
+          <div class="logo-wrap">
+            <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
+          </div>
+          <div class="head-text">
+            <div class="org">MULYA TEKNIK</div>
+            <div class="title">LAPORAN PROYEK</div>
+            <div class="sub">Rekap kegiatan, tim, dan ringkasan dokumen proyek</div>
+          </div>
+        </div>
+
+        <div class="meta-block" style="margin-top:10px">
+          <table class="meta-table">
+            <tr>
+              <td class="k">Nama Proyek</td><td class="v">${nama}</td>
+              <td class="k">Status</td><td class="v">${status}</td>
+            </tr>
+            <tr>
+              <td class="k">Klien</td><td class="v">${klien}</td>
+              <td class="k">Lokasi</td><td class="v">${lokasi}</td>
+            </tr>
+            <tr>
+              <td class="k">Tanggal Mulai</td><td class="v">${mulai}</td>
+              <td class="k">Tanggal Selesai</td><td class="v">${selesai}</td>
+            </tr>
+            <tr>
+              <td class="k">Project ID</td><td class="v">${projectId}</td>
+              <td class="k">Tanggal Cetak</td><td class="v">${formatDateID(new Date().toISOString())}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="sec-title">A. RINGKASAN KEUANGAN</div>
+          <table class="grid">
+            <thead><tr><th>RAB Awal</th><th>Margin Awal</th><th>Total Perubahan</th><th>Estimasi Akhir</th></tr></thead>
+            <tbody><tr><td>${rabAwal}</td><td>${marginAwal}</td><td>${perubahan}</td><td>${estimasi}</td></tr></tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="sec-title">B. TIM PROYEK</div>
+          <table class="grid">
+            <thead><tr><th>No</th><th>Nama</th><th>Username</th><th>Telepon</th></tr></thead>
+            <tbody>${timRows}</tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="sec-title">C. REKAP RIWAYAT PEKERJAAN</div>
+          <table class="grid">
+            <thead><tr><th>No</th><th>Kategori</th><th>Tanggal</th><th>Deskripsi</th><th>Oleh</th></tr></thead>
+            <tbody>${riwRows}</tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="sec-title">D. DISKUSI</div>
+          <table class="grid">
+            <thead><tr><th>No</th><th>Nama</th><th>Tanggal</th><th>Pesan</th></tr></thead>
+            <tbody>${diskRows}</tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="sec-title">E. LAMPIRAN DOKUMEN</div>
+          <div class="note-box">
+            Semua dokumen yang diunggah pada proyek (MOU, RAB, Design, Addendum, Progres, dll) diunduh melalui tombol <b>Lampiran ZIP</b>.
+          </div>
+        </div>
+
+        <div class="sign">
+          <div class="sign-col">
+            <div class="sign-title">Disetujui</div>
+            <div class="sign-line"></div>
+            <div class="sign-name">(_____________________)</div>
+          </div>
+          <div class="sign-col">
+            <div class="sign-title">Dibuat Oleh</div>
+            <div class="sign-line"></div>
+            <div class="sign-name">(_____________________)</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function printReport(projectId){
+    const payload = reportsByProjectId[projectId];
+    if (!payload){
+      tampilkanAlert("Data report proyek tidak ditemukan untuk print.", "danger");
+      return;
+    }
+    const html = buildPrintDocHtml(projectId);
+    const w = window.open("", "_blank");
+    if (!w){
+      tampilkanAlert("Popup diblokir browser. Izinkan popup untuk print.", "danger");
+      return;
+    }
+    w.document.open();
+    w.document.write(`
+      <!DOCTYPE html>
+      <html lang="id">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Print Laporan Proyek</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>${getPrintStyles()}</style>
+      </head>
+      <body>
+        ${html}
+        <script>
+          window.onload = () => { setTimeout(() => window.print(), 250); };
+        <\/script>
+      </body>
+      </html>
+    `);
+    w.document.close();
+  }
+
+  let printCooldown = false;
+  async function safePrintReport(pid){
+    if (printCooldown) return;
+    printCooldown = true;
+    await printReport(pid);
+    setTimeout(()=> printCooldown=false, 700);
+  }
+
+  function updatePaginationControls(){
+    const prevBtn = document.getElementById("prevPageBtn");
+    const nextBtn = document.getElementById("nextPageBtn");
+    const info = document.getElementById("paginationInfo");
+    const controls = document.getElementById("paginationControls");
+    if (!controls || !prevBtn || !nextBtn || !info) return;
+
+    controls.style.display = (pagination.last_page > 1) ? "flex" : "none";
+    prevBtn.disabled = pagination.current_page <= 1;
+    nextBtn.disabled = pagination.current_page >= pagination.last_page;
+    info.textContent = `Halaman ${pagination.current_page} dari ${pagination.last_page}`;
+  }
+
+  async function safePrevPage(){ applyFilters(pagination.current_page - 1); }
+  async function safeNextPage(){ applyFilters(pagination.current_page + 1); }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    initThemeToggle();
+
+    if (window.MasterShell && typeof window.MasterShell.initGlobalButtonDebounce === 'function') {
+      window.MasterShell.initGlobalButtonDebounce();
+    }
+
+    const prevBtn = document.getElementById("prevPageBtn");
+    const nextBtn = document.getElementById("nextPageBtn");
+    if (prevBtn) prevBtn.addEventListener("click", safePrevPage);
+    if (nextBtn) nextBtn.addEventListener("click", safeNextPage);
+
+    const searchInput = document.getElementById("searchReport");
+    const monthInput = document.getElementById("filterMonth");
+    if (searchInput){
+      searchInput.addEventListener("input", (e) => {
+        searchKeyword = String(e.target.value || '').toLowerCase();
+        applyFilters(1);
+      });
+    }
+    if (monthInput){
+      monthInput.addEventListener("change", (e) => {
+        filterMonth = String(e.target.value || '');
+        applyFilters(1);
+      });
+    }
+
+    const tbody = document.getElementById("completedTableBody");
+    if (tbody) tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Memuat data proyek + report...</td></tr>`;
+
+    try{
+      await fetchProjects();
+      await fetchAllReports();
+      buildCompletedList();
+      applyFilters(1);
+      tampilkanAlert("Sinkronisasi laporan selesai.", "success");
+    }catch(err){
+      console.error(err);
+      tampilkanAlert(err.message || "Gagal memuat data laporan.", "danger");
+      if (tbody) tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Gagal memuat data. Cek token / endpoint.</td></tr>`;
+    }
+  });
+</script>
+</body>
+</html>

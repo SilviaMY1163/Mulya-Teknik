@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Manajemen Design Proyek | Mulya Teknik</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ✅ MASTER CSS (SIDEBAR + TOGGLE + OVERLAY + PAGE HEADER JUDUL) -->
+<link rel="stylesheet" href="assets/css/master-shell.dashboard.css">
+
+<style>
+  :root {
+    color-scheme: light;
+    --primary-color: #0a4a80;
+    --secondary-color: #00bcd4;
+    --detail-color: #17a2b8;
+    --delete-color: #ff4d4f;
+    --edit-color: #faad14;
+    --success-color: #52c41a;
+
+    --text-color: #1f2933;
+    --text-soft: #6b7280;
+
+    --background-light: #f3f7fb;
+    --background-dark: #e3eefc;
+    --bg-body: radial-gradient(circle at top left, #e0f2ff 0, #f3f7fb 35%, #eef2ff 100%);
+    --bg-sidebar: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-elevated-soft: #f4f7fa;
+
+    --border-subtle: #e0e0e0;
+    --glass-border: rgba(148,163,184,0.35);
+
+    --shadow-deep: 0 20px 50px rgba(15, 23, 42, 0.18);
+    --shadow-soft: 0 8px 24px rgba(15,23,42,0.06);
+
+    --input-button-shadow: 0 10px 30px rgba(0, 188, 212, 0.35);
+
+    --sidebar-width: 250px;
+    --radius: 16px;
+
+    --primary: var(--primary-color);
+    --secondary: var(--secondary-color);
+    --surface: var(--bg-elevated);
+    --surface-soft: var(--bg-elevated-soft);
+    --text-main: var(--text-color);
+    --text-muted: var(--text-soft);
+
+    --danger: #ff4d4f;
+    --success: #28a745;
+    --warning: #faad14;
+    --info: #17a2b8;
+
+    --table-stripe: #e1effe;
+
+    /* mobile controls */
+    --container-pad: 24px;
+    --tap: 40px;
+    --btn-pad-y: 8px;
+    --btn-pad-x: 14px;
+    --btn-font: 12px;
+    --ring: 0 0 0 3px rgba(0,188,212,0.22);
+
+    /* ✅ sidebar width mobile (untuk posisi tombol X) */
+    --sbw: 280px;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --primary-color: #38bdf8;
+    --secondary-color: #22d3ee;
+
+    --text-color: #e5e7eb;
+    --text-soft: #9ca3af;
+
+    --background-light: #020617;
+    --background-dark: #020617;
+    --bg-body: radial-gradient(circle at top left, #0b1120 0, #020617 55%, #020617 100%);
+    --bg-sidebar: rgba(15,23,42,0.98);
+    --bg-elevated: rgba(15,23,42,0.97);
+    --bg-elevated-soft: rgba(15,23,42,0.9);
+
+    --border-subtle: rgba(148,163,184,0.5);
+    --glass-border: rgba(56,189,248,0.35);
+
+    --shadow-deep: 0 28px 80px rgba(15,23,42,0.9);
+    --shadow-soft: 0 20px 60px rgba(15,23,42,0.85);
+
+    --input-button-shadow: 0 20px 60px rgba(8,47,73,0.9);
+
+    --primary: #38bdf8;
+    --secondary: #22d3ee;
+    --surface: rgba(15,23,42,0.98);
+    --surface-soft: rgba(15,23,42,0.9);
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+
+    --danger: #f97373;
+    --success: #4ade80;
+    --warning: #facc15;
+    --info: #38bdf8;
+
+    --sidebar-width: 250px;
+    --table-stripe: rgba(15,23,42,0.9);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+  ::-webkit-scrollbar { width:0px; background:transparent; display:none; }
+  html, body { scrollbar-width:none; -ms-overflow-style:none; overflow-x:hidden; }
+  body { background: var(--bg-body); color: var(--text-main); min-height:100vh; display:flex; }
+  button.is-waiting { opacity:0.7; cursor:wait; }
+
+  /* fluid typography */
+  html { font-size: 16px; }
+  body { font-size: clamp(13px, 1.6vw, 15px); line-height: 1.45; }
+  .user-welcome h1 { font-size: clamp(20px, 2.4vw, 28px); line-height: 1.15; }
+  .user-welcome p  { font-size: clamp(12px, 1.7vw, 14px); color: var(--text-muted); }
+
+  .alert-container { width:100%; max-width:420px; position:fixed; top:20px; right:20px; z-index:1500; pointer-events:none; }
+  .alert {
+    pointer-events:auto;
+    padding:12px 14px;
+    border-radius:12px;
+    font-weight:500;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    border:1px solid;
+    margin-bottom:12px;
+    background: var(--surface);
+    color: var(--text-main);
+  }
+  .alert-danger { border-color: rgba(248, 113, 113, 0.9); background:#fee2e2; color:#b91c1c; }
+  .alert-success { border-color: rgba(34,197,94,0.9); background:#dcfce7; color:#166534; }
+  :root[data-theme="dark"] .alert-danger { background: rgba(127,29,29,0.9); color:#fee2e2; }
+  :root[data-theme="dark"] .alert-success { background: rgba(22,163,74,0.9); color:#bbf7d0; }
+
+  .page-header-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    min-width: min(220px, 100%);
+  }
+
+  .theme-toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: var(--btn-pad-y) var(--btn-pad-x);
+    min-height: var(--tap);
+    border-radius:999px;
+    border:1px solid var(--glass-border);
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.9));
+    color: var(--text-main);
+    font-size: var(--btn-font);
+    font-weight: 700;
+    cursor:pointer;
+    box-shadow: 0 10px 22px rgba(15,23,42,0.16);
+    transition: transform .18s ease, box-shadow .22s ease, filter .22s ease;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle i{ font-size: 18px; }
+  .theme-toggle:hover{ transform: translateY(-1px); box-shadow: 0 16px 40px rgba(15,23,42,0.22); }
+  .theme-toggle:focus-visible{ outline:none; box-shadow: 0 16px 40px rgba(15,23,42,0.22), var(--ring); }
+  .theme-toggle.is-dark{
+    background: radial-gradient(circle at top left, rgba(15,23,42,0.92), rgba(37,99,235,0.45));
+    color: #e5e7eb;
+    border-color: rgba(129,140,248,0.7);
+  }
+
+  /* TABLE */
+  .table-container {
+    background: var(--surface);
+    padding:18px;
+    box-shadow: var(--shadow-deep);
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius:18px;
+    margin-top:10px;
+    border:1px solid rgba(148,163,184,0.15);
+  }
+  table { width:100%; border-collapse:collapse; table-layout: fixed; min-width: 0; }
+
+  thead {
+    background: linear-gradient(120deg, #0a4a80 0%, #083c6b 40%, #00bcd4 100%);
+    box-shadow:0 10px 24px rgba(15,23,42,0.18);
+  }
+  :root[data-theme="dark"] thead {
+    background: linear-gradient(115deg, #020617 0%, #0b1120 35%, #1d4ed8 75%, #38bdf8 100%);
+    box-shadow:0 16px 36px rgba(15,23,42,0.85);
+  }
+
+  th {
+    color:#f9fafb;
+    padding:12px 10px;
+    font-weight:600;
+    text-transform: uppercase;
+    font-size:12px;
+    text-align:center;
+    letter-spacing:0.06em;
+    text-shadow:0 1px 2px rgba(15,23,42,0.55);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td {
+    padding:12px 10px;
+    border-bottom:1px solid #f3f4f6;
+    font-size:13px;
+    background: var(--surface);
+    text-align:center;
+    color: var(--text-main);
+
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) td { background-color: var(--table-stripe); }
+  tbody tr:hover td { background-color: rgba(226,232,240,0.7); transition:0.2s; }
+  :root[data-theme="dark"] td { border-bottom:1px solid rgba(31,41,55,0.9); }
+  :root[data-theme="dark"] tbody tr:nth-child(even) td { background-color: rgba(15,23,42,0.9); }
+  :root[data-theme="dark"] tbody tr:hover td { background-color: rgba(30,64,175,0.45); }
+
+  td:first-child { text-align:left; }
+  .col-deskripsi { display:none; }
+
+  .status-badge {
+    padding:5px 12px;
+    border-radius:50px;
+    font-size:11px;
+    font-weight:600;
+    display:inline-block;
+    border:1px solid transparent;
+    white-space: nowrap;
+  }
+  .status-aktif { background:#e6fffa; color:#047857; border-color:#b7eb8f; }
+  .status-selesai { background:#e6f7ff; color:#1890ff; border-color:#91d5ff; }
+  .status-negosiasi { background:#fffbe6; color:#faad14; border-color:#ffe58f; }
+  .status-default { background:#f0f2f5; color:#555; border-color:#d9d9d9; }
+
+  :root[data-theme="dark"] .status-badge.status-aktif { background: rgba(22,163,74,0.18); border-color: rgba(74,222,128,0.7); color:#bbf7d0; }
+  :root[data-theme="dark"] .status-badge.status-selesai { background: rgba(37,99,235,0.25); border-color: rgba(96,165,250,0.7); color:#bfdbfe; }
+  :root[data-theme="dark"] .status-badge.status-negosiasi { background: rgba(202,138,4,0.25); border-color: rgba(250,204,21,0.7); color:#facc15; }
+  :root[data-theme="dark"] .status-badge.status-default { background: rgba(31,41,55,0.9); border-color: rgba(75,85,99,0.7); color:#e5e7eb; }
+
+  /* ACTION BUTTONS */
+  .action-cell { white-space: normal; }
+  .action-cell{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:nowrap;
+  }
+  .action-cell button {
+    width:auto;
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+    margin:0;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    flex: 0 0 auto;
+    min-width: 92px;
+    justify-content:center;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .action-cell button i { font-size:16px; }
+  .action-cell button:hover { transform: translateY(-1px); }
+
+  .btn-upload { background: linear-gradient(135deg, var(--primary-color), #0f4e92); color:#fff; box-shadow:0 4px 12px rgba(10,74,128,0.35); }
+  .btn-upload:hover { filter: brightness(1.05); box-shadow:0 8px 18px rgba(10,74,128,0.5); }
+
+  .btn-view { background:#fff7e6; color:#d48806; border:1px solid #ffd591 !important; box-shadow:0 2px 6px rgba(250,173,20,0.25); }
+  .btn-view:hover { background:#ffe7ba; color:#ad6800; }
+
+  :root[data-theme="dark"] .btn-upload { background: linear-gradient(135deg, #1d4ed8, #0ea5e9); color:#e5e7eb; box-shadow:0 4px 14px rgba(37,99,235,0.6); }
+  :root[data-theme="dark"] .btn-upload:hover { background: linear-gradient(135deg, #2563eb, #38bdf8); }
+  :root[data-theme="dark"] .btn-view { background: rgba(250,204,21,0.1); border-color: rgba(250,204,21,0.6) !important; color:#facc15; }
+  :root[data-theme="dark"] .btn-view:hover { background: rgba(250,204,21,0.2); color:#fef3c7; }
+
+  .pagination { display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:14px; font-size:12px; color: var(--text-soft); flex-wrap:wrap; }
+  .pagination button {
+    border:1px solid rgba(148,163,184,0.5);
+    background:#fff;
+    border-radius:999px;
+    padding:6px 10px;
+    font-size:12px;
+    cursor:pointer;
+    min-width:32px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pagination button:hover:not(:disabled) { box-shadow:0 4px 10px rgba(15,23,42,0.16); transform: translateY(-1px); }
+  .pagination button:disabled { opacity:0.45; cursor:not-allowed; box-shadow:none; }
+  .page-info { padding:4px 10px; border-radius:999px; background:#f3f4f6; }
+  :root[data-theme="dark"] .pagination button { background: rgba(15,23,42,0.96); border-color: rgba(148,163,184,0.6); color:#e5e7eb; }
+  :root[data-theme="dark"] .page-info { background: rgba(31,41,55,0.9); color:#e5e7eb; }
+
+  /* MODAL */
+  .modal-wrapper {
+    position:fixed;
+    inset:0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(2px);
+    z-index:1400;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    transition: opacity 0.3s ease;
+    padding: 18px;
+  }
+  .modal-wrapper.active { display:flex; opacity:1; }
+
+  .modal-content {
+    background: var(--surface);
+    width:420px;
+    max-width:100%;
+    padding:18px 20px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    transform: translateY(30px);
+    transition: transform 0.3s ease;
+    position:relative;
+    border-radius:16px;
+    border:1px solid var(--border-subtle);
+    color: var(--text-main);
+    max-height:84vh;
+    overflow:hidden;
+    display:flex;
+    flex-direction: column;
+  }
+  .modal-wrapper.active .modal-content { transform: translateY(0); }
+
+  .modal-header {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    margin-bottom:10px;
+    border-bottom:1px solid rgba(148,163,184,0.3);
+    padding-bottom:10px;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+  .modal-header h2 { font-size:18px; color: var(--primary); font-weight:800; }
+
+  .close-modal{
+    background:none;
+    border:none;
+    width:32px;
+    height:32px;
+    border-radius:12px;
+    cursor:pointer;
+    color: var(--text-muted);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition: background .2s ease, color .2s ease, transform .15s ease;
+    -webkit-tap-highlight-color: transparent;
+    font-size:22px;
+    line-height:1;
+    flex: 0 0 auto;
+  }
+  .close-modal:hover{ background: rgba(148,163,184,0.16); color: var(--danger); }
+
+  .modal-body{
+    overflow:auto;
+    padding-right: 4px;
+    flex: 1 1 auto;
+  }
+
+  .form-group { margin-bottom:10px; }
+  .form-group label { display:block; font-weight:800; margin-bottom:6px; color: var(--text-main); font-size:12px; }
+
+  .form-group input, .form-group textarea {
+    width:100%;
+    padding:10px 12px;
+    min-height: var(--tap);
+    border-radius:12px;
+    border:1px solid var(--border-subtle);
+    background: var(--surface-soft);
+    transition: box-shadow .2s ease, border-color .2s ease;
+    font-size:13px;
+    color: var(--text-main);
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: var(--secondary);
+    outline:none;
+    box-shadow: var(--ring);
+  }
+
+  .drag-drop-area {
+    border:2px dashed rgba(148,163,184,0.7);
+    padding:12px;
+    border-radius:14px;
+    cursor:pointer;
+    transition:0.2s ease;
+    background: linear-gradient(135deg, rgba(10,74,128,0.04), rgba(0,188,212,0.03));
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:left;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .drag-drop-area:hover, .drag-drop-area.dragover {
+    border-color: var(--secondary);
+    background: linear-gradient(135deg, rgba(0,188,212,0.10), rgba(10,74,128,0.08));
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+  }
+  .drag-drop-area i {
+    font-size:24px;
+    color: var(--primary-color);
+    background: rgba(10,74,128,0.10);
+    padding:8px;
+    border-radius:999px;
+    flex: 0 0 auto;
+  }
+  :root[data-theme="dark"] .drag-drop-area{ background: rgba(15,23,42,0.92); border-color: rgba(148,163,184,0.6); }
+  :root[data-theme="dark"] .drag-drop-area i{ background: rgba(30,64,175,0.6); color:#e5e7eb; }
+
+  .drag-drop-text{ min-width:0; }
+  .drag-drop-text strong { font-size:12.5px; color: var(--text-main); display:block; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .drag-drop-text span { font-size:11px; color: var(--text-muted); }
+
+  .progress-wrapper { margin-top:10px; display:none; }
+  .progress-track { width:100%; height:6px; background: rgba(148,163,184,0.35); border-radius:999px; overflow:hidden; }
+  .progress-fill { width:0%; height:100%; background: var(--success-color); transition: width 0.3s ease; }
+  .progress-text { font-size:11px; margin-top:4px; display:block; text-align:right; color: var(--text-muted); }
+
+  .modal-footer {
+    display:flex;
+    justify-content: space-between;
+    gap:8px;
+    margin-top:10px;
+    border-top:1px solid rgba(148,163,184,0.25);
+    padding-top:10px;
+    flex-wrap:wrap;
+    flex: 0 0 auto;
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+  }
+  .modal-footer-left, .modal-footer-right { display:flex; gap:8px; flex-wrap:wrap; }
+
+  .btn-cancel {
+    background: var(--surface-soft);
+    color: var(--text-main);
+    border:1px solid rgba(148,163,184,0.35);
+    padding: var(--btn-pad-y) var(--btn-pad-x);
+    min-height: var(--tap);
+    border-radius:999px;
+    cursor:pointer;
+    font-weight:800;
+    font-size: 13px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-save {
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    color:#fff;
+    border:none;
+    padding: var(--btn-pad-y) calc(var(--btn-pad-x) + 6px);
+    min-height: var(--tap);
+    border-radius:999px;
+    cursor:pointer;
+    font-weight:900;
+    font-size: 13px;
+    box-shadow: var(--input-button-shadow);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .modal-footer.modal-footer-nav { align-items:center; justify-content:space-between; }
+  .modal-footer-nav .center-actions{ flex:1; display:flex; justify-content:center; }
+  .modal-footer-nav .side-actions{ width:64px; display:flex; align-items:center; }
+  .modal-footer-nav .side-actions.left{ justify-content:flex-start; }
+  .modal-footer-nav .side-actions.right{ justify-content:flex-end; }
+
+  .nav-icon-btn{
+    width:40px;
+    height:40px;
+    border-radius:14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid rgba(148,163,184,0.5);
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.9));
+    color: var(--primary-color);
+    box-shadow:0 12px 28px rgba(15,23,42,0.16);
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-icon-btn i{ font-size:20px; }
+  .nav-icon-btn:hover:not(:disabled){ transform: translateY(-1px); box-shadow:0 18px 40px rgba(15,23,42,0.22); }
+  .nav-icon-btn:disabled{ opacity:.45; cursor:not-allowed; box-shadow:none; transform:none; }
+  :root[data-theme="dark"] .nav-icon-btn{
+    background: rgba(15,23,42,0.96);
+    border-color: rgba(148,163,184,0.6);
+    color:#e5e7eb;
+    box-shadow:0 18px 40px rgba(15,23,42,0.85);
+  }
+
+  .file-list { margin-top:5px; max-height:260px; overflow-y:auto; padding-right:5px; }
+  .file-item {
+    display:flex;
+    align-items:center;
+    padding:8px 10px;
+    background:#fff;
+    border:1px solid #eee;
+    gap:10px;
+    margin-bottom:6px;
+    border-radius:12px;
+    transition:0.2s;
+  }
+  .file-item:hover { border-color: var(--secondary-color); background:#f8fdff; }
+  .file-icon { font-size:20px; color: var(--secondary-color); }
+  .file-info { flex:1; overflow:hidden; }
+  .file-name { font-weight:800; font-size:12px; color:#333; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .file-date { font-size:10px; color:#999; }
+  .file-link {
+    text-decoration:none;
+    color:#fff;
+    background: var(--primary-color);
+    padding:6px 10px;
+    font-size:10px;
+    border-radius:999px;
+    font-weight:800;
+    white-space:nowrap;
+    flex-shrink:0;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    border:none;
+    cursor:pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .file-link:hover { filter: brightness(1.06); }
+
+  :root[data-theme="dark"] .modal-content { background: rgba(15,23,42,0.98); color:#e5e7eb; box-shadow:0 24px 70px rgba(0,0,0,0.65); }
+  :root[data-theme="dark"] .form-group input,
+  :root[data-theme="dark"] .form-group textarea { background: rgba(15,23,42,0.96); border-color: rgba(148,163,184,0.6); color:#e5e7eb; }
+  :root[data-theme="dark"] .file-item { background: rgba(15,23,42,0.96); border-color: rgba(55,65,81,0.9); }
+  :root[data-theme="dark"] .file-name { color:#e5e7eb; }
+  :root[data-theme="dark"] .file-date { color:#9ca3af; }
+  :root[data-theme="dark"] .file-link { background: linear-gradient(135deg, #1d4ed8, #0ea5e9); color:#e5e7eb; }
+  :root[data-theme="dark"] .btn-cancel { background: rgba(31,41,55,0.9); color:#e5e7eb; }
+  :root[data-theme="dark"] .btn-save { background: linear-gradient(135deg, #1d4ed8, #0ea5e9); }
+
+  @media (max-width: 1024px) {
+    .main-content { padding: 80px 20px 30px 20px; }
+    th { font-size: 11px; }
+    td { font-size: 12.5px; }
+  }
+
+  /* =========================================================
+     ✅ MOBILE: Sidebar follow user.html (lebih kecil),
+     tombol burger/close lebih kecil, tombol X nempel di LUAR sidebar
+     - TANPA ubah fungsi JS lain
+  ========================================================= */
+  @media (max-width: 768px) {
+    :root{
+      --container-pad: 12px;
+      --tap: 34px;
+      --btn-pad-y: 6px;
+      --btn-pad-x: 10px;
+      --btn-font: 11px;
+
+      /* ✅ mirip user.html: sidebar ramping */
+      --sbw: 235px;
+    }
+
+    body { flex-direction: column; }
+
+    /* ✅ SIDEBAR mirip user.html (override master) */
+    .sidebar{
+      width: var(--sbw) !important;
+      max-width: 82vw !important;
+    }
+    .sidebar .sidebar-header{
+      padding: 12px 12px !important;
+    }
+    .sidebar .sidebar-header img{
+      width: 34px !important;
+      height: 34px !important;
+    }
+    .sidebar .brand-text{
+      font-size: 13px !important;
+      font-weight: 800 !important;
+    }
+    .sidebar .menu a{
+      padding: 10px 12px !important;
+      font-size: 12.5px !important;
+    }
+    .sidebar .menu a i{
+      font-size: 18px !important;
+    }
+    .sidebar .submenu a{
+      padding: 9px 12px !important;
+      font-size: 12px !important;
+    }
+    .sidebar .sidebar-footer{
+      padding: 12px !important;
+    }
+    .sidebar .btn-logout{
+      min-height: 36px !important;
+      padding: 8px 12px !important;
+      border-radius: 14px !important;
+      font-size: 12px !important;
+    }
+
+    /* ✅ tombol burger lebih kecil (kalau master-shell gak kecil) */
+    #toggleBtn.toggle-btn{
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 14px !important;
+    }
+    #toggleBtn.toggle-btn i{ font-size: 20px !important; }
+
+    /* ✅ tombol X: POSISI DI LUAR SIDEBAR (menempel kanan sidebar) */
+    #mobileCloseBtn{
+      position: fixed !important;
+      top: 12px !important;
+      left: calc(var(--sbw) + 10px) !important; /* ✅ di luar sidebar */
+      width: 34px !important;
+      height: 34px !important;
+      min-width: 34px !important;
+      min-height: 34px !important;
+      border-radius: 12px !important;
+      padding: 0 !important;
+      display: none !important; /* default hidden */
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 3000 !important;
+      box-shadow: 0 14px 30px rgba(15,23,42,0.22) !important;
+      border: 1px solid rgba(148,163,184,0.55) !important;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(226,232,240,0.9)) !important;
+      color: var(--text-main) !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #mobileCloseBtn i{ font-size: 20px !important; }
+
+    /* hanya muncul saat sidebar open */
+    body.sidebar-open #mobileCloseBtn{ display: inline-flex !important; }
+    body:not(.sidebar-open) #mobileCloseBtn{ display: none !important; }
+
+    /* alert */
+    .alert-container{ right: 12px; left: 12px; top: 12px; max-width: none; }
+
+    /* table -> card */
+    .table-container { padding: 0; border: none; background: transparent; box-shadow: none; overflow: visible; }
+    table{ width: 100%; display:block; }
+    thead{ display:none; }
+    tbody{ display:block; width:100%; }
+
+    tbody tr{
+      background: var(--surface);
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+      border: 1px solid rgba(148,163,184,0.22);
+      display:flex;
+      flex-direction: column;
+      overflow:hidden;
+    }
+
+    td{
+      display:grid;
+      grid-template-columns: minmax(110px, 44%) 1fr;
+      gap:10px;
+      align-items:start;
+      text-align:right;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(148,163,184,0.22);
+      background: transparent !important;
+    }
+    td::before{
+      content: attr(data-label);
+      font-weight: 900;
+      color: var(--primary);
+      text-align:left;
+    }
+    td > *{ justify-self: end; text-align:right; max-width:100%; }
+    .status-badge{ justify-self:end; margin-left:auto; }
+    td:last-child{ border-bottom:none; padding-top: 10px; }
+
+    /* ✅ tombol aksi di card: diperkecil (lebih rapih di mobile) */
+    .action-cell{
+      width:100%;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+    .action-cell button{
+      min-width: 0;
+      width: auto;
+      max-width: none;
+      padding: 7px 10px;
+      font-size: 10.6px;
+      border-radius: 12px;
+      min-height: 32px;
+      gap: 6px;
+    }
+    .action-cell button i{ font-size: 16px; }
+
+    .pagination{ justify-content: center; gap: 8px; padding: 10px 0 0; }
+    .page-info{ width: 100%; text-align:center; }
+
+    /* theme toggle jadi ikon saja */
+    .page-header-actions{ width: 100%; display:flex; justify-content:flex-end; }
+    .theme-toggle{
+      width: 40px;
+      min-width: 40px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      border-radius: 13px;
+      justify-content:center;
+    }
+    .theme-toggle span{ display:none; }
+
+    /* ✅ MODAL: bottom-sheet lebih kecil */
+    .modal-wrapper{ align-items: flex-end; padding: 0; }
+    .modal-content{
+      width:100%;
+      max-width:100%;
+      border-radius: 16px 16px 0 0;
+      padding: 8px 10px 10px 10px;
+      max-height: 68vh;
+      border-left:none;
+      border-right:none;
+      border-bottom:none;
+    }
+    .modal-header{ margin-bottom: 6px; padding-bottom: 8px; }
+    .modal-header h2{
+      font-size: 13.8px;
+      font-weight: 900;
+      line-height: 1.2;
+      max-width: calc(100% - 42px);
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .close-modal{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      font-size: 20px;
+    }
+    .modal-body{
+      max-height: calc(68vh - 104px);
+      overflow:auto;
+      padding-right: 2px;
+    }
+
+    .form-group{ margin-bottom: 8px; }
+    .form-group label{ font-size: 12px; margin-bottom: 5px; }
+
+    .form-group input, .form-group textarea{
+      min-height: 34px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+    .drag-drop-area{ padding: 10px; border-radius: 14px; gap: 10px; }
+    .drag-drop-area i{ font-size: 22px; padding: 7px; }
+    .drag-drop-text strong{ font-size: 12.2px; }
+    .drag-drop-text span{ font-size: 10.6px; }
+
+    .modal-footer{
+      margin-top: 8px;
+      padding-top: 8px;
+      gap: 8px;
+    }
+
+    /* ✅ tombol modal diperkecil */
+    .btn-cancel, .btn-save{
+      min-height: 32px;
+      font-size: 11.2px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ✅ tombol unduh file diperkecil */
+    .file-link{
+      padding: 6px 9px;
+      font-size: 9.8px;
+      border-radius: 12px;
+      gap: 4px;
+    }
+    .file-link i{ font-size: 15px; }
+
+    .file-list{ max-height: 46vh; }
+  }
+
+  @media (max-width: 480px) {
+    :root{ --sbw: 220px; }
+
+    .sidebar{
+      width: var(--sbw) !important;
+      max-width: 84vw !important;
+    }
+    .sidebar .menu a{ padding: 9px 11px !important; }
+    .sidebar .menu a i{ font-size: 17px !important; }
+
+    /* ✅ tombol X tetap di luar sidebar + rapih */
+    #mobileCloseBtn{
+      top: 10px !important;
+      left: calc(var(--sbw) + 10px) !important;
+      width: 32px !important;
+      height: 32px !important;
+      min-width: 32px !important;
+      min-height: 32px !important;
+      border-radius: 12px !important;
+    }
+    #mobileCloseBtn i{ font-size: 19px !important; }
+
+    .modal-content{ max-height: 64vh; }
+    .modal-body{ max-height: calc(64vh - 102px); }
+    .modal-header h2{ font-size: 13.2px; }
+
+    .action-cell button{
+      padding: 6.5px 9px;
+      font-size: 10.2px;
+      min-height: 31px;
+      border-radius: 12px;
+    }
+    .action-cell button i{ font-size: 15px; }
+  }
+
+  @media (max-width: 350px){
+    :root{ --sbw: 210px; }
+    .sidebar{ width: var(--sbw) !important; }
+    #mobileCloseBtn{ left: calc(var(--sbw) + 8px) !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
+    <span class="brand-text">Mulya Teknik</span>
+  </div>
+  <ul class="menu">
+    <li><a href="dashboard.html"><i class='bx bxs-dashboard'></i> <span>Dashboard</span></a></li>
+    <li class="active"><a href="design.html"><i class='bx bxs-color-fill'></i> <span>Design</span></a></li>
+    <li><a href="laporan.html"><i class='bx bxs-bar-chart-alt-2'></i> <span>Laporan</span></a></li>
+    <li><a href="user.html"><i class='bx bxs-group'></i> <span>Pengguna</span></a></li>
+    <li class="has-submenu">
+      <a href="javascript:void(0);">
+        <i class='bx bxs-buildings'></i>
+        <span>Proyek</span>
+        <i class='bx bx-chevron-down submenu-toggle-icon'></i>
+      </a>
+      <ul class="submenu">
+        <li><a href="leads.html">Leads</a></li>
+        <li><a href="daftar_proyek.html">Daftar Proyek</a></li>
+        <li><a href="proyek_batal.html">Proyek Batal</a></li>
+      </ul>
+    </li>
+  </ul>
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="logout()">
+      <i class='bx bx-log-out'></i> <span>Keluar</span>
+    </button>
+  </div>
+</div>
+
+<button class="toggle-btn" id="toggleBtn"><i class='bx bx-menu'></i></button>
+<button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Tutup Sidebar"><i class='bx bx-x'></i></button>
+<div class="overlay" id="overlay"></div>
+
+<div class="main-content">
+  <div class="alert-container"></div>
+
+  <div class="page-header">
+    <div class="user-welcome">
+      <h1>Manajemen Design</h1>
+      <p>Kelola file desain & dokumen proyek</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Ganti tema tampilan">
+        <i class='bx bx-moon'></i>
+        <span>Dark</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table id="projectTable">
+      <thead>
+        <tr>
+          <th>NAMA PROYEK</th>
+          <th>KLIEN</th>
+          <th>STATUS</th>
+          <th>LOKASI</th>
+          <th class="col-deskripsi">DESKRIPSI</th>
+          <th>AKSI</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="6" style="text-align: center; color: #888; padding:20px;">Memuat data...</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pagination" id="pagination">
+      <button type="button" id="prevPageBtn">&laquo;</button>
+      <span class="page-info" id="pageInfo">Halaman 1 dari 1</span>
+      <button type="button" id="nextPageBtn">&raquo;</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-wrapper" id="uploadModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">Upload File</h2>
+      <button class="close-modal" onclick="tutupModal('uploadModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="uploadProjectId">
+
+      <div class="form-group" style="display:none;">
+        <label>Deskripsi</label>
+        <textarea id="designDesc" rows="2" placeholder="Keterangan singkat..."></textarea>
+      </div>
+
+      <div class="form-group" style="display:none;">
+        <label>Bobot Progres (%) <span style="font-weight:400;color:#999;">(opsional)</span></label>
+        <input type="number" id="designWeight" min="0" max="100" step="0.1" placeholder="Misal: 10">
+      </div>
+
+      <div class="form-group">
+        <label>Pilih File (bisa lebih dari satu)</label>
+        <div class="drag-drop-area" id="dropZone">
+          <i class='bx bx-cloud-upload'></i>
+          <div class="drag-drop-text">
+            <strong id="fileNameDisplay">Klik / Drag file kesini</strong>
+            <span id="fileSizeDisplay">Maksimal 50MB per file, total 200MB</span>
+          </div>
+          <input type="file" id="designFile" multiple
+                 accept="image/*,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                 hidden onchange="handleFileSelect(this)">
+        </div>
+      </div>
+
+      <div class="progress-wrapper" id="progressWrapper">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <span class="progress-text" id="progressText">0%</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-footer-left">
+        <button class="btn-cancel" onclick="tutupModal('uploadModal')">Batal</button>
+      </div>
+      <div class="modal-footer-right">
+        <button class="btn-save" onclick="prosesUpload()">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-wrapper" id="viewModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="viewModalTitle">Daftar File</h2>
+      <button class="close-modal" onclick="tutupModal('viewModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="fileListContainer" class="file-list">
+        <p style="text-align:center; font-size:12px; color:#888;">Memuat data...</p>
+      </div>
+    </div>
+
+    <div class="modal-footer modal-footer-nav">
+      <div class="side-actions left">
+        <button class="nav-icon-btn" id="prevProjectBtn" onclick="navigateViewProject(-1)" type="button" aria-label="Proyek sebelumnya">
+          <i class='bx bx-chevron-left'></i>
+        </button>
+      </div>
+
+      <div class="center-actions">
+        <button class="btn-cancel" onclick="tutupModal('viewModal')" type="button">Tutup</button>
+      </div>
+
+      <div class="side-actions right">
+        <button class="nav-icon-btn" id="nextProjectBtn" onclick="navigateViewProject(1)" type="button" aria-label="Proyek berikutnya">
+          <i class='bx bx-chevron-right'></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ================= CONFIG =================
+  const BASE_URL = "https://mt-optima-api-176148115028.asia-southeast2.run.app";
+
+  // LIST PROJECTS
+  const API_PROJECTS = `${BASE_URL}/api/projects`;
+
+  // GET FILES PER PROJECT
+  const API_PROJECT_FILES = (id) => `${BASE_URL}/api/projects/${id}/files`;
+
+  const API_ADD_PROGRES = (id) => `${BASE_URL}/api/projects/${id}/progress`;
+
+  const API_DOWNLOAD_FILE = (attachmentId) => `${BASE_URL}/api/attachments/${attachmentId}/download`;
+
+  const AUTH_TOKEN = localStorage.getItem('token') || '';
+
+  // ✅ tetap sesuai request: 50MB/file, total 200MB
+  const MAX_FILE_SIZE  = 50 * 1024 * 1024;
+  const MAX_TOTAL_SIZE = 200 * 1024 * 1024;
+
+  const CLICK_COOLDOWN_MS = 3000;
+  let isLogoutCooldown      = false;
+  let isUploadModalCooldown = false;
+  let isViewModalCooldown   = false;
+  let isUploadCooldown      = false;
+  let isDownloadCooldown    = false;
+
+  let projects = [];
+  let currentPage = 1;
+  const PAGE_SIZE = 10;
+
+  let currentViewProjectIndex = -1;
+
+  if (!AUTH_TOKEN) window.location.href = 'login.html';
+
+  const THEME_KEY = 'mt-theme';
+
+  function applyTheme(theme) {
+    if (theme !== 'dark' && theme !== 'light') theme = 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+    updateThemeToggleUI(theme);
+  }
+
+  function updateThemeToggleUI(theme) {
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+    const icon = toggle.querySelector('i');
+    const label = toggle.querySelector('span');
+    if (theme === 'dark') {
+      toggle.classList.add('is-dark');
+      if (icon) { icon.classList.remove('bx-moon'); icon.classList.add('bx-sun'); }
+      if (label) label.textContent = 'Light';
+    } else {
+      toggle.classList.remove('is-dark');
+      if (icon) { icon.classList.remove('bx-sun'); icon.classList.add('bx-moon'); }
+      if (label) label.textContent = 'Dark';
+    }
+  }
+
+  function initThemeToggle() {
+    const saved = localStorage.getItem(THEME_KEY) || 'light';
+    applyTheme(saved);
+    const toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(cur === 'light' ? 'dark' : 'light');
+    });
+  }
+
+  function initGlobalButtonDebounce() {
+    document.addEventListener('click', function (e) {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+
+      if (btn.classList.contains('btn-logout') ||
+          btn.classList.contains('btn-save') ||
+          btn.classList.contains('file-link')) {
+        return;
+      }
+
+      if (btn.dataset.debouncing === 'true') {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        return;
+      }
+
+      btn.dataset.debouncing = 'true';
+      btn.classList.add('is-waiting');
+
+      setTimeout(() => {
+        btn.dataset.debouncing = 'false';
+        btn.classList.remove('is-waiting');
+      }, CLICK_COOLDOWN_MS);
+    }, true);
+  }
+
+  function initBurgerScrollTransparency() {
+    const btn = document.getElementById('toggleBtn');
+    if (!btn) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 10) btn.classList.add('scrolled');
+      else btn.classList.remove('scrolled');
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+  }
+
+  // ✅ penting: tombol X hanya tampil saat sidebar benar-benar open
+  function syncSidebarOpenState() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('overlay');
+
+    const isOpen =
+      (sb && sb.classList.contains('active')) ||
+      (ov && ov.classList.contains('active'));
+
+    document.body.classList.toggle('sidebar-open', !!isOpen);
+  }
+
+  async function logout() {
+    if (isLogoutCooldown) return;
+    isLogoutCooldown = true;
+
+    try {
+      await fetch(`${BASE_URL}/api/logout`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${AUTH_TOKEN}`, 'Accept':'application/json' }
+      });
+    } catch (e) {
+      console.error('Logout error:', e);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('mt_progress_reminder_last_date');
+      window.location.href = 'login.html';
+      setTimeout(() => { isLogoutCooldown = false; }, CLICK_COOLDOWN_MS);
+    }
+  }
+
+  function initSidebarSubmenuToggle() {
+    document.querySelectorAll(".sidebar .has-submenu > a").forEach(trigger => {
+      trigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        const li = trigger.parentElement;
+        li.classList.toggle("open");
+      });
+    });
+  }
+
+  function setActiveMenu() {
+    const path = window.location.pathname;
+    const current = path.split('/').pop() || 'design.html';
+
+    document.querySelectorAll('.sidebar .menu > li').forEach(li => li.classList.remove('active','open'));
+    document.querySelectorAll('.sidebar .submenu li').forEach(li => li.classList.remove('active'));
+
+    document.querySelectorAll('.sidebar .menu a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('javascript')) return;
+      const page = href.split('/').pop();
+      if (page === current) {
+        const li = a.parentElement;
+        if (li.parentElement && li.parentElement.classList.contains('submenu')) {
+          li.classList.add('active');
+          const parentLi = li.closest('.has-submenu');
+          if (parentLi) parentLi.classList.add('active','open');
+        } else {
+          li.classList.add('active');
+        }
+      }
+    });
+  }
+
+  const statusMap = {
+    'aktif':     { name: 'Aktif',     class: 'status-aktif' },
+    'negosiasi': { name: 'Negosiasi', class: 'status-negosiasi' },
+    'selesai':   { name: 'Selesai',   class: 'status-selesai' },
+    'batal':     { name: 'Batal',     class: 'status-default' },
+    'default':   { name: 'Unknown',   class: 'status-default' },
+  };
+
+  function getStatusUI(statusKey) {
+    const key = String(statusKey || '').toLowerCase();
+    for (const mapKey in statusMap) if (key.includes(mapKey)) return statusMap[mapKey];
+    return statusMap['default'];
+  }
+
+  function tampilkanAlert(msg, type) {
+    const div = document.createElement("div");
+    div.className = `alert alert-${type}`;
+    div.innerHTML = `<div style="display:flex; align-items:center; gap:8px;">
+      <i class='bx ${type === "success" ? "bxs-check-circle" : "bxs-x-circle"}' style="font-size:20px;"></i>
+      <span>${msg}</span>
+    </div>`;
+    document.querySelector(".alert-container").appendChild(div);
+    setTimeout(() => {
+      div.style.opacity = "0";
+      setTimeout(() => div.remove(), 300);
+    }, 4000);
+  }
+
+  function tutupModal(modalId) {
+    const el = document.getElementById(modalId);
+    if (el) el.classList.remove('active');
+  }
+
+  async function fetchProjects() {
+    try {
+      const response = await fetch(API_PROJECTS, {
+        headers: {
+          'Authorization': `Bearer ${AUTH_TOKEN}`,
+          'ngrok-skip-browser-warning': 'true',
+          'Accept':'application/json'
+        }
+      });
+
+      if (!response.ok) throw new Error("Gagal mengambil data proyek.");
+
+      const res = await response.json();
+      const rawData = res.data || res;
+
+      projects = rawData.map(p => {
+        const descRaw = ((p.deskripsi_desain || p.deskripsi || p.keterangan || "") + "").trim();
+        return {
+          id: p.id,
+          nama_proyek: p.nama_proyek || p.nama || `Proyek #${p.id}`,
+          nama_klien: p.nama_klien || p.client || '-',
+          status: p.status || 'negosiasi',
+          alamat_proyek: p.alamat_proyek || p.alamat || p.lokasi || p.address || '-',
+          deskripsi_desain: descRaw || '-',
+        };
+      });
+
+      currentPage = 1;
+      renderTable(projects);
+
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      document.getElementById('tableBody').innerHTML =
+        `<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat data: ${error.message}</td></tr>`;
+    }
+  }
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    const pageInfo = document.getElementById('pageInfo');
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+
+    tbody.innerHTML = '';
+
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada proyek.</td></tr>`;
+      if (pageInfo) pageInfo.textContent = "Halaman 1 dari 1";
+      if (prevBtn) prevBtn.disabled = true;
+      if (nextBtn) nextBtn.disabled = true;
+      return;
+    }
+
+    const totalItems = data.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const pageData = data.slice(startIndex, startIndex + PAGE_SIZE);
+
+    pageData.forEach(p => {
+      const tr = document.createElement('tr');
+      const statusInfo = getStatusUI(p.status);
+      tr.setAttribute('data-project-id', p.id);
+
+      tr.innerHTML = `
+        <td data-label="Nama Proyek"><strong>${p.nama_proyek}</strong></td>
+        <td data-label="Klien">${p.nama_klien}</td>
+        <td data-label="Status"><span class="status-badge ${statusInfo.class}">${statusInfo.name}</span></td>
+        <td data-label="Lokasi">${p.alamat_proyek || '-'}</td>
+        <td data-label="Deskripsi" class="desc-cell col-deskripsi">${p.deskripsi_desain || '-'}</td>
+        <td data-label="Aksi" class="action-cell">
+          <button class="btn-upload" onclick="bukaUploadModal(${p.id})" type="button">
+            <i class='bx bx-cloud-upload'></i> Upload
+          </button>
+          <button class="btn-view" onclick="bukaLihatModal(${p.id})" type="button">
+            <i class='bx bx-folder-open'></i> File
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    if (pageInfo) pageInfo.textContent = `Halaman ${currentPage} dari ${Math.max(1, Math.ceil(totalItems / PAGE_SIZE))}`;
+    if (prevBtn) prevBtn.disabled = currentPage <= 1;
+    if (nextBtn) nextBtn.disabled = currentPage >= Math.ceil(totalItems / PAGE_SIZE);
+  }
+
+  function handleFileSelect(input) {
+    const files = Array.from(input.files || []);
+    const nameDisplay = document.getElementById('fileNameDisplay');
+    const sizeDisplay = document.getElementById('fileSizeDisplay');
+
+    if (!files.length) {
+      nameDisplay.innerText = "Klik / Drag file kesini";
+      sizeDisplay.innerText = "Maksimal 50MB per file, total 200MB";
+      sizeDisplay.style.color = "#888";
+      return;
+    }
+
+    let totalSize = 0;
+    let hasTooBig = false;
+
+    files.forEach(f => {
+      totalSize += f.size;
+      if (f.size > MAX_FILE_SIZE) hasTooBig = true;
+    });
+
+    if (hasTooBig) {
+      tampilkanAlert("Ukuran setiap file maksimal 50MB.", "danger");
+      input.value = "";
+      nameDisplay.innerText = "Klik / Drag file kesini";
+      sizeDisplay.innerText = "Maksimal 50MB per file, total 200MB";
+      sizeDisplay.style.color = "#888";
+      return;
+    }
+
+    if (totalSize > MAX_TOTAL_SIZE) {
+      tampilkanAlert("Total ukuran file maksimal 200MB per upload.", "danger");
+      input.value = "";
+      nameDisplay.innerText = "Klik / Drag file kesini";
+      sizeDisplay.innerText = "Maksimal 50MB per file, total 200MB";
+      sizeDisplay.style.color = "#888";
+      return;
+    }
+
+    nameDisplay.innerText = (files.length === 1) ? files[0].name : `${files.length} file dipilih`;
+    nameDisplay.style.color = "#0a4a80";
+
+    const sizeMB = (totalSize / (1024 * 1024)).toFixed(1);
+    sizeDisplay.innerText = `${sizeMB} MB - Siap upload`;
+    sizeDisplay.style.color = "#52c41a";
+  }
+
+  function bukaUploadModal(id) {
+    if (isUploadModalCooldown) return;
+    isUploadModalCooldown = true;
+
+    const projectId = Number(id);
+    const project = projects.find(p => p.id === projectId);
+
+    const uploadProjectIdInput = document.getElementById('uploadProjectId');
+    if (uploadProjectIdInput) uploadProjectIdInput.value = id;
+
+    const modalTitleEl = document.getElementById('modalTitle');
+    if (modalTitleEl) {
+      modalTitleEl.innerText = project
+        ? `Upload DESAIN: ${project.nama_proyek.substring(0,25)}${project.nama_proyek.length > 25 ? '...' : ''}`
+        : `Upload DESAIN: Proyek #${id}`;
+    }
+
+    const descInput = document.getElementById('designDesc');
+    if (descInput) descInput.value = '';
+
+    const weightInput = document.getElementById('designWeight');
+    if (weightInput) weightInput.value = '';
+
+    const fileInput = document.getElementById('designFile');
+    if (fileInput) fileInput.value = '';
+
+    document.getElementById('fileNameDisplay').innerText = "Klik / Drag file kesini";
+    document.getElementById('fileNameDisplay').style.color = "#333";
+    document.getElementById('fileSizeDisplay').innerText = "Maksimal 50MB per file, total 200MB";
+    document.getElementById('fileSizeDisplay').style.color = "#888";
+
+    document.getElementById('progressWrapper').style.display = "none";
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressText').innerText = '0%';
+
+    document.getElementById('uploadModal').classList.add('active');
+
+    setTimeout(() => { isUploadModalCooldown = false; }, CLICK_COOLDOWN_MS);
+  }
+
+  async function prosesUpload() {
+    if (isUploadCooldown) return;
+    isUploadCooldown = true;
+
+    const id = Number((document.getElementById('uploadProjectId')?.value || 0));
+    const desc = (document.getElementById('designDesc')?.value || '').trim();
+
+    const fileInput = document.getElementById('designFile');
+    const files = Array.from(fileInput?.files || []);
+
+    if (!id) {
+      tampilkanAlert("ID proyek tidak valid.", "danger");
+      isUploadCooldown = false;
+      return;
+    }
+
+    if (!files.length) {
+      tampilkanAlert("Pilih minimal satu file untuk diupload.", "danger");
+      isUploadCooldown = false;
+      return;
+    }
+
+    let totalSize = 0;
+    for (const f of files) {
+      totalSize += f.size;
+      if (f.size > MAX_FILE_SIZE) {
+        tampilkanAlert("Ukuran setiap file maksimal 50MB.", "danger");
+        isUploadCooldown = false;
+        return;
+      }
+    }
+    if (totalSize > MAX_TOTAL_SIZE) {
+      tampilkanAlert("Total ukuran file maksimal 200MB per upload.", "danger");
+      isUploadCooldown = false;
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('deskripsi', desc || 'File desain');
+    formData.append('kategori', 'DESAIN');
+    formData.append('bobot_persentase', '0');
+    files.forEach(f => formData.append('files[]', f, f.name));
+
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const btnSave = document.querySelector('#uploadModal .btn-save');
+
+    document.getElementById('progressWrapper').style.display = "block";
+    progressBar.style.width = '30%';
+    progressText.innerText = 'Uploading...';
+    if (btnSave) btnSave.disabled = true;
+
+    try {
+      const url = API_ADD_PROGRES(id);
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${AUTH_TOKEN}`,
+          'ngrok-skip-browser-warning': 'true',
+          'Accept': 'application/json'
+        },
+        body: formData
+      });
+
+      const text = await response.text();
+      let result = {};
+      try { result = text ? JSON.parse(text) : {}; } catch (_) { result = { raw: text }; }
+
+      if (!response.ok) {
+        const msg = result?.message
+          || (result?.errors ? JSON.stringify(result.errors) : '')
+          || result?.error
+          || `Gagal upload (status ${response.status})`;
+        throw new Error(msg);
+      }
+
+      progressBar.style.width = '100%';
+      progressText.innerText = 'Selesai!';
+      tampilkanAlert("File desain berhasil diunggah.", "success");
+
+      await fetchProjects();
+      tutupModal('uploadModal');
+      setTimeout(() => bukaLihatModal(id), 400);
+
+    } catch (error) {
+      console.error(error);
+      tampilkanAlert(error.message || "Error jaringan saat upload", "danger");
+      progressBar.style.width = '0%';
+      progressText.innerText = '0%';
+    } finally {
+      if (btnSave) btnSave.disabled = false;
+      setTimeout(() => { isUploadCooldown = false; }, CLICK_COOLDOWN_MS);
+    }
+  }
+
+  function getDownloadUrlFromFile(f) {
+    let url = f.url_download || f.download_url || f.url || f.link || f.path_download || f.download_link;
+    const attachId = f.id_attachment || f.attachment_id || f.id;
+    if (!url && attachId) url = API_DOWNLOAD_FILE(attachId);
+    if (!url) return null;
+    if (!url.startsWith('http')) url = `${BASE_URL}${url}`;
+    return url;
+  }
+
+  async function downloadFile(encodedUrl, encodedName) {
+    if (isDownloadCooldown) return;
+    isDownloadCooldown = true;
+
+    const url = decodeURIComponent(encodedUrl);
+    const filename = decodeURIComponent(encodedName || 'file');
+
+    if (!url) {
+      tampilkanAlert("Link download tidak tersedia.", "danger");
+      isDownloadCooldown = false;
+      return;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${AUTH_TOKEN}`,
+          'ngrok-skip-browser-warning': 'true'
+        }
+      });
+
+      if (!response.ok) throw new Error("Gagal mengunduh file (status " + response.status + ")");
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = filename || 'file';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+
+    } catch (error) {
+      console.error("Download error:", error);
+      tampilkanAlert(error.message || "Gagal mengunduh file.", "danger");
+    } finally {
+      setTimeout(() => { isDownloadCooldown = false; }, CLICK_COOLDOWN_MS);
+    }
+  }
+
+  function setViewModalTitleByIndex() {
+    const titleEl = document.getElementById('viewModalTitle');
+    if (!titleEl) return;
+    const p = projects[currentViewProjectIndex];
+    if (!p) titleEl.textContent = "Daftar File (DESAIN)";
+    else {
+      const shortName = p.nama_proyek.length > 28 ? p.nama_proyek.substring(0, 28) + "..." : p.nama_proyek;
+      titleEl.textContent = `File DESAIN – ${shortName}`;
+    }
+  }
+
+  function updateNavButtonsState() {
+    const prevBtn = document.getElementById('prevProjectBtn');
+    const nextBtn = document.getElementById('nextProjectBtn');
+    const total = projects.length;
+
+    if (!prevBtn || !nextBtn || total === 0 || currentViewProjectIndex === -1) {
+      if (prevBtn) prevBtn.disabled = true;
+      if (nextBtn) nextBtn.disabled = true;
+      return;
+    }
+
+    prevBtn.disabled = currentViewProjectIndex <= 0;
+    nextBtn.disabled = currentViewProjectIndex >= (total - 1);
+  }
+
+  async function loadFilesForViewIndex() {
+    if (isViewModalCooldown) return;
+    isViewModalCooldown = true;
+
+    const container = document.getElementById('fileListContainer');
+    const p = projects[currentViewProjectIndex];
+
+    if (!p) {
+      container.innerHTML = `<p style="color:red; text-align:center;">Proyek tidak ditemukan.</p>`;
+      isViewModalCooldown = false;
+      updateNavButtonsState();
+      return;
+    }
+
+    setViewModalTitleByIndex();
+    updateNavButtonsState();
+
+    container.innerHTML = `
+      <div style="text-align:center; padding: 20px; color: #666;">
+        <i class='bx bx-loader-alt bx-spin' style="font-size: 24px;"></i>
+        <p>Memuat file desain...</p>
+      </div>`;
+
+    try {
+      const url = API_PROJECT_FILES(p.id);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${AUTH_TOKEN}`,
+          'ngrok-skip-browser-warning': 'true',
+          'Accept':'application/json'
+        }
+      });
+
+      const resText = await response.text();
+      let res = {};
+      try { res = resText ? JSON.parse(resText) : {}; } catch (_) { res = {}; }
+
+      let designFiles = [];
+      if (Array.isArray(res.desain)) designFiles = res.desain.map(f => ({ ...f, kategori: 'DESAIN' }));
+
+      if (!designFiles.length) {
+        container.innerHTML = `
+          <div style="text-align:center; padding: 20px; color: #999;">
+            <i class='bx bx-folder-open' style="font-size: 30px; margin-bottom: 5px;"></i>
+            <p>Belum ada file DESAIN untuk proyek ini.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = designFiles.map(f => {
+        const fileName = f.nama_file || f.original_name || f.filename || 'File';
+        let icon = 'bx-file-blank';
+        if (fileName.match(/\.(pdf)$/i)) icon = 'bx-file-pdf';
+        else if (fileName.match(/\.(jpg|jpeg|png)$/i)) icon = 'bx-image';
+        else if (fileName.match(/\.(xls|xlsx)$/i)) icon = 'bx-spreadsheet';
+
+        const kategori = 'DESAIN';
+        const tanggal  = f.tanggal_upload || f.created_at || '';
+
+        const downloadUrl = getDownloadUrlFromFile(f);
+        const safeUrl     = downloadUrl ? encodeURIComponent(downloadUrl) : '';
+        const safeName    = encodeURIComponent(fileName);
+        const disabledAttr = downloadUrl ? '' : 'style="opacity:0.5; cursor:not-allowed;"';
+
+        return `
+          <div class="file-item">
+            <i class='bx ${icon} file-icon'></i>
+            <div class="file-info">
+              <span class="file-name" title="${fileName}">${fileName}</span>
+              <span class="file-date">${kategori}${tanggal ? " • " + tanggal : ""}</span>
+            </div>
+            <button class="file-link" ${disabledAttr}
+              ${downloadUrl ? `onclick="downloadFile('${safeUrl}', '${safeName}')"` : ''}>
+              <i class='bx bx-download'></i> Unduh
+            </button>
+          </div>
+        `;
+      }).join('');
+
+    } catch (error) {
+      console.error(error);
+      container.innerHTML = `<p style="color:red; text-align:center;">Gagal memuat file DESAIN.</p>`;
+    } finally {
+      isViewModalCooldown = false;
+      updateNavButtonsState();
+    }
+  }
+
+  async function bukaLihatModal(id) {
+    const modal = document.getElementById('viewModal');
+    if (modal) modal.classList.add('active');
+
+    const idx = projects.findIndex(p => Number(p.id) === Number(id));
+    currentViewProjectIndex = (idx !== -1) ? idx : 0;
+
+    await loadFilesForViewIndex();
+  }
+
+  async function navigateViewProject(direction) {
+    if (!projects.length || currentViewProjectIndex === -1) return;
+    const newIndex = currentViewProjectIndex + direction;
+    if (newIndex < 0 || newIndex >= projects.length) return;
+    currentViewProjectIndex = newIndex;
+    await loadFilesForViewIndex();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
+    initGlobalButtonDebounce();
+    initSidebarSubmenuToggle();
+    initBurgerScrollTransparency();
+    setActiveMenu();
+    fetchProjects();
+
+    const sidebar   = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const overlay   = document.getElementById("overlay");
+    const closeBtn  = document.getElementById("mobileCloseBtn");
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.add("active");
+        overlay.classList.add("active");
+      } else {
+        sidebar.classList.toggle("collapsed");
+      }
+      syncSidebarOpenState();
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove("active");
+      overlay.classList.remove("active");
+      syncSidebarOpenState();
+    }
+
+    if (toggleBtn) toggleBtn.addEventListener("click", toggleSidebar);
+    if (overlay)  overlay.addEventListener("click", closeSidebar);
+    if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
+
+    // ✅ pastikan body.sidebar-open ikut berubah walau class dari master berubah
+    const mo = new MutationObserver(() => syncSidebarOpenState());
+    if (sidebar) mo.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+    if (overlay) mo.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+    syncSidebarOpenState();
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('designFile');
+    if (dropZone && fileInput) {
+      dropZone.addEventListener('click', () => fileInput.click());
+      dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+          fileInput.files = e.dataTransfer.files;
+          handleFileSelect(fileInput);
+        }
+      });
+    }
+
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) { currentPage--; renderTable(projects); }
+    });
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+      const totalPages = Math.max(1, Math.ceil(projects.length / PAGE_SIZE));
+      if (currentPage < totalPages) { currentPage++; renderTable(projects); }
+    });
+
+    updateNavButtonsState();
+  });
+</script>
+</body>
+</html>

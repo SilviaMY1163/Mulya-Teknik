@@ -1,0 +1,3178 @@
+<!DOCTYPE html> 
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Proyek | Mulya Teknik</title>
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- ✅ MASTER SHELL CSS (Sidebar + Toggle + Overlay + Page Header + Theme Toggle) -->
+  <link rel="stylesheet" href="assets/css/master-shell.dashboard.css">
+
+  <style>
+    /* =========================================
+       1) TOKEN & RESET (tetap di halaman)
+       ========================================= */
+    :root{
+      color-scheme: light;
+
+      /* BRAND COLORS */
+      --primary-color:#0a4a80;
+      --secondary-color:#00bcd4;
+      --detail-color:#17a2b8;
+      --delete-color:#ff4d4f;
+      --edit-color:#faad14;
+      --success-color:#52c41a;
+
+      /* TEXT */
+      --text-color:#1f2933;
+      --text-soft:#6b7280;
+      --text-muted:#9ca3af;
+
+      /* BACKGROUND (✅ dibuat putih saat light) */
+      --bg-body:#ffffff;
+      --bg-body-soft:#ffffff;
+      --bg-sidebar:#ffffff;
+      --bg-card:#ffffff;
+      --bg-card-soft:#f7f9fc;
+      --bg-input:#f9f9f9;
+
+      /* BACKGROUND GRADIENT */
+      --bg-gradient-1: rgba(56, 189, 248, 0.14);
+      --bg-gradient-2: rgba(30, 64, 175, 0.12);
+      --bg-gradient-3: rgba(15, 23, 42, 0.06);
+
+      /* BORDER & SHADOW */
+      --border-subtle: rgba(15, 23, 42, 0.08);
+      --border-strong: rgba(15, 23, 42, 0.16);
+      --shadow-soft: 0 12px 40px rgba(15, 23, 42, 0.06);
+      --shadow-deep: 0 20px 60px rgba(15, 23, 42, 0.12);
+
+      /* COMPONENT */
+      --tab-border:#e0e0e0;
+      --tab-hover-bg: rgba(15,23,42,0.03);
+      --table-stripe:#f4f7fa;
+
+      /* GRADIENT */
+      --title-gradient: linear-gradient(135deg, #0a4a80, #00bcd4);
+      --btn-gradient: linear-gradient(120deg, #0a4a80, #00bcd4);
+
+      /* SCROLLBAR */
+      --scroll-thumb: rgba(148, 163, 184, 0.8);
+      --scroll-track: transparent;
+
+      /* ✅ tambahan token agar master-shell aman */
+      --sidebar-width: 250px;
+      --glass-border: var(--border-subtle);
+      --text-main: var(--text-color);
+    }
+
+    :root[data-theme="dark"]{
+      color-scheme: dark;
+
+      --primary-color:#4dabf7;
+      --secondary-color:#22d3ee;
+      --detail-color:#38bdf8;
+      --delete-color:#f97373;
+      --edit-color:#facc15;
+      --success-color:#4ade80;
+
+      --text-color:#e5e7eb;
+      --text-soft:#9ca3af;
+      --text-muted:#6b7280;
+
+      --bg-body:#020617;
+      --bg-body-soft:#020617;
+      --bg-sidebar: rgba(15,23,42,0.98);
+      --bg-card: rgba(15,23,42,0.97);
+      --bg-card-soft: rgba(15,23,42,0.9);
+      --bg-input: rgba(15,23,42,0.92);
+
+      --bg-gradient-1: rgba(56, 189, 248, 0.18);
+      --bg-gradient-2: rgba(30, 64, 175, 0.55);
+      --bg-gradient-3: rgba(15, 23, 42, 0.9);
+
+      --border-subtle: rgba(148, 163, 184, 0.4);
+      --border-strong: rgba(148, 163, 184, 0.7);
+      --shadow-soft: 0 20px 60px rgba(15, 23, 42, 0.7);
+      --shadow-deep: 0 24px 70px rgba(15, 23, 42, 0.9);
+
+      --tab-border: rgba(148,163,184,0.45);
+      --tab-hover-bg: rgba(15,23,42,0.16);
+      --table-stripe: rgba(15,23,42,0.95);
+
+      --title-gradient: linear-gradient(135deg, #22d3ee, #facc15);
+      --btn-gradient: linear-gradient(120deg, #22d3ee, #facc15);
+
+      --scroll-thumb: rgba(148, 163, 184, 0.85);
+
+      /* sinkron */
+      --text-main: var(--text-color);
+      --glass-border: rgba(148,163,184,0.35);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    html, body { scroll-behavior:smooth; }
+    body{
+      background:
+        radial-gradient(circle at top left, var(--bg-gradient-1), transparent 55%),
+        radial-gradient(circle at 80% 0, var(--bg-gradient-2), transparent 55%),
+        radial-gradient(circle at 10% 100%, var(--bg-gradient-2), transparent 55%),
+        linear-gradient(135deg, var(--bg-body-soft), var(--bg-body));
+      color: var(--text-color);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--scroll-track); }
+    ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 999px; }
+
+    /* =========================================
+       2) KONTEN HALAMAN (bukan master shell)
+       ========================================= */
+    .alert-container{
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      width: min(320px, 90vw);
+    }
+    .alert{
+      padding:15px;
+      margin-bottom:10px;
+      border-radius:10px;
+      color:#fff;
+      animation: slideIn .3s;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+      box-shadow: var(--shadow-soft);
+    }
+    .alert-success{ background: var(--success-color); }
+    .alert-danger{ background: var(--delete-color); }
+    @keyframes slideIn{
+      from{ transform: translateX(100%); }
+      to{ transform: translateX(0); }
+    }
+
+    /* HEADER CARD */
+    .project-header-card{
+      background: var(--bg-card);
+      padding: clamp(20px, 2.5vw, 30px);
+      border-radius: 16px;
+      box-shadow: var(--shadow-deep);
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+    .project-header-card::before{
+      content:'';
+      position:absolute;
+      top:0; left:0;
+      width:6px; height:100%;
+      background: var(--secondary-color);
+    }
+    .ph-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .ph-title h1{
+      font-size: clamp(20px, 2.6vw, 28px);
+      font-weight: 800;
+      background: var(--title-gradient);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      color:transparent;
+      margin-bottom:5px;
+      line-height:1.2;
+    }
+    .ph-title p{ color: var(--text-soft); font-size: 13px; }
+    #projectMeta{ color: var(--text-muted); font-size: 12px; }
+    #projectLocation{ color: var(--text-soft); font-size: 14px; }
+    #projectLocation i{ margin-right: 5px; }
+
+    .ph-status{
+      padding:8px 16px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border:1px solid transparent;
+    }
+
+    .progress-container{ margin-top: 10px; }
+    .progress-info{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:5px;
+      font-size:13px;
+      font-weight:600;
+      color: var(--primary-color);
+    }
+    .progress-track{
+      width:100%;
+      height:10px;
+      background: rgba(148,163,184,0.3);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .progress-fill{
+      height:100%;
+      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+      width:0%;
+      transition: width 1s ease;
+    }
+
+    /* TABS */
+    .tabs-nav{
+      display:flex;
+      gap:10px;
+      margin-bottom:25px;
+      overflow-x:auto;
+      padding-bottom:5px;
+      border-bottom:2px solid var(--tab-border);
+    }
+    .tab-btn{
+      padding:12px 25px;
+      background: transparent;
+      border:none;
+      font-size:15px;
+      font-weight:600;
+      color: var(--text-soft);
+      cursor:pointer;
+      transition: all .25s;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      border-radius: 999px 999px 0 0;
+    }
+    .tab-btn:hover{
+      color: var(--secondary-color);
+      background: var(--tab-hover-bg);
+    }
+    .tab-btn.active{
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+
+    .tab-content{ display:none; animation: slideUp .4s ease; }
+    .tab-content.active{ display:block; }
+    @keyframes slideUp{
+      from{ opacity:0; transform: translateY(15px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* CARDS & FORMS */
+    .card-section{
+      background: var(--bg-card);
+      border-radius: 14px;
+      box-shadow: var(--shadow-soft);
+      padding: 22px;
+      margin-bottom: 25px;
+      border: 1px solid var(--border-subtle);
+    }
+    .section-title{
+      font-size:18px;
+      font-weight:700;
+      color: var(--primary-color);
+      margin-bottom:18px;
+      border-bottom:1px solid var(--border-subtle);
+      padding-bottom:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .section-title i{ font-size:20px; }
+
+    .form-group{ margin-bottom: 15px; }
+    .form-group label{
+      display:block;
+      font-size:13px;
+      font-weight:600;
+      color: var(--text-soft);
+      margin-bottom:5px;
+    }
+    .form-control{
+      width:100%;
+      padding:11px 14px;
+      border:1px solid var(--border-subtle);
+      border-radius: 8px;
+      font-size:14px;
+      background: var(--bg-input);
+      color: var(--text-color);
+    }
+    .form-control::placeholder{ color: var(--text-muted); }
+
+    .form-readonly{
+      background-color: transparent;
+      color: var(--text-color);
+      cursor: default;
+      border:none;
+      padding-left:0;
+      padding-right:0;
+    }
+    .form-readonly:focus{ outline:none; }
+
+    .btn-primary{
+      background: var(--btn-gradient);
+      color:#fff;
+      border:none;
+      padding:10px 20px;
+      border-radius: 999px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.25s;
+      font-size:14px;
+      box-shadow: var(--shadow-soft);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    }
+    .btn-primary:hover{
+      filter: brightness(1.03);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-deep);
+    }
+
+    .btn-ghost{
+      background: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--border-subtle);
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn-ghost:hover{
+      transform: translateY(-1px);
+      border-color: var(--secondary-color);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .grid-2-col{
+      display:grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap:25px;
+    }
+    .right-stack{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+
+    /* ✅ TAB3 TOP GRID (RAB kiri lebih lebar, Upload kanan) + bawah sejajar */
+    .rab-top-grid{
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap:18px;
+      align-items:stretch;
+      margin-bottom: 10px;
+    }
+
+    .rab-budget-card,
+    .rab-upload-card{
+      display:flex;
+      flex-direction:column;
+      height:100%;
+      padding: 18px;
+      border-radius:14px;
+    }
+
+    .rab-upload-card{
+      padding-bottom: 26px;
+    }
+
+    .rab-budget-card .btn-primary{
+      margin-top: 10px;
+      align-self: center;
+      width: auto;
+      min-width: 180px;
+      padding: 9px 14px;
+      font-size: 12px;
+      border-radius: 999px;
+    }
+
+    /* DETAIL LIST */
+    .details-list{ display:flex; flex-direction:column; gap:10px; }
+    .detail-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      padding:10px 14px;
+      border-radius:10px;
+      background: var(--bg-card-soft);
+      border: 1px solid var(--border-subtle);
+    }
+    .detail-label{
+      flex: 0 0 40%;
+      font-size:11px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      color: var(--text-muted);
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .detail-label i{
+      font-size:16px;
+      color: var(--secondary-color);
+    }
+    .detail-value{
+      flex:1;
+      font-size:14px;
+      font-weight:600;
+      color: var(--text-color);
+      text-align:right;
+      word-break: break-word;
+    }
+    .detail-value-multiline{
+      font-weight:400;
+      color: var(--text-soft);
+      text-align:right;
+      white-space: pre-line;
+    }
+
+    /* ✅ TIMELINE (RAMPING + scroll max 5) */
+    .timeline{
+      border-left:2px solid rgba(15,23,42,0.10);
+      margin-left:8px;
+      padding-left:18px;
+      position:relative;
+    }
+    .timeline-scroll{
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+    .timeline-item{ margin-bottom:12px; position:relative; }
+    .timeline-item::before{
+      content:'';
+      position:absolute;
+      left:-24px; top:6px;
+      width:9px; height:9px;
+      background: var(--secondary-color);
+      border-radius:50%;
+      border:2px solid #fff;
+      box-shadow: 0 0 0 2px rgba(0,188,212,0.18);
+    }
+    .timeline-date{
+      font-size:11px;
+      color:#64748b;
+      margin-bottom:6px;
+      line-height:1.2;
+    }
+    .timeline-content{
+      background:#fff;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(15,23,42,0.10);
+      box-shadow: 0 8px 22px rgba(15,23,42,0.05);
+      color:#0f172a;
+    }
+    .tag-kategori{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:10.5px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(15,23,42,0.10);
+      color:#0f172a;
+      background: rgba(2,6,23,0.03);
+      white-space:nowrap;
+    }
+    .timeline-header-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:6px;
+    }
+    .timeline-title{
+      font-weight:900;
+      color:#0a4a80;
+      font-size:13px;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .timeline-card{
+      background: #fff !important;
+      border: 1px solid rgba(15,23,42,0.10) !important;
+      padding-bottom: 22px;
+    }
+    .timeline-card .section-title{
+      color: #0a4a80;
+      border-bottom-color: rgba(15,23,42,0.12);
+    }
+
+    /* CHAT */
+    .chat-box{
+      height:300px;
+      overflow-y:auto;
+      background: var(--bg-card-soft);
+      padding:15px;
+      border-radius:8px;
+      border: 1px solid var(--border-subtle);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .chat-msg{
+      padding:10px 15px;
+      border-radius:16px;
+      font-size:13px;
+      max-width:85%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .msg-other{ align-self:flex-start; }
+    .msg-me{
+      align-self:flex-end;
+      background: var(--btn-gradient);
+      color:#fff;
+      border:none;
+    }
+
+    .bubble-1{ background:#ffffff; border:1px solid #ddd; }
+    .bubble-2{ background:#e6f7ff; border:1px solid #91d5ff; }
+    .bubble-3{ background:#f9f0ff; border:1px solid #d3adf7; }
+
+    :root[data-theme="dark"] .bubble-1{ background: rgba(15,23,42,0.95); border-color: rgba(148,163,184,0.4); }
+    :root[data-theme="dark"] .bubble-2{ background: rgba(30,64,175,0.85); border-color: rgba(129,140,248,0.8); }
+    :root[data-theme="dark"] .bubble-3{ background: rgba(109,40,217,0.85); border-color: rgba(196,181,253,0.8); }
+
+    .discussion-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+    .topic-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .topic-chip{
+      border-radius:20px;
+      padding:6px 14px;
+      border:1px solid var(--border-subtle);
+      background: var(--bg-card-soft);
+      font-size:12px;
+      cursor:pointer;
+      transition: all .25s;
+    }
+    .topic-chip:hover{
+      background: var(--tab-hover-bg);
+      border-color: var(--secondary-color);
+    }
+    .topic-chip.active{
+      background: var(--primary-color);
+      color:#fff;
+      border-color: var(--primary-color);
+    }
+
+    .btn-topic-new{
+      background: var(--bg-card);
+      color: var(--primary-color);
+      border:1px dashed var(--border-subtle);
+      padding:7px 14px;
+      border-radius:20px;
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      transition:.25s;
+    }
+    .btn-topic-new:hover{
+      background: var(--tab-hover-bg);
+      border-color: var(--primary-color);
+    }
+
+    .discussion-subtitle{
+      font-size:12px;
+      color: var(--text-soft);
+      margin-bottom:10px;
+    }
+
+    /* TABLE MINI */
+    .table-mini{
+      width:100%;
+      border-collapse: collapse;
+    }
+    .table-mini th, .table-mini td{
+      border:1px solid var(--border-subtle);
+      padding:8px 10px;
+      font-size:12px;
+      text-align:left;
+      vertical-align: top;
+    }
+    .table-mini th{
+      background: var(--table-stripe);
+      font-weight:600;
+      color: var(--text-soft);
+    }
+
+    /* ✅ hide kolom waktu di tabel (progress docs) */
+    .hide-time-col thead th.time-col,
+    .hide-time-col tbody td.time-col{
+      display:none;
+    }
+
+    /* ✅ waktu real-time (dipakai di RAB / Progres / Addendum) */
+    .rt-time{
+      display:block;
+      margin-top:4px;
+      font-size:11px;
+      color: var(--text-soft);
+      line-height:1.2;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .rt-time i{ margin-right:4px; color: var(--secondary-color); }
+
+    /* ✅ DROPZONE UPLOAD RAB */
+    .rab-upload-grid{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+      flex:1;
+    }
+    .dropzone{
+      border:2px dashed rgba(10,74,128,0.25);
+      background: linear-gradient(135deg, rgba(10,74,128,0.04), rgba(0,188,212,0.03));
+      border-radius:14px;
+      padding:16px;
+      cursor:pointer;
+      transition:.2s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .dropzone:hover{
+      border-color: rgba(0,188,212,0.55);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-soft);
+    }
+    .dropzone.dragover{
+      border-color: rgba(0,188,212,0.95);
+      background: linear-gradient(135deg, rgba(0,188,212,0.10), rgba(10,74,128,0.08));
+    }
+    .dz-row{ display:flex; align-items:center; gap:12px; }
+    .dz-icon{
+      width:44px; height:44px;
+      border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(0,188,212,0.14);
+      color: var(--primary-color);
+      font-size:22px;
+      flex:0 0 auto;
+    }
+    .dz-title{
+      font-weight:800;
+      color: var(--primary-color);
+      font-size:14px;
+      line-height:1.2;
+      margin-bottom:2px;
+    }
+    .dz-sub{ font-size:12px; color: var(--text-soft); }
+    .dz-meta{
+      margin-top:10px;
+      font-size:12px;
+      color: var(--text-muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .dz-filename{
+      margin-top:10px;
+      font-size:12px;
+      font-weight:700;
+      color: var(--primary-color);
+      word-break: break-word;
+    }
+
+    .dz-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:center;
+      margin-top:auto;
+       margin-bottom: 10px;
+    }
+
+    .btn-upload-rab{
+      padding:8px 14px !important;
+      font-size:12px !important;
+      border-radius:999px !important;
+      min-height:38px !important;
+      box-shadow: var(--shadow-soft) !important;
+      width:auto !important;
+      white-space:nowrap;
+    }
+    .btn-upload-rab i{ font-size:16px; }
+
+    :root[data-theme="dark"] .dropzone{
+      border-color: rgba(148,163,184,0.35);
+      background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(15,23,42,0.25));
+    }
+    :root[data-theme="dark"] .dz-icon{
+      background: rgba(56,189,248,0.14);
+      color: var(--secondary-color);
+    }
+
+    /* ✅ Pagination bar */
+    .pagination-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px dashed var(--border-subtle);
+      flex-wrap:wrap;
+    }
+    .pg-left{ font-size:12px; color: var(--text-muted); }
+    .pg-actions{ display:flex; gap:8px; align-items:center; }
+    .pg-btn{
+      border:1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--primary-color);
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .pg-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-soft);
+      border-color: var(--secondary-color);
+    }
+    .pg-btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    /* ✅ MODAL (POPUP FORM) */
+    .modal-overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 10000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+    }
+    .modal-overlay.active{ display:flex; }
+
+    .modal{
+      width: min(760px, 100%);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-deep);
+      overflow:hidden;
+      max-height: 86vh;
+      display:flex;
+      flex-direction:column;
+    }
+    .modal-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(10,74,128,0.06), rgba(0,188,212,0.04));
+    }
+    .modal-title{
+      font-weight: 800;
+      color: var(--primary-color);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size: 16px;
+    }
+    .modal-close{
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--primary-color);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.2s;
+    }
+    .modal-close:hover{
+      transform: translateY(-1px);
+      border-color: var(--secondary-color);
+      box-shadow: var(--shadow-soft);
+    }
+    .modal-body{
+      padding: 18px;
+      overflow:auto;
+    }
+    .modal-footer{
+      padding: 16px 18px;
+      border-top: 1px solid var(--border-subtle);
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      background: var(--bg-card);
+    }
+
+    /* ✅ full width cards (tab4 bawah) */
+    .full-width-stack{ display:flex; flex-direction:column; gap:20px; }
+    .card-wide{ width:100%; }
+
+    /* RESPONSIVE */
+    @media (max-width:1200px){
+      .grid-2-col{ grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width:992px){
+      .grid-2-col{ grid-template-columns: 1fr; }
+
+      .rab-top-grid{ grid-template-columns: 1fr; }
+      .dz-actions{ justify-content:center; }
+      .btn-upload-rab{ width:100% !important; justify-content:center; }
+      .rab-budget-card .btn-primary{ width:100%; min-width:0; }
+    }
+    @media (max-width:768px){
+      .detail-item{ flex-direction:column; align-items:flex-start; }
+      .detail-value, .detail-value-multiline{ text-align:left; margin-top:3px; }
+    }
+    @media (max-width:480px){
+      .ph-title h1{ font-size:20px; }
+      .section-title{ font-size:16px; }
+      .btn-primary{ width:100%; }
+      .btn-ghost{ width:100%; justify-content:center; }
+      .modal-footer{ justify-content:stretch; }
+    }
+
+    :root[data-theme="dark"] #teamList,
+    :root[data-theme="dark"] #mouCard,
+    :root[data-theme="dark"] #mouList,
+    :root[data-theme="dark"] #rabFileCard{
+      background: var(--bg-card-soft) !important;
+    }
+
+    .soft-box{
+      background: var(--bg-card-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    /* ✅ tombol kecil edit progres */
+    .btn-mini{
+      border:1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--primary-color);
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .btn-mini:hover{
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-soft);
+      border-color: var(--secondary-color);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SIDEBAR (pakai class master) -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
+      <div class="brand-text">Mulya Teknik</div>
+    </div>
+
+    <ul class="menu">
+      <li>
+        <a href="dashboard.html">
+          <i class='bx bxs-dashboard'></i>
+          <span class="menu-text">Dashboard</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="design.html">
+          <i class='bx bxs-color-fill'></i>
+          <span class="menu-text">Design</span>
+        </a>
+      </li>
+      <li>
+        <a href="laporan.html">
+          <i class='bx bxs-bar-chart-alt-2'></i>
+          <span class="menu-text">Laporan</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="user.html">
+          <i class='bx bxs-group'></i>
+          <span class="menu-text">Pengguna</span>
+        </a>
+      </li>
+
+      <!-- ✅ Parent Proyek open + active -->
+      <li class="has-submenu open active">
+        <a href="javascript:void(0)">
+          <i class='bx bxs-buildings'></i>
+          <span class="menu-text">Proyek</span>
+          <i class='bx bx-chevron-down submenu-toggle-icon'></i>
+        </a>
+
+        <ul class="submenu">
+          <li><a href="leads.html">Leads</a></li>
+          <li><a href="daftar_proyek.html">Daftar Proyek</a></li>
+          <li><a href="proyek_batal.html">Proyek Batal</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="handleLogoutClick()">
+        <i class='bx bx-log-out'></i> <span>Keluar</span>
+      </button>
+    </div>
+  </div>
+
+  <button class="toggle-btn" id="toggleBtn"><i class='bx bx-menu'></i></button>
+  <button class="mobile-close-btn" id="mobileCloseBtn"><i class='bx bx-x'></i></button>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- MAIN CONTENT (pakai class master: main-content) -->
+  <div class="main-content">
+    <!-- PAGE HEADER (master) -->
+    <div class="page-header">
+      <div class="user-welcome">
+        <h1>Detail Proyek</h1>
+        <p>Pantau informasi proyek, RAB, dokumen, progres, dan diskusi internal.</p>
+      </div>
+
+      <div class="header-right">
+        <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle tema">
+          <i class='bx bx-moon'></i>
+          <span class="theme-label">LIGHT</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="alert-container"></div>
+
+    <!-- HEADER PROYEK -->
+    <div class="project-header-card">
+      <div class="ph-top">
+        <div class="ph-title">
+          <h1 id="projectTitle">Memuat Data...</h1>
+          <p id="projectMeta" style="display:none;"></p>
+          <p id="projectLocation">
+            <i class='bx bxs-map'></i> -
+          </p>
+        </div>
+        <span class="ph-status" id="projectStatus">LOADING</span>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-info">
+          <span>Progress Keseluruhan</span>
+          <span id="progressText">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="openTab(event, 'tab1')">
+        <i class='bx bx-info-circle'></i> Info Proyek
+      </button>
+      <button class="tab-btn" onclick="openTab(event, 'tab3')">
+        <i class='bx bx-wallet'></i> RAB & Dokumen
+      </button>
+      <button class="tab-btn" onclick="openTab(event, 'tab4')">
+        <i class='bx bx-hard-hat'></i> Progres & Diskusi
+      </button>
+    </div>
+
+    <!-- TAB 1: INFO PROYEK -->
+    <div id="tab1" class="tab-content active">
+      <div class="grid-2-col">
+        <!-- DETAIL DATA PROYEK -->
+        <div class="card-section">
+          <div class="section-title"><i class='bx bx-data'></i> Detail Data Proyek</div>
+
+          <div class="details-list">
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-briefcase-alt-2'></i> Nama Proyek</div>
+              <div class="detail-value" id="infoName">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-hash'></i> ID Proyek</div>
+              <div class="detail-value" id="infoId">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-badge-check'></i> Status</div>
+              <div class="detail-value" id="infoStatus">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-user'></i> Klien</div>
+              <div class="detail-value" id="infoClient">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-calendar'></i> Tanggal Mulai</div>
+              <div class="detail-value" id="infoDate">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-time-five'></i> Durasi</div>
+              <div class="detail-value" id="infoDuration">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-map'></i> Lokasi</div>
+              <div class="detail-value detail-value-multiline" id="infoLocation">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-wallet'></i> Total RAB</div>
+              <div class="detail-value" id="infoRab">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-line-chart'></i> Perkiraan Keuntungan</div>
+              <div class="detail-value" id="infoMargin">-</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label"><i class='bx bx-detail'></i> Deskripsi</div>
+              <div class="detail-value detail-value-multiline" id="infoDesc">Tidak ada deskripsi.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KANAN: TIM, MOU -->
+        <div class="right-stack">
+          <!-- TIM -->
+          <div class="card-section">
+            <div class="section-title"><i class='bx bx-group'></i> Tim Proyek</div>
+            <div id="teamList" style="padding:10px; background:#f9f9f9; border-radius:8px; min-height:100px;">
+              <p style="color:#888; text-align:center; padding-top:30px;">Memuat tim...</p>
+            </div>
+          </div>
+
+          <!-- MOU TERAKHIR -->
+          <div class="card-section">
+            <div class="section-title"><i class='bx bx-file-blank'></i> MoU Terakhir</div>
+            <div id="mouCard" style="padding:10px; background:#f9f9f9; border-radius:8px; min-height:80px;">
+              <p style="color:#888; text-align:center; padding-top:10px;">Memeriksa data MoU...</p>
+            </div>
+          </div>
+
+          <!-- DAFTAR MOU (✅ pagination max 5) -->
+          <div class="card-section">
+            <div class="section-title"><i class='bx bx-file'></i> Daftar Dokumen MoU</div>
+            <div id="mouList" style="background:#f9f9f9; border-radius:8px; padding:10px;">
+              <div id="mouListItems" style="max-height:220px; overflow-y:auto;">
+                <span style="color:#999; font-size:13px;">Belum ada daftar MoU.</span>
+              </div>
+              <div class="pagination-bar" id="mouPagination" style="display:none;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: RAB & BUDGET -->
+    <div id="tab3" class="tab-content">
+      <div class="rab-top-grid">
+        <!-- CARD: NILAI RAB & MARGIN (kiri) -->
+        <div class="card-section rab-budget-card">
+          <div class="section-title"><i class='bx bx-calculator'></i> Rencana Anggaran Biaya (RAB)</div>
+
+          <div class="form-group">
+            <label style="font-size:15px;">Total Nilai RAB</label>
+            <input type="text" id="totalRAB" class="form-control"
+                   style="font-size:16px; font-weight:bold; color: var(--primary-color);"
+                   placeholder="Contoh: 1500000000">
+            
+          </div>
+
+          <div class="grid-2-col" style="grid-template-columns: 1fr 1fr; gap:14px;">
+            <div class="form-group">
+              <label>Perkiraan Margin (%)</label>
+              <input type="number" id="rabMargin" class="form-control" min="0" max="100" step="0.1" placeholder="Contoh: 15">
+            </div>
+            <div class="form-group">
+              <label>Perkiraan Keuntungan (Rp)</label>
+              <input type="text" id="rabProfit" class="form-control form-readonly" readonly placeholder="Akan terhitung otomatis">
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="handleSaveRabClick()">
+            <i class='bx bx-save'></i> Simpan Budget
+          </button>
+        </div>
+
+        <!-- CARD: UPLOAD FILE RAB (kanan) -->
+        <div class="card-section rab-upload-card">
+          <div class="section-title"><i class='bx bx-cloud-upload'></i> Upload Dokumen RAB</div>
+
+          <div class="rab-upload-grid">
+            <div style="flex:1;">
+              <input type="file" id="rabFileInput" hidden
+                     accept="application/pdf,image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+              <div class="dropzone" id="rabDropzone" role="button" tabindex="0" aria-label="Dropzone upload RAB">
+                <div class="dz-row">
+                  <div class="dz-icon"><i class='bx bxs-file-plus'></i></div>
+                  <div>
+                    <div class="dz-title">Tarik & lepas file RAB di sini</div>
+                    <div class="dz-sub">atau klik area ini untuk pilih file</div>
+                  </div>
+                </div>
+
+                <div class="dz-filename" id="rabSelectedName" style="display:none;"></div>
+
+                <div class="dz-meta">
+                  <span><i class='bx bx-shield-quarter'></i> Max 10MB</span>
+                  <span><i class='bx bx-file'></i> PDF / Gambar / Excel</span>
+                </div>
+              </div>
+
+              
+            </div>
+
+            <div class="dz-actions">
+              <button class="btn-primary btn-upload-rab" type="button" onclick="handleUploadRabFileClick()">
+                <i class='bx bx-upload'></i> Upload RAB
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD: DOKUMEN RAB (✅ pagination max 5) -->
+      <div class="card-section">
+        <div class="section-title"><i class='bx bx-file'></i> Dokumen RAB</div>
+        <div class="form-group">
+          <label>File RAB Terunggah</label>
+
+          <div id="rabFileCard" style="padding: 15px; background: #f4f7fa; border-radius: 8px;">
+            <div id="rabFileItems">
+              <span style="color: #666;">Memeriksa file...</span>
+            </div>
+            <div class="pagination-bar" id="rabPagination" style="display:none;"></div>
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: TIMELINE, PROGRES, DISKUSI & ADDENDUM -->
+    <div id="tab4" class="tab-content">
+      <div class="grid-2-col">
+        <div class="card-section timeline-card">
+          <div class="section-title"><i class='bx bx-time-five'></i> Timeline Progres</div>
+          <!-- ✅ max 5 tampil, sisanya scroll -->
+          <div class="timeline-scroll">
+            <div class="timeline" id="projectTimeline">
+              <p style="color:#64748b; font-style:italic;">Belum ada laporan progres.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-section" id="cardDiskusi">
+          <div class="section-title"><i class='bx bx-chat'></i> Diskusi Internal Proyek</div>
+
+          <div class="discussion-header">
+            <div class="topic-chips" id="topicChips"></div>
+            <button class="btn-topic-new" onclick="promptNewTopic()">
+              <i class='bx bx-plus'></i> Topik Baru
+            </button>
+          </div>
+
+          <div id="currentTopicLabel" class="discussion-subtitle">
+            Ruang diskusi: <strong>General</strong>
+          </div>
+
+          <div class="chat-box" id="chatBox">
+            <p style="text-align:center; color:#999; margin-top:50px;">Belum ada diskusi.</p>
+          </div>
+
+          <div style="display:flex; margin-top:15px; gap:10px; align-items:center;">
+            <input type="text" class="form-control" id="chatInput" placeholder="Tulis komentar atau catatan..."
+                   style="border-radius:50px; padding-left:20px;">
+            <button class="btn-primary" onclick="handlePostCommentClick()"
+                    style="border-radius:50%; width:45px; height:45px; padding:0; display:flex; justify-content:center; align-items:center;">
+              <i class='bx bxs-paper-plane' style="font-size:20px;"></i>
+            </button>
+          </div>
+
+          <div style="margin-top:8px; font-size:12px; color:#666; display:flex; align-items:center; gap:6px;">
+            <input type="checkbox" id="anonymousCheck" style="width:14px; height:14px;">
+            <label for="anonymousCheck">Kirim sebagai anonim</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ PROGRES & ADDENDUM dibuat memanjang (full width) + addendum di bawah progres -->
+      <div class="full-width-stack">
+        <!-- PROGRES LAPANGAN -->
+        <div class="card-section card-wide" id="cardProgressLapangan">
+          <div class="section-title"><i class='bx bx-hard-hat'></i> Progres Lapangan</div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="color:var(--text-soft); font-size:12px; line-height:1.4;">
+              
+            </div>
+            <button class="btn-primary" type="button" onclick="openProgressCreate()">
+              <i class='bx bx-plus-circle'></i> Input Progres
+            </button>
+          </div>
+
+          <div class="form-group" style="margin-top:5px;">
+            <label>Dokumen Progres Lapangan (Database)</label>
+
+            <div class="soft-box">
+              <div style="overflow-x:auto;">
+                <table class="table-mini hide-time-col">
+                  <thead>
+                    <tr>
+                      <th style="width:52px;">No</th>
+                      <th>Nama File</th>
+                      <th class="time-col">Waktu</th>
+                      <th style="width:110px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="progressDocsTbody">
+                    <tr>
+                      <td colspan="4" style="text-align:center; color:#999;">Memuat dokumen progres...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="pagination-bar" id="progressDocsPagination" style="display:none;"></div>
+            </div>
+
+            
+          </div>
+        </div>
+
+        <!-- ADDENDUM -->
+        <div class="card-section card-wide" id="cardAddendum">
+          <div class="section-title"><i class='bx bx-file'></i> Addendum Kontrak (Opsional)</div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="color:var(--text-soft); font-size:12px; line-height:1.4;">
+              
+            </div>
+            <button class="btn-primary" type="button" onclick="openModal('addendumModal')">
+              <i class='bx bx-plus-circle'></i> Input Addendum
+            </button>
+          </div>
+
+          <div class="form-group" style="margin-top:10px;">
+            <label>Daftar Addendum dari Database</label>
+            <div class="soft-box">
+              <div style="overflow-x:auto;">
+                <table class="table-mini">
+                  <thead>
+                    <tr>
+                      <th style="width:52px;">No</th>
+                      <th>Judul</th>
+                      <th>Kategori</th>
+                      <th>Jumlah</th>
+                      <th>Tanggal</th>
+                      <th style="width:110px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="addendumTableBody">
+                    <tr>
+                      <td colspan="6" style="text-align:center; color:#999;">Memuat addendum...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="pagination-bar" id="addendumPagination" style="display:none;"></div>
+            </div>
+
+            
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ✅ MODAL: INPUT PROGRES -->
+  <div class="modal-overlay" id="progressModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="progressModalTitle">
+      <div class="modal-header">
+        <div class="modal-title" id="progressModalTitle">
+          <i class='bx bx-hard-hat'></i> <span id="progressModalTitleText">Input Progres Lapangan</span>
+        </div>
+        <button class="modal-close" type="button" onclick="closeModal('progressModal')" aria-label="Tutup">
+          <i class='bx bx-x'></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="editingProgressId" value="">
+        <div class="form-group">
+          <label>Judul Pekerjaan</label>
+          <input type="text" class="form-control" id="progTitle" placeholder="Contoh: Pemasangan Keramik Lantai 1">
+        </div>
+
+        <div class="form-group">
+          <label>Deskripsi Detail</label>
+          <textarea class="form-control" id="progDesc" rows="3" placeholder="Jelaskan apa yang dikerjakan hari ini..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Bobot Progres (%)</label>
+          <input type="number" class="form-control" id="progWeight" min="0" max="100" step="0.1" placeholder="Misal: 5">
+        </div>
+
+        <div class="form-group">
+          <input type="file" id="progFile" hidden accept="image/*,video/*,application/pdf">
+          <label for="progFile" class="btn-primary"
+                 style="width:100%; background:#fff; color:#555; border:2px dashed #ccc; display:flex; justify-content:center; align-items:center; gap:6px; cursor:pointer; transition:.3s; box-shadow:none;">
+            <i class='bx bx-cloud-upload' style="font-size:20px;"></i> Upload Foto / Video / Dokumen
+          </label>
+          <span id="progFileName" style="font-size:12px; display:block; margin-top:6px; color:var(--primary-color); font-weight:700;"></span>
+          <div style="font-size:11px; color:#666; margin-top:2px;">(Max 10MB)</div>
+        </div>
+
+        <div style="font-size:12px; color:var(--text-soft); margin-top:10px;">
+          Tip: Kalau mode <b>Edit</b>, ini akan mengirim progres versi revisi (upload ulang) ke server dan otomatis tampil dari server.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-ghost" type="button" onclick="closeModal('progressModal')">
+          <i class='bx bx-x-circle'></i> Batal
+        </button>
+        <button class="btn-primary" type="button" onclick="handleUploadProgressClick()" style="background:var(--success-color);">
+          <i class='bx bx-send'></i> <span id="progressSubmitText">Kirim Progres</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ MODAL: INPUT ADDENDUM -->
+  <div class="modal-overlay" id="addendumModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addendumModalTitle">
+      <div class="modal-header">
+        <div class="modal-title" id="addendumModalTitle">
+          <i class='bx bx-file'></i> Input Addendum Kontrak
+        </div>
+        <button class="modal-close" type="button" onclick="closeModal('addendumModal')" aria-label="Tutup">
+          <i class='bx bx-x'></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Kategori Anggaran</label>
+          <input type="text" id="addendumKategori" class="form-control" placeholder="Contoh: Material, Upah, Lainnya">
+        </div>
+
+        <div class="form-group">
+          <label>Jumlah Perubahan (Rp)</label>
+          <input type="text" id="addendumAmount" class="form-control" placeholder="Contoh: 500000000">
+          
+        </div>
+
+        <div class="form-group">
+          <label>Tanggal Perubahan</label>
+          <input type="date" id="addendumDate" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Judul Addendum</label>
+          <input type="text" id="addendumTitle" class="form-control" placeholder="Contoh: Addendum Perubahan Jadwal">
+        </div>
+
+        <div class="form-group">
+          <label>Deskripsi Addendum</label>
+          <textarea id="addendumDesc" class="form-control" rows="3" placeholder="Ringkasan isi addendum (opsional)..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <input type="file" id="addendumFile" hidden accept="image/*,application/pdf,.doc,.docx">
+          <button type="button" class="btn-primary"
+                  onclick="document.getElementById('addendumFile').click()"
+                  style="background:#fff; color:#555; border:2px dashed #ccc; width:100%; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:none;">
+            <i class='bx bx-cloud-upload'></i> Pilih File Addendum
+          </button>
+          <span id="addendumFileName" style="font-size:12px; display:block; margin-top:6px; color:var(--primary-color); font-weight:700;"></span>
+          <div style="font-size:11px; color:#666; margin-top:2px;">(Max 10MB, PDF/gambar/doc/docx)</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-ghost" type="button" onclick="closeModal('addendumModal')">
+          <i class='bx bx-x-circle'></i> Batal
+        </button>
+        <button class="btn-primary" type="button" onclick="handleUploadAddendumClick()">
+          <i class='bx bx-save'></i> Unggah Addendum
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== THEME HANDLER (LIGHT / DARK) =====
+    const THEME_STORAGE_KEYS = ['mulya_theme', 'theme', 'app_theme', 'color-theme'];
+
+    function getInitialTheme() {
+      let saved = null;
+      try {
+        for (let i = 0; i < THEME_STORAGE_KEYS.length; i++) {
+          const key = THEME_STORAGE_KEYS[i];
+          const val = localStorage.getItem(key);
+          if (val === 'light' || val === 'dark') {
+            saved = val;
+            break;
+          }
+        }
+      } catch (e) { saved = null; }
+
+      if (!saved) {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        saved = prefersDark ? 'dark' : 'light';
+      }
+      return saved;
+    }
+
+    function applyTheme(theme, persist) {
+      if (persist === undefined) persist = true;
+      const safe = theme === 'dark' ? 'dark' : 'light';
+      const root = document.documentElement;
+      root.setAttribute('data-theme', safe);
+
+      const icon = document.querySelector('#themeToggleBtn i');
+      const label = document.querySelector('#themeToggleBtn .theme-label');
+
+      if (icon) {
+        if (safe === 'dark') {
+          icon.classList.remove('bx-moon');
+          icon.classList.add('bx-sun');
+        } else {
+          icon.classList.remove('bx-sun');
+          icon.classList.add('bx-moon');
+        }
+      }
+
+      if (label) label.textContent = safe === 'dark' ? 'DARK' : 'LIGHT';
+
+      if (persist) {
+        try {
+          for (let i = 0; i < THEME_STORAGE_KEYS.length; i++) {
+            localStorage.setItem(THEME_STORAGE_KEYS[i], safe);
+          }
+        } catch (e) {}
+      }
+    }
+
+    // ===== KONFIGURASI API =====
+    const BASE_URL = "https://mt-optima-api-176148115028.asia-southeast2.run.app";
+    const AUTH_TOKEN = localStorage.getItem('token');
+
+    // ✅ sesuai daftar API yang kamu kirim
+    const API_PROJECT_FILES         = (id) => `${BASE_URL}/api/projects/${id}/files`;          // GET
+    const API_PROJECT_PROGRESS      = (id) => `${BASE_URL}/api/projects/${id}/progress`;       // GET & POST
+    const API_PROJECT_PROGRESS_ALT  = (id) => `${BASE_URL}/${id}/progress`;                    // POST fallback (jika memang ada)
+    const API_PROJECT_BUDGET_CHANGE = (id) => `${BASE_URL}/api/projects/${id}/budget-change`;  // POST (GET ternyata 405 di server kamu)
+    const API_UPDATE_RAB            = (id) => `${BASE_URL}/api/projects/${id}/rab`;            // POST (budget + file_rab)
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('id');
+
+    const GENERAL_TOPIC_KEY = 'general';
+    let currentTopicId = GENERAL_TOPIC_KEY;
+    let commentTopics = [];
+
+    let projectFiles = {
+      desain: [],
+      progres_lapangan: [],
+      dokumen_legal: [],
+      rab: [],
+      addendum: []
+    };
+
+    // ✅ cache timeline untuk fitur "edit (upload ulang)"
+    let timelineCache = [];
+
+    const rupiahFormatter = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    });
+
+    const ITEMS_PER_PAGE = 5;
+    let mouPage = 1;
+    let rabPage = 1;
+    let progressDocsPage = 1;
+    let addendumPage = 1;
+
+    // ✅ addendum cache
+    let addendumItems = [];
+
+    if (!AUTH_TOKEN) {
+      alert("Sesi Anda habis. Silakan login kembali.");
+      window.location.href = "login.html";
+    }
+    if (!projectId) {
+      alert("Project ID tidak ditemukan. Kembali ke daftar.");
+      window.location.href = "daftar_proyek.html";
+    }
+
+    // ===== LOGOUT API =====
+    async function logout() {
+      try {
+        await fetch(`${BASE_URL}/api/logout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          }
+        });
+      } catch (error) {
+        console.error("Logout error:", error);
+      } finally {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // ===== HELPER ALERT =====
+    function tampilkanAlert(msg, type) {
+      const div = document.createElement("div");
+      div.className = `alert alert-${type}`;
+      div.innerHTML = `<i class='bx ${type === "success" ? "bx-check-circle" : "bx-x-circle"}'></i> ${msg}`;
+      document.querySelector(".alert-container").appendChild(div);
+      setTimeout(() => {
+        div.style.opacity = "0";
+        setTimeout(() => div.remove(), 300);
+      }, 3000);
+    }
+
+    // ===== DATE HELPERS (real-time relative + date only) =====
+    function parseToTime(x) {
+      const t = new Date(x).getTime();
+      return isFinite(t) ? t : null;
+    }
+
+    function formatDateOnly(dateStr) {
+      if (!dateStr) return '-';
+      const t = parseToTime(dateStr);
+      if (!t) return String(dateStr);
+      try {
+        return new Date(t).toLocaleDateString('id-ID', { year:'numeric', month:'short', day:'2-digit' });
+      } catch(_) {
+        return String(dateStr);
+      }
+    }
+
+    function formatDateTime(dateStr) {
+      if (!dateStr) return '-';
+      const t = parseToTime(dateStr);
+      if (!t) return String(dateStr);
+      try {
+        return new Date(t).toLocaleString('id-ID', { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+      } catch(_) {
+        return String(dateStr);
+      }
+    }
+
+    function formatTimelineRelative(date, absoluteStr) {
+      if (!date) return absoluteStr || '-';
+      const t = parseToTime(date);
+      if (!t) return absoluteStr || date;
+
+      const now = Date.now();
+      const diff = now - t;
+
+      const sec = Math.floor(diff/1000);
+      const min = Math.floor(sec/60);
+      const hr  = Math.floor(min/60);
+      const day = Math.floor(hr/24);
+
+      if (sec < 60) return `${sec} detik lalu`;
+      if (min < 60) return `${min} menit lalu`;
+      if (hr < 24)  return `${hr} jam lalu`;
+      if (day < 7)  return `${day} hari lalu`;
+
+      return formatDateTime(date);
+    }
+
+    function updateTimelineRelativeTimes() {
+      document.querySelectorAll('#projectTimeline .timeline-item').forEach((el) => {
+        const dt = el.getAttribute('data-ts');
+        const dateEl = el.querySelector('.timeline-date');
+        if (dateEl) dateEl.textContent = formatTimelineRelative(dt, dt);
+      });
+    }
+
+    // ✅ update realtime label untuk RAB / ProgresLapanganDocs / Addendum (seperti MoU)
+    function updateRealtimeLabels() {
+      document.querySelectorAll('[data-rt="1"]').forEach((el) => {
+        const ts = el.getAttribute('data-ts') || '';
+        const abs = el.getAttribute('data-abs') || ts || '-';
+        const rel = formatTimelineRelative(ts, ts);
+        el.textContent = `${rel} • ${abs}`;
+      });
+    }
+
+    // ===== HELPER DOWNLOAD LINK =====
+    function getDownloadUrlFromFile(f) {
+      let url =
+        f.url_download ||
+        f.download_url ||
+        f.downloadUrl ||
+        f.url ||
+        f.link ||
+        f.path_download ||
+        f.download_link ||
+        f.file_url ||
+        f.fileUrl;
+
+      if (!url) return null;
+      if (!url.startsWith('http')) url = `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+      return url;
+    }
+
+    function isExternalObjectStorageUrl(url) {
+      const u = (url || '').toLowerCase();
+      return u.includes('backblazeb2.com') || u.includes('s3.') || u.includes('amazonaws.com');
+    }
+
+    /**
+     * ✅ FIX CORS/405 download:
+     * - presigned Backblaze/S3 jangan di-fetch via JS (preflight OPTIONS -> CORS/405).
+     * - gunakan <a href> (browser navigation) agar aman.
+     */
+    async function downloadFile(encodedUrl, encodedName) {
+      const url = decodeURIComponent(encodedUrl || '');
+      const filename = decodeURIComponent(encodedName || 'file');
+
+      if (!url) {
+        tampilkanAlert("Link download tidak tersedia.", "danger");
+        return;
+      }
+
+      try {
+        if (isExternalObjectStorageUrl(url)) {
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          return;
+        }
+
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          }
+        });
+
+        if (!response.ok) {
+          const t = await response.text().catch(()=> '');
+          throw new Error("Gagal mengunduh file (status " + response.status + ") " + t);
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = filename || 'file';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+
+      } catch (error) {
+        console.error("Download error:", error);
+        tampilkanAlert(error.message || "Gagal mengunduh file.", "danger");
+      }
+    }
+
+    // ✅ MODAL OPEN/CLOSE
+    function openModal(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.add('active');
+      el.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+
+      el.addEventListener('click', function onBackdrop(e){
+        if (e.target === el) closeModal(id);
+      }, { once:true });
+    }
+    function closeModal(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('active');
+      el.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        ['progressModal','addendumModal'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el && el.classList.contains('active')) closeModal(id);
+        });
+      }
+    });
+
+    // ✅ HELPER: fetch POST dengan fallback endpoint
+    async function postWithFallback(urlList, options, acceptStatusList) {
+      const urls = Array.isArray(urlList) ? urlList : [urlList];
+      let lastErr = null;
+
+      for (let i = 0; i < urls.length; i++) {
+        const url = urls[i];
+        try {
+          const res = await fetch(url, options);
+          if (res.ok) return res;
+
+          const st = res.status;
+          const text = await res.text().catch(()=> '');
+
+          if (Array.isArray(acceptStatusList) && acceptStatusList.includes(st)) return res;
+
+          if (st === 404 || st === 405) {
+            lastErr = new Error(`Endpoint ${url} gagal (status ${st}) ${text}`);
+            continue;
+          }
+
+          throw new Error(`Request gagal (status ${st}) ${text}`);
+
+        } catch (e) {
+          lastErr = e;
+          if (!(String(e.message || '').includes('status 404') || String(e.message || '').includes('status 405'))) {
+            break;
+          }
+        }
+      }
+
+      throw lastErr || new Error('Request gagal.');
+    }
+
+    // ===== INIT =====
+    document.addEventListener("DOMContentLoaded", () => {
+      const initialTheme = getInitialTheme();
+      applyTheme(initialTheme, false);
+
+      const themeToggleEl = document.getElementById("themeToggleBtn");
+      if (themeToggleEl) {
+        themeToggleEl.addEventListener("click", () => {
+          const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+          const next = current === 'dark' ? 'light' : 'dark';
+          applyTheme(next, true);
+        });
+      }
+
+      if (location.protocol === 'file:') {
+        console.warn("[MulyaTeknik] Kamu membuka file via file:// (origin null). Sebaiknya jalankan via http server agar tidak kena masalah CORS saat fetch.");
+      }
+
+      document.querySelectorAll('.has-submenu > a').forEach((trigger) => {
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const parent = trigger.closest('.has-submenu');
+          if (!parent) return;
+
+          const willOpen = !parent.classList.contains('open');
+
+          document.querySelectorAll('.has-submenu.open').forEach((li) => {
+            if (li !== parent) li.classList.remove('open');
+          });
+
+          parent.classList.toggle('open', willOpen);
+        });
+      });
+
+      fetchProjectDetail();
+      fetchProjectFiles();
+      fetchTimeline();
+      fetchCommentTopics();
+      fetchComments(GENERAL_TOPIC_KEY);
+
+      // ✅ Addendum list: jangan langsung GET /budget-change kalau server 405.
+      loadAddendumFromLocal();
+      fetchAddendumList();
+
+      const rabInput = document.getElementById('totalRAB');
+      if (rabInput) {
+        rabInput.addEventListener('input', function (e) {
+          handleRabInputFormat(e);
+          updateRabProfit();
+        });
+      }
+
+      const marginInput = document.getElementById('rabMargin');
+      if (marginInput) marginInput.addEventListener('input', updateRabProfit);
+
+      const progFileInput = document.getElementById('progFile');
+      if (progFileInput) {
+        progFileInput.addEventListener('change', function () {
+          if (this.files[0]) {
+            document.getElementById('progFileName').innerText = "File terpilih: " + this.files[0].name;
+          } else {
+            document.getElementById('progFileName').innerText = "";
+          }
+        });
+      }
+
+      const addendumFileInput = document.getElementById('addendumFile');
+      if (addendumFileInput) {
+        addendumFileInput.addEventListener('change', function () {
+          if (this.files[0]) {
+            document.getElementById('addendumFileName').innerText = "File terpilih: " + this.files[0].name;
+          } else {
+            document.getElementById('addendumFileName').innerText = "";
+          }
+        });
+      }
+
+      // ✅ AUTO FORMAT nominal addendum (1.000.000)
+      const addAmt = document.getElementById('addendumAmount');
+      if (addAmt) {
+        addAmt.addEventListener('input', (e) => {
+          e.target.value = formatNumberWithDots(e.target.value);
+        });
+      }
+
+      const chatInputEl = document.getElementById('chatInput');
+      if (chatInputEl) {
+        chatInputEl.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handlePostCommentClick();
+          }
+        });
+      }
+
+      setupRabDropzone();
+
+      const sidebar = document.getElementById("sidebar");
+      const toggleBtn = document.getElementById("toggleBtn");
+      const mobileCloseBtn = document.getElementById("mobileCloseBtn");
+      const overlay = document.getElementById("overlay");
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+          if (window.innerWidth <= 768) {
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+          } else {
+            sidebar.classList.toggle("collapsed");
+          }
+        });
+      }
+      if (mobileCloseBtn) {
+        mobileCloseBtn.addEventListener("click", () => {
+          sidebar.classList.remove("active");
+          overlay.classList.remove("active");
+        });
+      }
+      if (overlay) {
+        overlay.addEventListener("click", () => {
+          sidebar.classList.remove("active");
+          overlay.classList.remove("active");
+        });
+      }
+
+      // ✅ real-time refresh relative timestamp (timeline + label lain)
+      setInterval(() => {
+        updateTimelineRelativeTimes();
+        updateRealtimeLabels();
+      }, 60000);
+    });
+
+    /* =========================
+       ✅ UPLOAD RAB (drag & drop + manual)
+       ========================= */
+    function setupRabDropzone() {
+      const dz = document.getElementById('rabDropzone');
+      const input = document.getElementById('rabFileInput');
+      const nameEl = document.getElementById('rabSelectedName');
+      if (!dz || !input) return;
+
+      function setSelected(file) {
+        if (!file) {
+          if (nameEl) { nameEl.style.display = 'none'; nameEl.textContent = ''; }
+          return;
+        }
+        if (nameEl) {
+          nameEl.style.display = 'block';
+          nameEl.textContent = `File terpilih: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+        }
+      }
+
+      dz.addEventListener('click', () => input.click());
+      dz.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          input.click();
+        }
+      });
+
+      input.addEventListener('change', () => {
+        setSelected(input.files && input.files[0] ? input.files[0] : null);
+      });
+
+      dz.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dz.classList.add('dragover');
+      });
+      dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+      dz.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dz.classList.remove('dragover');
+        const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0] ? e.dataTransfer.files[0] : null;
+        if (!file) return;
+
+        try {
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          input.files = dt.files;
+        } catch (_) {}
+        setSelected(file);
+      });
+    }
+
+    // ✅ upload RAB sesuai API -> field wajib: total_rab, perkiraan_margin, file_rab
+    async function uploadRabFile() {
+      const input = document.getElementById('rabFileInput');
+      const file = input?.files?.[0] || null;
+
+      if (!file) {
+        tampilkanAlert("Silakan pilih file RAB terlebih dahulu.", "danger");
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        tampilkanAlert("Ukuran file terlalu besar. Maksimal 10MB.", "danger");
+        return;
+      }
+
+      const total = getTotalRabNumber();
+      const margin = getMarginNumber();
+
+      const fd = new FormData();
+      fd.append('file_rab', file);
+
+      if (total && total > 0) fd.append('total_rab', String(total));
+      if (isFinite(margin)) fd.append('perkiraan_margin', String(margin));
+
+      // alias aman
+      fd.append('file', file);
+
+      try {
+        const res = await fetch(API_UPDATE_RAB(projectId), {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: fd
+        });
+
+        if (!res.ok) {
+          const t = await res.text().catch(()=> '');
+          throw new Error(`Gagal upload RAB (status ${res.status}) ${t}`);
+        }
+
+        tampilkanAlert("Berhasil upload dokumen RAB. Data tersimpan ke database.", "success");
+        await fetchProjectFiles();
+
+        try { input.value = ""; } catch(e) {}
+        const nameEl = document.getElementById('rabSelectedName');
+        if (nameEl) { nameEl.style.display = 'none'; nameEl.textContent = ""; }
+
+      } catch (error) {
+        console.error("Upload RAB error:", error);
+        tampilkanAlert(error.message || "Gagal upload dokumen RAB.", "danger");
+      }
+    }
+
+    /* =========================
+       ✅ Pagination helper
+       ========================= */
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function renderPagination(el, page, totalPages, onPrev, onNext) {
+      if (!el) return;
+      if (totalPages <= 1) {
+        el.style.display = 'none';
+        el.innerHTML = '';
+        return;
+      }
+      el.style.display = 'flex';
+      el.innerHTML = `
+        <div class="pg-left">Halaman <b>${page}</b> dari <b>${totalPages}</b></div>
+        <div class="pg-actions">
+          <button class="pg-btn" id="${el.id}-prev" ${page <= 1 ? 'disabled' : ''}>
+            <i class='bx bx-chevron-left'></i> Prev
+          </button>
+          <button class="pg-btn" id="${el.id}-next" ${page >= totalPages ? 'disabled' : ''}>
+            Next <i class='bx bx-chevron-right'></i>
+          </button>
+        </div>
+      `;
+      const prevBtn = document.getElementById(`${el.id}-prev`);
+      const nextBtn = document.getElementById(`${el.id}-next`);
+      if (prevBtn) prevBtn.onclick = onPrev;
+      if (nextBtn) nextBtn.onclick = onNext;
+    }
+
+    async function fetchProjectDetail() {
+      try {
+        const response = await fetch(`${BASE_URL}/api/projects/${projectId}`, {
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          }
+        });
+        if (!response.ok) {
+          const t = await response.text().catch(()=> '');
+          throw new Error("Gagal mengambil data proyek (status " + response.status + ") " + t);
+        }
+
+        const res = await response.json();
+        const data = res.data || res;
+
+        document.getElementById('projectTitle').innerText = data.nama_proyek || data.name || "Tanpa Nama";
+        document.getElementById('projectLocation').innerHTML =
+          `<i class='bx bxs-map'></i> ${data.alamat_proyek || data.lokasi || data.address || '-'}`;
+
+        const statusEl = document.getElementById('projectStatus');
+        const statusText = data.status || data.project_status || 'Unknown';
+        statusEl.innerText = statusText;
+
+        const statusLower = (statusText || '').toLowerCase();
+        if (statusLower.includes('aktif')) {
+          statusEl.style.cssText = "background:#e6f7ff; color:#1890ff; border:1px solid #91d5ff;";
+        } else if (statusLower.includes('selesai')) {
+          statusEl.style.cssText = "background:#f6ffed; color:#52c41a; border:1px solid #b7eb8f;";
+        } else if (statusLower.includes('batal') || statusLower.includes('archive')) {
+          statusEl.style.cssText = "background:#fff1f0; color:#cf1322; border:1px solid #ffa39e;";
+        } else {
+          statusEl.style.cssText = "background:#fffbe6; color:#faad14; border:1px solid #ffe58f;";
+        }
+
+        const pct = Number(data.persentase_selesai || data.progress || data.persentase || 0) || 0;
+        document.getElementById('progressText').innerText = `${pct}%`;
+        document.getElementById('progressBar').style.width = `${pct}%`;
+
+        const infoNameEl      = document.getElementById('infoName');
+        const infoIdEl        = document.getElementById('infoId');
+        const infoStatusEl    = document.getElementById('infoStatus');
+        const infoClientEl    = document.getElementById('infoClient');
+        const infoDateEl      = document.getElementById('infoDate');
+        const infoDurationEl  = document.getElementById('infoDuration');
+        const infoLocationEl  = document.getElementById('infoLocation');
+        const infoDescEl      = document.getElementById('infoDesc');
+        const infoRabEl       = document.getElementById('infoRab');
+        const infoMarginEl    = document.getElementById('infoMargin');
+
+        if (infoNameEl)     infoNameEl.innerText     = data.nama_proyek   || data.name || '-';
+        if (infoIdEl)       infoIdEl.innerText       = data.id            || data.project_id || '-';
+        if (infoStatusEl)   infoStatusEl.innerText   = data.status        || data.project_status || '-';
+        if (infoClientEl)   infoClientEl.innerText   = data.nama_klien    || data.client_name || (data.klien?.nama) || '-';
+        if (infoDateEl)     infoDateEl.innerText     = data.tanggal_mulai || data.start_date || '-';
+        if (infoDurationEl) infoDurationEl.innerText = data.durasi        || data.duration || '-';
+        if (infoLocationEl) infoLocationEl.innerText = data.alamat_proyek || data.lokasi || data.address || '-';
+        if (infoDescEl)     infoDescEl.innerText     = data.deskripsi     || data.description || 'Tidak ada deskripsi.';
+
+        const totalRabValRaw  = data.total_rab ?? data.totalRAB ?? data.rab_total ?? 0;
+        const totalRabVal     = totalRabValRaw ? Number(totalRabValRaw) : 0;
+
+        const storedMarginRaw = (data.perkiraan_margin !== undefined && data.perkiraan_margin !== null)
+          ? data.perkiraan_margin
+          : (data.margin ?? 0);
+
+        let marginProfit  = 0;
+        let marginPercent = 0;
+
+        if (totalRabVal && storedMarginRaw !== undefined && storedMarginRaw !== null) {
+          const storedMarginNum = Number(storedMarginRaw);
+          if (!isNaN(storedMarginNum) && totalRabVal) {
+            if (storedMarginNum <= 1000) {
+              marginPercent = storedMarginNum;
+              marginProfit  = Math.round(totalRabVal * storedMarginNum / 100);
+            } else {
+              marginProfit  = storedMarginNum;
+              marginPercent = (marginProfit / totalRabVal) * 100;
+            }
+          }
+        }
+
+        if (infoRabEl)    infoRabEl.innerText    = totalRabVal ? rupiahFormatter.format(totalRabVal) : '-';
+        if (infoMarginEl) infoMarginEl.innerText = marginProfit ? rupiahFormatter.format(marginProfit) : '-';
+
+        const totalRABInput   = document.getElementById('totalRAB');
+        const rabMarginInput  = document.getElementById('rabMargin');
+        const rabProfitInput  = document.getElementById('rabProfit');
+
+        if (totalRABInput) {
+          totalRABInput.value = totalRabVal ? String(totalRabVal) : '';
+          totalRABInput.value = formatNumberWithDots(totalRABInput.value);
+        }
+        if (rabMarginInput) {
+          rabMarginInput.value = (marginPercent && isFinite(marginPercent))
+            ? marginPercent.toFixed(1)
+            : "";
+        }
+        if (rabProfitInput) {
+          rabProfitInput.value = marginProfit ? rupiahFormatter.format(marginProfit) : "";
+        }
+
+        const team = data.assigned_users || data.team_members || data.users || data.tim || [];
+        const teamContainer = document.getElementById('teamList');
+        if (Array.isArray(team) && team.length > 0) {
+          teamContainer.innerHTML = team.map(u => {
+            const nama = u.name || u.nama || 'Anggota Tim';
+            const peran = u.peran || u.role || u.jabatan || 'Anggota Tim';
+            const inisial = (nama || 'A').charAt(0).toUpperCase();
+            return `
+              <div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid rgba(15,23,42,0.10);">
+                <div style="width:35px; height:35px; background:#e3eefc; color:var(--primary-color); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold;">
+                  ${inisial}
+                </div>
+                <div>
+                  <div style="font-weight:700; font-size:14px;">${nama}</div>
+                  <div style="font-size:12px; color:#777;">${peran}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          teamContainer.innerHTML = '<p style="color:#999; text-align:center; padding:20px;">Belum ada tim yang ditugaskan.</p>';
+        }
+
+      } catch (error) {
+        console.error(error);
+        tampilkanAlert("Gagal memuat detail proyek.", "danger");
+      }
+    }
+
+    // ✅ FETCH FILES
+    async function fetchProjectFiles() {
+      try {
+        const res = await fetch(API_PROJECT_FILES(projectId), {
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          }
+        });
+        if (!res.ok) {
+          const t = await res.text().catch(()=> '');
+          throw new Error("Gagal mengambil file proyek (status " + res.status + ") " + t);
+        }
+
+        const j = await res.json();
+        let list = j.data || j.files || j || [];
+        let flat = [];
+
+        if (Array.isArray(list)) {
+          flat = list;
+        } else if (list && typeof list === 'object') {
+          Object.values(list).forEach(v => {
+            if (Array.isArray(v)) flat.push(...v);
+          });
+        }
+
+        projectFiles = { desain:[], progres_lapangan:[], dokumen_legal:[], rab:[], addendum:[] };
+
+        (flat || []).forEach(f => {
+          const katRaw = (f.kategori || f.category || f.tipe || f.type || '').toString();
+          const kat = katRaw.toLowerCase();
+          const nama = (f.nama_file || f.filename || f.name || '').toString().toLowerCase();
+
+          if (kat.includes('addendum') || kat.includes('adendum') || nama.includes('addendum') || nama.includes('adendum')) { projectFiles.addendum.push(f); return; }
+          if (kat.includes('rab') || nama.includes('rab')) { projectFiles.rab.push(f); return; }
+          if (kat.includes('progres') || kat.includes('lapangan') || nama.includes('progres')) { projectFiles.progres_lapangan.push(f); return; }
+          if (kat.includes('desain') || kat.includes('design') || nama.includes('desain')) { projectFiles.desain.push(f); return; }
+          if (kat.includes('mou') || kat.includes('legal') || nama.includes('mou')) { projectFiles.dokumen_legal.push(f); return; }
+
+          projectFiles.dokumen_legal.push(f);
+        });
+
+        renderMouFromFiles();
+        renderRabFiles();
+        renderProgresLapanganDocs();
+
+        // ✅ FIX: kalau tombol unduh addendum tidak berfungsi karena url null,
+        // kita pastikan addendumItems minimal dibangun dari file addendum yang ada.
+        mergeAddendumWithFiles();
+        renderAddendumTable();
+
+        // ✅ update realtime label setelah render
+        updateRealtimeLabels();
+
+      } catch (e) {
+        console.error(e);
+        const rabItems = document.getElementById('rabFileItems');
+        if (rabItems) rabItems.innerHTML = `<span style="color:#999; font-size:13px;">Gagal memuat dokumen.</span>`;
+        const mouItems = document.getElementById('mouListItems');
+        if (mouItems) mouItems.innerHTML = `<span style="color:#999; font-size:13px;">Gagal memuat dokumen.</span>`;
+        const pTbody = document.getElementById('progressDocsTbody');
+        if (pTbody) pTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">Gagal memuat dokumen progres.</td></tr>`;
+      }
+    }
+
+    function renderMouFromFiles() {
+      const mouCard = document.getElementById('mouCard');
+      const listEl = document.getElementById('mouListItems');
+      const pgEl = document.getElementById('mouPagination');
+
+      const files = (projectFiles.dokumen_legal || []).filter(f => {
+        const kat = (f.kategori || f.category || f.tipe || f.type || '').toString().toLowerCase();
+        const nama = (f.nama_file || f.filename || f.name || '').toString().toLowerCase();
+        return kat.includes('mou') || nama.includes('mou');
+      });
+
+      const sorted = files.slice().sort((a,b) => {
+        const da = parseToTime(a.created_at || a.updated_at || a.tanggal || 0) || 0;
+        const db = parseToTime(b.created_at || b.updated_at || b.tanggal || 0) || 0;
+        if (db !== da) return db - da;
+        return (Number(b.id || 0) - Number(a.id || 0));
+      });
+
+      if (mouCard) {
+        if (sorted.length === 0) {
+          mouCard.innerHTML = `<p style="color:#999; text-align:center; padding:10px;">Belum ada MoU.</p>`;
+        } else {
+          const f = sorted[0];
+          const name = f.nama_file || f.filename || f.name || 'MoU';
+          const url = getDownloadUrlFromFile(f);
+          const tanggal = f.tanggal_upload || f.created_at || f.updated_at || '';
+          const abs = tanggal ? formatDateTime(tanggal) : '';
+          mouCard.innerHTML = `
+            <div style="display:flex; align-items:flex-start; gap:10px;">
+              <div style="width:38px; height:38px; border-radius:12px; background:rgba(0,188,212,0.14); display:flex; align-items:center; justify-content:center; color:var(--primary-color);">
+                <i class='bx bxs-file'></i>
+              </div>
+              <div style="flex:1;">
+                <div style="font-weight:800; color:var(--primary-color); font-size:13px; margin-bottom:4px;">${name}</div>
+                <div style="font-size:12px; color:#777;">${tanggal ? formatDateTime(tanggal) : ''}</div>
+                ${url ? `
+                  <button class="btn-primary" style="margin-top:10px; padding:8px 12px; font-size:12px;"
+                    onclick="downloadFile('${encodeURIComponent(url)}', '${encodeURIComponent(name)}')">
+                    <i class='bx bx-download'></i> Unduh
+                  </button>` : `<div style="margin-top:10px; font-size:12px; color:#999;">Link download tidak tersedia.</div>`}
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      if (!listEl) return;
+
+      if (sorted.length === 0) {
+        listEl.innerHTML = `<span style="color:#999; font-size:13px;">Belum ada daftar MoU.</span>`;
+        if (pgEl) { pgEl.style.display='none'; pgEl.innerHTML=''; }
+        return;
+      }
+
+      const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+      mouPage = clamp(mouPage, 1, totalPages);
+
+      const start = (mouPage - 1) * ITEMS_PER_PAGE;
+      const pageItems = sorted.slice(start, start + ITEMS_PER_PAGE);
+
+      listEl.innerHTML = pageItems.map((f, idx) => {
+        const name = f.nama_file || f.filename || f.name || `MoU ${start + idx + 1}`;
+        const url = getDownloadUrlFromFile(f);
+        const tanggal = f.tanggal_upload || f.created_at || f.updated_at || '';
+        return `
+          <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; padding:10px; border-bottom:1px solid rgba(15,23,42,0.08);">
+            <div style="min-width:0;">
+              <div style="font-weight:700; font-size:13px; color:var(--text-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${name}</div>
+              <div style="font-size:11px; color:#888;">${tanggal ? formatDateTime(tanggal) : ''}</div>
+            </div>
+            <div>
+              ${url ? `
+                <button class="pg-btn" style="padding:7px 10px;" onclick="downloadFile('${encodeURIComponent(url)}', '${encodeURIComponent(name)}')">
+                  <i class='bx bx-download'></i>
+                </button>` : `
+                <button class="pg-btn" style="padding:7px 10px;" disabled title="Tidak ada link">
+                  <i class='bx bx-link-alt'></i>
+                </button>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderPagination(pgEl, mouPage, totalPages,
+        () => { mouPage = clamp(mouPage - 1, 1, totalPages); renderMouFromFiles(); },
+        () => { mouPage = clamp(mouPage + 1, 1, totalPages); renderMouFromFiles(); }
+      );
+    }
+
+    // ✅ RAB: tambahkan keterangan waktu real-time seperti MoU
+    function renderRabFiles() {
+      const itemsEl = document.getElementById('rabFileItems');
+      const pgEl = document.getElementById('rabPagination');
+      if (!itemsEl) return;
+
+      const files = (projectFiles.rab || []).slice().sort((a,b) => {
+        const da = parseToTime(a.created_at || a.updated_at || a.tanggal || 0) || 0;
+        const db = parseToTime(b.created_at || b.updated_at || b.tanggal || 0) || 0;
+        if (db !== da) return db - da;
+        return (Number(b.id || 0) - Number(a.id || 0));
+      });
+
+      if (files.length === 0) {
+        itemsEl.innerHTML = `<span style="color:#777;">Belum ada file RAB.</span>`;
+        if (pgEl) { pgEl.style.display='none'; pgEl.innerHTML=''; }
+        return;
+      }
+
+      const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
+      rabPage = clamp(rabPage, 1, totalPages);
+
+      const start = (rabPage - 1) * ITEMS_PER_PAGE;
+      const pageItems = files.slice(start, start + ITEMS_PER_PAGE);
+
+      itemsEl.innerHTML = pageItems.map((f, idx) => {
+        const name = f.nama_file || f.filename || f.name || `RAB ${start + idx + 1}`;
+        const url = getDownloadUrlFromFile(f);
+        const ts = f.tanggal_upload || f.created_at || f.updated_at || f.tanggal || '';
+        const abs = ts ? formatDateTime(ts) : '-';
+        return `
+          <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; padding:10px; border-bottom:1px solid rgba(15,23,42,0.08);">
+            <div style="min-width:0;">
+              <div style="font-weight:800; font-size:13px; color:var(--primary-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <i class='bx bxs-file' style="margin-right:6px;"></i>${name}
+              </div>
+              <span class="rt-time" data-rt="1" data-ts="${ts}" data-abs="${abs}">
+                ${ts ? (formatTimelineRelative(ts, ts) + " • " + abs) : "-"}
+              </span>
+            </div>
+            <div>
+              ${url ? `
+                <button class="btn-primary" style="padding:8px 12px; font-size:12px;"
+                  onclick="downloadFile('${encodeURIComponent(url)}', '${encodeURIComponent(name)}')">
+                  <i class='bx bx-download'></i> Unduh
+                </button>` : `
+                <button class="btn-primary" style="padding:8px 12px; font-size:12px;" disabled>
+                  <i class='bx bx-link-alt'></i> Tidak ada link
+                </button>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderPagination(pgEl, rabPage, totalPages,
+        () => { rabPage = clamp(rabPage - 1, 1, totalPages); renderRabFiles(); updateRealtimeLabels(); },
+        () => { rabPage = clamp(rabPage + 1, 1, totalPages); renderRabFiles(); updateRealtimeLabels(); }
+      );
+    }
+
+    // ✅ Progres lapangan: tambah keterangan waktu real-time seperti MoU (tanpa ubah struktur tabel)
+    function renderProgresLapanganDocs() {
+      const tbody = document.getElementById('progressDocsTbody');
+      const pgEl = document.getElementById('progressDocsPagination');
+      if (!tbody) return;
+
+      const files = (projectFiles.progres_lapangan || []).slice().sort((a,b) => {
+        const da = parseToTime(a.created_at || a.updated_at || a.tanggal || 0) || 0;
+        const db = parseToTime(b.created_at || b.updated_at || b.tanggal || 0) || 0;
+        if (db !== da) return db - da;
+        return (Number(b.id || 0) - Number(a.id || 0));
+      });
+
+      if (files.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">Belum ada dokumen progres lapangan.</td></tr>`;
+        if (pgEl) { pgEl.style.display='none'; pgEl.innerHTML=''; }
+        return;
+      }
+
+      const totalPages = Math.ceil(files.length / ITEMS_PER_PAGE);
+      progressDocsPage = clamp(progressDocsPage, 1, totalPages);
+
+      const start = (progressDocsPage - 1) * ITEMS_PER_PAGE;
+      const pageItems = files.slice(start, start + ITEMS_PER_PAGE);
+
+      tbody.innerHTML = pageItems.map((f, idx) => {
+        const name = f.nama_file || f.filename || f.name || `Progres ${start + idx + 1}`;
+        const url = getDownloadUrlFromFile(f);
+        const ts = f.tanggal_upload || f.created_at || f.updated_at || f.tanggal || '';
+        const abs = ts ? formatDateTime(ts) : '-';
+        return `
+          <tr>
+            <td>${start + idx + 1}</td>
+            <td style="max-width:320px;">
+              <div style="font-weight:700; color:var(--text-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <i class='bx bxs-file' style="margin-right:6px; color:var(--primary-color);"></i>${name}
+              </div>
+              <span class="rt-time" data-rt="1" data-ts="${ts}" data-abs="${abs}">
+                ${ts ? (formatTimelineRelative(ts, ts) + " • " + abs) : "-"}
+              </span>
+            </td>
+            <td class="time-col" style="color:var(--text-soft);">${ts ? formatDateTime(ts) : '-'}</td>
+            <td>
+              ${url ? `
+                <button class="pg-btn" onclick="downloadFile('${encodeURIComponent(url)}', '${encodeURIComponent(name)}')">
+                  <i class='bx bx-download'></i> Unduh
+                </button>` : `
+                <button class="pg-btn" disabled>
+                  <i class='bx bx-link-alt'></i> -
+                </button>`}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      renderPagination(pgEl, progressDocsPage, totalPages,
+        () => { progressDocsPage = clamp(progressDocsPage - 1, 1, totalPages); renderProgresLapanganDocs(); updateRealtimeLabels(); },
+        () => { progressDocsPage = clamp(progressDocsPage + 1, 1, totalPages); renderProgresLapanganDocs(); updateRealtimeLabels(); }
+      );
+    }
+
+    /* =========================
+       ✅ TIMELINE PROGRES (judul sejajar persentase + edit)
+       ========================= */
+    async function fetchTimeline() {
+      try {
+        const res = await fetch(API_PROJECT_PROGRESS(projectId), {
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          }
+        });
+        if (!res.ok) {
+          const t = await res.text().catch(()=> '');
+          throw new Error("Gagal mengambil timeline progres (status " + res.status + ") " + t);
+        }
+
+        const j = await res.json();
+        const items = j.data || j.items || j || [];
+
+        const container = document.getElementById('projectTimeline');
+        if (!container) return;
+
+        const list = Array.isArray(items) ? items : [];
+        timelineCache = list.slice();
+
+        if (list.length === 0) {
+          container.innerHTML = `<p style="color:#64748b; font-style:italic;">Belum ada laporan progres.</p>`;
+          return;
+        }
+
+        list.sort((a,b) => {
+          const da = parseToTime(a.created_at || a.tanggal || a.date || 0) || 0;
+          const db = parseToTime(b.created_at || b.tanggal || b.date || 0) || 0;
+          return db - da;
+        });
+
+        container.innerHTML = list.map((it, index) => {
+          const dt = it.created_at || it.tanggal || it.date || '';
+          const title = it.judul || it.title || it.nama || 'Progres';
+          const desc = it.deskripsi || it.description || '';
+          const bobot = (it.bobot_persentase !== undefined && it.bobot_persentase !== null)
+            ? it.bobot_persentase
+            : ((it.bobot !== undefined && it.bobot !== null) ? it.bobot : (it.persentase ?? it.weight ?? ''));
+
+          const badge = (bobot !== '' && bobot !== null && bobot !== undefined)
+            ? `<span class="tag-kategori"><i class='bx bx-bar-chart-alt-2'></i>${bobot}%</span>`
+            : `<span class="tag-kategori"><i class='bx bx-bar-chart-alt-2'></i>-</span>`;
+
+          const safeId = it.id || it.progress_id || ('idx_' + index);
+
+          return `
+            <div class="timeline-item" data-ts="${dt}">
+              <div class="timeline-date">${formatTimelineRelative(dt, dt)}</div>
+              <div class="timeline-content">
+                <div class="timeline-header-row">
+                  <div class="timeline-title" title="${title}">${title}</div>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    ${badge}
+                    <button class="btn-mini" type="button" onclick="openProgressEdit('${String(safeId).replace(/'/g,"\\'")}')">
+                      <i class='bx bx-edit'></i> Edit
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size:12.5px; color:#334155; white-space:pre-line; line-height:1.45;">${desc || '-'}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        updateTimelineRelativeTimes();
+
+      } catch (e) {
+        console.error(e);
+        const container = document.getElementById('projectTimeline');
+        if (container) container.innerHTML = `<p style="color:#999; font-style:italic;">Gagal memuat timeline.</p>`;
+      }
+    }
+
+    function openProgressCreate(){
+      document.getElementById('editingProgressId').value = '';
+      document.getElementById('progressModalTitleText').textContent = 'Input Progres Lapangan';
+      document.getElementById('progressSubmitText').textContent = 'Kirim Progres';
+
+      document.getElementById('progTitle').value = '';
+      document.getElementById('progDesc').value = '';
+      document.getElementById('progWeight').value = '';
+      try { document.getElementById('progFile').value = ''; } catch(_) {}
+      const fn = document.getElementById('progFileName'); if (fn) fn.textContent = '';
+
+      openModal('progressModal');
+    }
+
+    function openProgressEdit(progressId){
+      const it = (timelineCache || []).find(x => String(x.id || x.progress_id || '') === String(progressId));
+      if (!it) {
+        const idx = String(progressId).startsWith('idx_') ? Number(String(progressId).replace('idx_','')) : -1;
+        if (idx >= 0 && timelineCache[idx]) {
+          return openProgressEdit(String(timelineCache[idx].id || timelineCache[idx].progress_id || progressId));
+        }
+        tampilkanAlert("Data progres untuk diedit tidak ditemukan.", "danger");
+        return;
+      }
+
+      const title = it.judul || it.title || it.nama || 'Progres';
+      const desc = it.deskripsi || it.description || '';
+      const bobot = (it.bobot_persentase !== undefined && it.bobot_persentase !== null)
+        ? it.bobot_persentase
+        : ((it.bobot !== undefined && it.bobot !== null) ? it.bobot : (it.persentase ?? it.weight ?? ''));
+
+      document.getElementById('editingProgressId').value = String(progressId);
+      document.getElementById('progressModalTitleText').textContent = 'Edit Progres (Upload Ulang)';
+      document.getElementById('progressSubmitText').textContent = 'Simpan Revisi';
+
+      document.getElementById('progTitle').value = title;
+      document.getElementById('progDesc').value = desc;
+      document.getElementById('progWeight').value = (bobot !== '' && bobot !== null && bobot !== undefined) ? String(bobot) : '';
+
+      try { document.getElementById('progFile').value = ''; } catch(_) {}
+      const fn = document.getElementById('progFileName'); if (fn) fn.textContent = '';
+
+      openModal('progressModal');
+    }
+
+    async function uploadProgressLapangan() {
+      const editingId = (document.getElementById('editingProgressId')?.value || '').trim();
+
+      const title = (document.getElementById('progTitle')?.value || '').trim();
+      const desc  = (document.getElementById('progDesc')?.value || '').trim();
+      const wRaw  = (document.getElementById('progWeight')?.value || '').trim();
+      const fileEl = document.getElementById('progFile');
+      const file = fileEl && fileEl.files && fileEl.files[0] ? fileEl.files[0] : null;
+
+      if (!title) { tampilkanAlert("Judul progres wajib diisi.", "danger"); return; }
+
+      const persen = Number(wRaw);
+      if (!isFinite(persen) || persen < 0 || persen > 100) {
+        tampilkanAlert("Bobot progres harus 0 - 100.", "danger");
+        return;
+      }
+      if (file && file.size > 10 * 1024 * 1024) {
+        tampilkanAlert("Ukuran file progres terlalu besar. Maksimal 10MB.", "danger");
+        return;
+      }
+
+      let deskripsiGabung = desc ? `${title}\n${desc}` : title;
+      if (editingId) {
+        deskripsiGabung = `[REVISI] ${deskripsiGabung}`;
+      }
+
+      const fd = new FormData();
+      fd.append('deskripsi', deskripsiGabung);
+      fd.append('bobot_persentase', String(persen));
+      fd.append('persentase', String(persen));
+      fd.append('kategori', 'PROGRES_LAPANGAN');
+
+      if (editingId) {
+        fd.append('id', editingId);
+        fd.append('progress_id', editingId);
+      }
+
+      if (file) {
+        fd.append('files[]', file);
+        fd.append('files[0]', file);
+      } else {
+        fd.append('files[]', new Blob([]), '');
+      }
+
+      try {
+        const res = await postWithFallback(
+          [API_PROJECT_PROGRESS(projectId), API_PROJECT_PROGRESS_ALT(projectId)],
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${AUTH_TOKEN}`,
+              'ngrok-skip-browser-warning': 'true'
+            },
+            body: fd
+          }
+        );
+
+        if (!res.ok) {
+          const t = await res.text().catch(()=> '');
+          throw new Error(`Gagal upload progres (status ${res.status}) ${t}`);
+        }
+
+        tampilkanAlert(editingId ? "Revisi progres berhasil dikirim." : "Progres berhasil dikirim.", "success");
+        closeModal('progressModal');
+
+        document.getElementById('editingProgressId').value = '';
+        document.getElementById('progTitle').value = '';
+        document.getElementById('progDesc').value = '';
+        document.getElementById('progWeight').value = '';
+        try { document.getElementById('progFile').value = ''; } catch(_) {}
+        const fn = document.getElementById('progFileName'); if (fn) fn.textContent = '';
+
+        await fetchTimeline();
+        await fetchProjectFiles();
+
+      } catch (e) {
+        console.error(e);
+        tampilkanAlert(e.message || "Gagal mengirim progres.", "danger");
+      }
+    }
+
+    /* =========================
+       ✅ ADDENDUM
+       ========================= */
+    const ADDENDUM_LOCAL_KEY = () => `mt_addendum_${projectId}`;
+
+    function loadAddendumFromLocal() {
+      try {
+        const raw = localStorage.getItem(ADDENDUM_LOCAL_KEY());
+        const arr = raw ? JSON.parse(raw) : [];
+        addendumItems = Array.isArray(arr) ? arr : [];
+      } catch(_) {
+        addendumItems = [];
+      }
+      renderAddendumTable();
+    }
+
+    function saveAddendumToLocal(item) {
+      try {
+        const raw = localStorage.getItem(ADDENDUM_LOCAL_KEY());
+        let arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) arr = [];
+        arr.unshift(item);
+        localStorage.setItem(ADDENDUM_LOCAL_KEY(), JSON.stringify(arr.slice(0, 200)));
+      } catch(_) {}
+    }
+
+    async function fetchAddendumList() {
+      try {
+        const res = await fetch(API_PROJECT_BUDGET_CHANGE(projectId), {
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          }
+        });
+
+        if (res.status === 405) return;
+        if (!res.ok) return;
+
+        const j = await res.json();
+        const items = j.data || j.items || j || [];
+        if (Array.isArray(items) && items.length) {
+          addendumItems = items;
+          renderAddendumTable();
+          updateRealtimeLabels();
+        }
+
+      } catch (e) {
+        // fallback local saja
+      }
+    }
+
+    // ✅ FIX tombol unduh addendum:
+    // penyebab paling sering: addendumItems tidak punya URL download (API GET 405),
+    // jadi tombolnya disabled. Di sini kita:
+    // 1) kalau addendumItems kosong -> bangun list dari projectFiles.addendum (yang pasti punya url)
+    // 2) kalau item addendum tidak punya url -> tempelkan url dari file addendum terbaru (best effort)
+    function mergeAddendumWithFiles() {
+      const fileAdds = (projectFiles.addendum || []).slice().sort((a,b) => {
+        const da = parseToTime(a.created_at || a.updated_at || a.tanggal || 0) || 0;
+        const db = parseToTime(b.created_at || b.updated_at || b.tanggal || 0) || 0;
+        return db - da;
+      });
+
+      if (!fileAdds.length) return;
+
+      // (1) kalau addendumItems kosong, jadikan file addendum sebagai data utama
+      if (!Array.isArray(addendumItems) || addendumItems.length === 0) {
+        addendumItems = fileAdds.map((f, i) => {
+          const nm = f.nama_file || f.filename || f.name || `Addendum ${i+1}`;
+          const ts = f.tanggal_upload || f.created_at || f.updated_at || f.tanggal || new Date().toISOString();
+          return {
+            id: f.id || ('file_' + i),
+            judul: nm,
+            kategori_anggaran: (f.kategori || f.category || 'Addendum'),
+            jumlah_perubahan: 0,
+            tanggal_perubahan: ts,
+            created_at: ts,
+            url: getDownloadUrlFromFile(f),
+            nama_file: nm
+          };
+        });
+        return;
+      }
+
+      // (2) tempelkan url kalau item belum punya url
+      const bestFile = fileAdds[0];
+      const bestUrl = getDownloadUrlFromFile(bestFile);
+
+      addendumItems = addendumItems.map((it) => {
+        const url = getDownloadUrlFromFile(it) || it.url || null;
+        if (url) return it;
+
+        // coba cari berdasarkan judul ~ nama_file
+        const t = (it.judul || it.title || it.deskripsi || '').toString().trim().toLowerCase();
+        const hit = fileAdds.find(f => ((f.nama_file || f.filename || f.name || '').toString().trim().toLowerCase() === t));
+        if (hit) {
+          const u = getDownloadUrlFromFile(hit);
+          if (u) return { ...it, url: u, nama_file: hit.nama_file || hit.filename || hit.name };
+        }
+
+        // fallback: pakai file addendum terbaru biar tombol unduh tetap berfungsi minimal
+        if (bestUrl) return { ...it, url: bestUrl, nama_file: bestFile.nama_file || bestFile.filename || bestFile.name };
+        return it;
+      });
+    }
+
+    async function uploadAddendum() {
+      const kategori = (document.getElementById('addendumKategori')?.value || '').trim();
+      const amountRaw = (document.getElementById('addendumAmount')?.value || '').trim();
+      const tanggal = (document.getElementById('addendumDate')?.value || '').trim();
+      const judul = (document.getElementById('addendumTitle')?.value || '').trim();
+      const desc = (document.getElementById('addendumDesc')?.value || '').trim();
+
+      const amountNum = Number(String(amountRaw).replace(/\./g,'').replace(/\D/g,''));
+      const fileEl = document.getElementById('addendumFile');
+      const file = fileEl && fileEl.files && fileEl.files[0] ? fileEl.files[0] : null;
+
+      if (!judul) { tampilkanAlert("Judul addendum wajib diisi.", "danger"); return; }
+      if (!kategori) { tampilkanAlert("Kategori anggaran wajib diisi.", "danger"); return; }
+      if (!file) { tampilkanAlert("File addendum wajib dipilih.", "danger"); return; }
+      if (!isFinite(amountNum) || amountNum <= 0) { tampilkanAlert("Jumlah perubahan wajib diisi (angka).", "danger"); return; }
+      if (file.size > 10 * 1024 * 1024) { tampilkanAlert("Ukuran file addendum terlalu besar. Maksimal 10MB.", "danger"); return; }
+
+      const fd = new FormData();
+      fd.append('kategori_anggaran', kategori);
+      fd.append('file_addendum', file);
+      fd.append('jumlah_perubahan', String(amountNum));
+      fd.append('deskripsi', desc ? `${judul}\n${desc}` : judul);
+      if (tanggal) fd.append('tanggal_perubahan', tanggal);
+
+      // alias aman
+      fd.append('kategori', kategori);
+      fd.append('judul', judul);
+      fd.append('tanggal', tanggal);
+
+      try {
+        const res = await fetch(API_PROJECT_BUDGET_CHANGE(projectId), {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: fd
+        });
+
+        if (!res.ok) {
+          const t = await res.text().catch(()=> '');
+          throw new Error(`Gagal upload addendum (status ${res.status}) ${t}`);
+        }
+
+        tampilkanAlert("Addendum berhasil diunggah.", "success");
+        closeModal('addendumModal');
+
+        saveAddendumToLocal({
+          id: 'local_' + Date.now(),
+          judul,
+          kategori_anggaran: kategori,
+          jumlah_perubahan: amountNum,
+          tanggal_perubahan: tanggal,
+          created_at: new Date().toISOString(),
+          url: null
+        });
+
+        document.getElementById('addendumKategori').value = '';
+        document.getElementById('addendumAmount').value = '';
+        document.getElementById('addendumDate').value = '';
+        document.getElementById('addendumTitle').value = '';
+        document.getElementById('addendumDesc').value = '';
+        try { document.getElementById('addendumFile').value = ''; } catch(_) {}
+        const fn = document.getElementById('addendumFileName'); if (fn) fn.textContent = '';
+
+        loadAddendumFromLocal();
+        await fetchProjectFiles();
+
+      } catch (e) {
+        console.error(e);
+        tampilkanAlert(e.message || "Gagal upload addendum.", "danger");
+      }
+    }
+
+    function renderAddendumTable() {
+      const tbody = document.getElementById('addendumTableBody');
+      const pgEl = document.getElementById('addendumPagination');
+      if (!tbody) return;
+
+      const list = (addendumItems || []).slice().sort((a,b) => {
+        const da = parseToTime(a.created_at || a.tanggal_perubahan || a.tanggal || a.date || 0) || 0;
+        const db = parseToTime(b.created_at || b.tanggal_perubahan || b.tanggal || b.date || 0) || 0;
+        return db - da;
+      });
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#999;">Belum ada addendum.</td></tr>`;
+        if (pgEl) { pgEl.style.display='none'; pgEl.innerHTML=''; }
+        return;
+      }
+
+      const totalPages = Math.ceil(list.length / ITEMS_PER_PAGE);
+      addendumPage = clamp(addendumPage, 1, totalPages);
+
+      const start = (addendumPage - 1) * ITEMS_PER_PAGE;
+      const pageItems = list.slice(start, start + ITEMS_PER_PAGE);
+
+      tbody.innerHTML = pageItems.map((it, idx) => {
+        const judul = it.judul || it.title || 'Addendum';
+        const kategori = it.kategori_anggaran || it.kategori || it.category || '-';
+        const jumlah = Number(it.jumlah_perubahan || it.amount || it.nominal || 0) || 0;
+
+        // ✅ real-time seperti MoU (relative + absolute)
+        const ts = it.tanggal_perubahan || it.tanggal || it.date || it.created_at || '';
+        const abs = ts ? formatDateTime(ts) : '-';
+
+        // ✅ pastikan url ada (ini yang bikin tombol unduh tidak berfungsi kalau kosong)
+        const url = getDownloadUrlFromFile(it) || it.url || null;
+
+        // gunakan nama file kalau ada, agar unduhan lebih masuk akal
+        const dlName = (it.nama_file || judul || 'Addendum');
+
+        return `
+          <tr>
+            <td>${start + idx + 1}</td>
+            <td style="min-width:220px;">
+              <div style="font-weight:800; color:var(--text-color);">${judul}</div>
+            </td>
+            <td>${kategori}</td>
+            <td style="font-weight:800; color:var(--primary-color);">${rupiahFormatter.format(jumlah)}</td>
+            <td style="color:var(--text-soft);">
+              <span class="rt-time" data-rt="1" data-ts="${ts}" data-abs="${abs}">
+                ${ts ? (formatTimelineRelative(ts, ts) + " • " + abs) : "-"}
+              </span>
+            </td>
+            <td>
+              ${url ? `
+                <button class="pg-btn" onclick="downloadFile('${encodeURIComponent(url)}', '${encodeURIComponent(dlName)}')">
+                  <i class='bx bx-download'></i> Unduh
+                </button>` : `
+                <button class="pg-btn" disabled title="File belum terhubung / belum ada link">
+                  <i class='bx bx-link-alt'></i> -
+                </button>`}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      renderPagination(pgEl, addendumPage, totalPages,
+        () => { addendumPage = clamp(addendumPage - 1, 1, totalPages); renderAddendumTable(); updateRealtimeLabels(); },
+        () => { addendumPage = clamp(addendumPage + 1, 1, totalPages); renderAddendumTable(); updateRealtimeLabels(); }
+      );
+
+      // ✅ update setelah render
+      updateRealtimeLabels();
+    }
+
+    /* =========================
+       ✅ RAB BUDGET SAVE (POST /api/projects/{id}/rab)
+       payload: total_rab, perkiraan_margin
+       ========================= */
+    async function saveRabBudget() {
+      const total = getTotalRabNumber();
+      const margin = getMarginNumber();
+
+      if (!total || total <= 0) { tampilkanAlert("Total RAB wajib diisi.", "danger"); return; }
+      if (margin < 0 || margin > 100) { tampilkanAlert("Margin harus 0 - 100.", "danger"); return; }
+
+      const payload = {
+        total_rab: total,
+        perkiraan_margin: margin
+      };
+
+      try {
+        const res = await fetch(API_UPDATE_RAB(projectId), {
+          method: 'POST',
+          headers: {
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${AUTH_TOKEN}`,
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const t = await res.text().catch(()=> '');
+          throw new Error(`Gagal simpan budget (status ${res.status}) ${t}`);
+        }
+
+        tampilkanAlert("Budget RAB berhasil disimpan.", "success");
+        await fetchProjectDetail();
+        await fetchProjectFiles();
+
+      } catch (e) {
+        console.error(e);
+        tampilkanAlert(e.message || "Gagal menyimpan budget RAB.", "danger");
+      }
+    }
+
+    /* =========================
+       ✅ DISKUSI (fallback localStorage)
+       ========================= */
+    function updateCurrentTopicLabel() {
+      const label = document.getElementById('currentTopicLabel');
+      const t = commentTopics.find(x => x.id === currentTopicId);
+      const name = t ? t.name : 'General';
+      if (label) label.innerHTML = `Ruang diskusi: <strong>${name}</strong>`;
+    }
+
+    function renderTopicChips() {
+      const el = document.getElementById('topicChips');
+      if (!el) return;
+
+      const topics = commentTopics.length ? commentTopics : [{ id: GENERAL_TOPIC_KEY, name: 'General' }];
+      el.innerHTML = topics.map(t => {
+        const active = t.id === currentTopicId ? 'active' : '';
+        return `<button class="topic-chip ${active}" type="button" onclick="switchTopic('${t.id}')">${t.name}</button>`;
+      }).join('');
+    }
+
+    async function fetchCommentTopics() {
+      try {
+        const key = `mt_topics_${projectId}`;
+        const raw = localStorage.getItem(key);
+        const arr = raw ? JSON.parse(raw) : null;
+
+        commentTopics = Array.isArray(arr) && arr.length ? arr : [{ id: GENERAL_TOPIC_KEY, name: 'General' }];
+        renderTopicChips();
+        updateCurrentTopicLabel();
+      } catch(e) {
+        commentTopics = [{ id: GENERAL_TOPIC_KEY, name: 'General' }];
+        renderTopicChips();
+        updateCurrentTopicLabel();
+      }
+    }
+
+    function switchTopic(topicId) {
+      currentTopicId = topicId || GENERAL_TOPIC_KEY;
+      renderTopicChips();
+      updateCurrentTopicLabel();
+      fetchComments(currentTopicId);
+    }
+
+    async function promptNewTopic() {
+      const name = prompt("Nama topik baru:");
+      if (!name) return;
+
+      const id = 't_' + Date.now();
+      commentTopics.push({ id, name: name.trim() });
+
+      try { localStorage.setItem(`mt_topics_${projectId}`, JSON.stringify(commentTopics)); } catch(_) {}
+      switchTopic(id);
+    }
+
+    async function fetchComments(topicId = currentTopicId) {
+      const box = document.getElementById('chatBox');
+      if (!box) return;
+
+      try {
+        const key = `mt_comments_${projectId}_${topicId}`;
+        const raw = localStorage.getItem(key);
+        const arr = raw ? JSON.parse(raw) : [];
+        const list = Array.isArray(arr) ? arr : [];
+
+        if (list.length === 0) {
+          box.innerHTML = `<p style="text-align:center; color:#999; margin-top:50px;">Belum ada diskusi.</p>`;
+          return;
+        }
+
+        box.innerHTML = list.map(m => {
+          const cls = m.me ? 'msg-me' : 'msg-other bubble-1';
+          return `<div class="chat-msg ${cls}">${m.text}</div>`;
+        }).join('');
+        box.scrollTop = box.scrollHeight;
+
+      } catch(e) {
+        box.innerHTML = `<p style="text-align:center; color:#999; margin-top:50px;">Belum ada diskusi.</p>`;
+      }
+    }
+
+    async function postComment() {
+      const input = document.getElementById('chatInput');
+      const anon = document.getElementById('anonymousCheck');
+      const text = (input?.value || '').trim();
+      if (!text) return;
+
+      const isAnon = !!(anon && anon.checked);
+      const msg = { text: isAnon ? `Anon: ${text}` : text, me: true, ts: Date.now() };
+
+      const key = `mt_comments_${projectId}_${currentTopicId}`;
+      let list = [];
+      try {
+        const raw = localStorage.getItem(key);
+        list = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(list)) list = [];
+      } catch(_) { list = []; }
+
+      list.push(msg);
+      try { localStorage.setItem(key, JSON.stringify(list)); } catch(_) {}
+
+      if (input) input.value = '';
+      await fetchComments(currentTopicId);
+    }
+
+    /* =========================
+       UTIL: format input RAB
+       ========================= */
+    function formatNumberWithDots(value) {
+      if (value === null || value === undefined) return '';
+      const onlyNum = String(value).replace(/\D/g, '');
+      if (!onlyNum) return '';
+      return onlyNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    function handleRabInputFormat(e) {
+      const input = e.target;
+      input.value = formatNumberWithDots(input.value);
+    }
+    function getTotalRabNumber() {
+      const el = document.getElementById('totalRAB');
+      const raw = el ? el.value : '';
+      const n = Number(String(raw).replace(/\./g,'').replace(/\D/g,''));
+      return isNaN(n) ? 0 : n;
+    }
+    function getMarginNumber() {
+      const el = document.getElementById('rabMargin');
+      const n = Number(el ? el.value : 0);
+      return isNaN(n) ? 0 : n;
+    }
+    function updateRabProfit() {
+      const total = getTotalRabNumber();
+      const margin = getMarginNumber();
+      const profitEl = document.getElementById('rabProfit');
+      if (!profitEl) return;
+      if (!total || !margin) { profitEl.value = ""; return; }
+      const profit = Math.round(total * (margin/100));
+      profitEl.value = rupiahFormatter.format(profit);
+    }
+
+    /* =========================
+       SUBMIT GUARD (3 detik)
+       ========================= */
+    const submitGuards = {};
+    function withSubmitGuard(key, fn) {
+      if (submitGuards[key]) return;
+      submitGuards[key] = true;
+      try { fn(); }
+      finally { setTimeout(() => { submitGuards[key] = false; }, 3000); }
+    }
+    function handleUploadProgressClick() { withSubmitGuard('upload_progress', uploadProgressLapangan); }
+    function handleUploadAddendumClick() { withSubmitGuard('upload_addendum', uploadAddendum); }
+    function handleSaveRabClick() { withSubmitGuard('save_rab', saveRabBudget); }
+    function handlePostCommentClick() { withSubmitGuard('post_comment', postComment); }
+    function handleLogoutClick() { withSubmitGuard('logout', logout); }
+    function handleUploadRabFileClick() { withSubmitGuard('upload_rab_file', uploadRabFile); }
+
+    function openTab(evt, tabName) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
+
+      // ✅ supaya label real-time langsung update saat pindah tab
+      setTimeout(() => {
+        updateRealtimeLabels();
+        updateTimelineRelativeTimes();
+      }, 0);
+    }
+  </script>
+</body>
+</html>

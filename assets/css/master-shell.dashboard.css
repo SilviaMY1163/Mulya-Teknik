@@ -1,0 +1,516 @@
+/* ================= MASTER SHELL (FROM dashboard.html) ================= */
+/* ONLY: Sidebar + Toggle + Overlay + Page Header + Theme Toggle */
+/* NOTE:
+   - Token (:root) tetap diletakkan di masing-masing halaman (atau master token terpisah).
+   - Jangan bikin ulang .sidebar/.menu/.toggle-btn/.overlay/.page-header/.theme-toggle di halaman lain.
+*/
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  box-shadow: 0 18px 40px rgba(15,23,42,0.25);
+  border-right: 1px solid var(--border-subtle);
+  padding: 20px 0;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 1200;
+  transition: left 0.4s, width 0.4s, background 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(18px);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px 20px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.sidebar-header img {
+  width: 45px; height: 45px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(15,23,42,0.25));
+}
+
+.brand-text {
+  font-weight: 800;
+  font-size: 20px;
+  background: linear-gradient(130deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  letter-spacing: 0.03em;
+}
+
+:root[data-theme="dark"] .brand-text {
+  background: linear-gradient(90deg, #38bdf8, #facc15);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============ MENU LIST ============ */
+.menu {
+  list-style: none;
+  flex-grow: 1;
+  padding: 0 10px;
+}
+
+.menu li {
+  margin: 6px 0;
+  border-radius: 999px;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+/* default item */
+.menu > li > a {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px;
+  color: var(--text-main);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 15px;
+  background: transparent;
+}
+
+/* LIGHT: text menu biru tua */
+:root[data-theme="light"] .menu > li > a {
+  color: var(--primary-color);
+}
+
+.menu > li > a i {
+  font-size: 20px;
+  margin-right: 14px;
+  color: var(--secondary-color);
+  min-width: 20px;
+}
+
+.menu > li:hover > a {
+  background: radial-gradient(circle at top left,
+              rgba(56,189,248,0.10),
+              rgba(15,23,42,0.02));
+  box-shadow: 0 8px 20px rgba(15,23,42,0.10);
+}
+
+/* ============ ACTIVE CARD – MENU UTAMA ============ */
+.menu li.active > a {
+  position: relative;
+  background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.08) 0%,
+      rgba(148, 197, 253, 0.55) 40%,
+      #e0f2ff 100%
+  );
+  color: #0f172a;
+  font-weight: 700;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.55);
+  box-shadow: 0 16px 36px rgba(15,23,42,0.25);
+  padding-left: 30px;
+}
+
+.menu li.active > a i {
+  color: #0ea5e9;
+}
+
+/* ======== DARK THEME ======== */
+:root[data-theme="dark"] .menu > li > a { color: #e5e7eb; }
+:root[data-theme="dark"] .menu > li > a i { color: #38bdf8; }
+
+:root[data-theme="dark"] .menu li.active > a {
+  background: linear-gradient(
+      135deg,
+      #020617 0%,
+      #0b1120 40%,
+      rgba(37, 99, 235, 0.75) 100%
+  );
+  color: #e5e7eb;
+  border-color: rgba(37,99,235,0.85);
+  box-shadow: 0 22px 48px rgba(15,23,42,0.9);
+}
+
+:root[data-theme="dark"] .menu li.active > a i { color: #38bdf8; }
+
+/* ================= PROYEK + SUBMENU (MERGE DARI LEADS) ================= */
+.menu li.has-submenu > a {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-text {
+  flex: 1;
+  display: inline-block;
+}
+
+.submenu-toggle-icon {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* Supaya “card parent” terasa membungkus area submenu saat open/active */
+.menu li.has-submenu.open,
+.menu li.has-submenu.active {
+  border-radius: 18px;          /* bukan 999px supaya wrap submenu lebih natural */
+  padding-bottom: 8px;          /* ruang buat submenu */
+}
+
+.menu li.has-submenu.open > a,
+.menu li.has-submenu.active > a {
+  border-radius: 18px;
+}
+
+/* garis putus-putus & layout submenu (LEADS STYLE) */
+.submenu {
+  list-style: none;
+  margin: 0 10px 8px 48px;
+  padding: 6px 0 4px 0;
+  border-left: 1px dashed rgba(148,163,184,0.6);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.25s ease;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.has-submenu.open .submenu {
+  max-height: 500px;
+  opacity: 1;
+  animation: fadeDown 0.2s ease-out;
+}
+
+/* item submenu */
+.submenu li { margin-bottom: 4px; }
+
+.submenu li a {
+  display: block;
+  font-size: 13px;
+  padding: 6px 10px;
+  color: var(--primary-color);     /* LEADS: submenu biru tua */
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+}
+
+/* hover submenu (LEADS: gradient) */
+.submenu li a:hover {
+  color: #ffffff;
+  background: linear-gradient(135deg,
+              rgba(10,74,128,0.4),
+              rgba(0,188,212,0.5));
+}
+
+/* card aktif submenu (LEADS: gradient + shadow) */
+.submenu li.active a {
+  color: #ffffff;
+  font-weight: 600;
+  background: linear-gradient(135deg,
+              rgba(10,74,128,0.6),
+              rgba(0,188,212,0.7));
+  box-shadow: 0 8px 20px rgba(15,23,42,0.2);
+  border-radius: 10px;
+}
+
+/* DARK: submenu */
+:root[data-theme="dark"] .submenu-toggle-icon { color: #9ca3af; }
+
+:root[data-theme="dark"] .submenu li a {
+  color: #e5e7eb;
+}
+
+:root[data-theme="dark"] .submenu li a:hover {
+  color: #e5e7eb;
+  background: rgba(37,99,235,0.5);
+}
+
+:root[data-theme="dark"] .submenu li.active a {
+  color: #e5e7eb;
+  background: linear-gradient(135deg,
+              rgba(37,99,235,0.8),
+              rgba(56,189,248,0.8));
+  box-shadow: 0 18px 40px rgba(15,23,42,0.85);
+}
+
+/* Footer + Logout */
+.sidebar-footer {
+  padding: 10px 20px;
+  margin-top: auto;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 14px 35px rgba(15,23,42,0.25);
+}
+
+.btn-logout i {
+  margin-right: 6px;
+  font-size: 18px;
+  color: #ffffff; /* ikon logout putih */
+}
+
+.btn-logout:hover {
+  background-color: #083c6b;
+  transform: translateY(-2px);
+}
+
+:root[data-theme="dark"] .btn-logout {
+  background: radial-gradient(circle at top left,
+              rgba(239,68,68,0.2),
+              rgba(15,23,42,0.95));
+  color: #fee2e2;
+  border: 1px solid rgba(248,113,113,0.5);
+  box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+}
+
+/* Collapsed Sidebar */
+.sidebar.collapsed { width: 80px; }
+
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .menu a span,
+.sidebar.collapsed .btn-logout span,
+.sidebar.collapsed .submenu {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-header { justify-content: center; }
+.sidebar.collapsed .sidebar-header img { margin: 0; }
+
+.sidebar.collapsed .menu > li > a {
+  justify-content: center;
+  padding: 14px 0;
+  border-radius: 22px;
+}
+
+.sidebar.collapsed .menu > li > a i { margin: 0; }
+
+/* ================= MAIN CONTENT & TOGGLE ================= */
+.main-content {
+  margin-left: var(--sidebar-width);
+  padding: 30px 40px;
+  transition: margin-left 0.4s, padding 0.3s;
+}
+
+.sidebar.collapsed ~ .main-content { margin-left: 80px; }
+
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 265px;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--primary-color);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1300;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 18px 38px rgba(15,23,42,0.18);
+  transition: all 0.35s ease;
+  backdrop-filter: blur(12px);
+}
+
+:root[data-theme="dark"] .toggle-btn {
+  background: rgba(15,23,42,0.98);
+  border-color: rgba(56,189,248,0.6);
+  color: #0a4a80;
+}
+
+.toggle-btn.scrolled {
+  background: rgba(255,255,255,0.08);
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+:root[data-theme="dark"] .toggle-btn.scrolled {
+  background: rgba(15,23,42,0.08);
+  border-color: transparent;
+}
+
+.sidebar.collapsed ~ .toggle-btn { left: 95px; }
+.sidebar.collapsed ~ .toggle-btn i { transform: rotate(180deg); }
+
+.mobile-close-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 270px;
+  background: rgba(15,23,42,0.98);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  z-index: 1300;
+  box-shadow: 0 22px 44px rgba(15,23,42,0.9);
+  opacity: 0;
+  transform: scale(0.5);
+  border: 1px solid rgba(148,163,184,0.6);
+  color: #e5e7eb;
+  font-size: 28px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.sidebar.active ~ .mobile-close-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top left,
+              rgba(56,189,248,0.15),
+              rgba(15,23,42,0.9));
+  backdrop-filter: blur(4px);
+  z-index: 1100;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.active { display: block; opacity: 1; }
+
+/* ================= PAGE HEADER (Judul Halaman) ================= */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-left: 60px;
+  gap: 16px;
+}
+
+.user-welcome h1 {
+  font-weight: 800;
+  font-size: 32px;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 5px;
+}
+
+:root[data-theme="dark"] .user-welcome h1 {
+  background: linear-gradient(90deg, #38bdf8, #facc15);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.user-welcome p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ================= THEME TOGGLE (Dark/Light button) ================= */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: radial-gradient(circle at top left,
+              rgba(255,255,255,0.96),
+              rgba(226,232,240,0.9));
+  color: var(--text-main);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(15,23,42,0.16);
+  transition: all 0.25s ease;
+}
+
+.theme-toggle i { font-size: 16px; }
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(15,23,42,0.22);
+}
+
+.theme-toggle.is-dark {
+  background: radial-gradient(circle at top left,
+              rgba(15,23,42,0.9),
+              rgba(37,99,235,0.5));
+  color: #e5e7eb;
+  border-color: rgba(129,140,248,0.7);
+}
+
+/* ================= RESPONSIVE (SHELL ONLY) ================= */
+@media (max-width: 768px) {
+  .sidebar { left: -250px; }
+  .sidebar.active { left: 0; }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 80px 15px 30px 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .toggle-btn {
+    left: 20px;
+    top: 25px;
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+    background: rgba(255,255,255,0.96);
+  }
+
+  :root[data-theme="dark"] .toggle-btn {
+    background: rgba(15,23,42,0.98);
+  }
+
+  .sidebar.active ~ .toggle-btn {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .mobile-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-header {
+    padding-left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+}

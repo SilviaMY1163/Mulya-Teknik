@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Login System | Mulya Teknik</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Default: tema GELAP (industrial) */
+      color-scheme: dark;
+
+      --bg-body: #020617;
+      --bg-overlay: rgba(15, 23, 42, 0.85);
+      --bg-radial-1: rgba(56, 189, 248, 0.24);
+      --bg-radial-2: rgba(30, 64, 175, 0.55);
+
+      --card-bg: rgba(15, 23, 42, 0.96);
+      --card-border: rgba(148, 163, 184, 0.7);
+      --card-shadow-main: rgba(15, 23, 42, 0.95);
+
+      --primary-color: #38bdf8;    /* cyan industrial */
+      --primary-hover: #0ea5e9;
+      --accent-gold: #facc15;
+      --accent-soft: rgba(250, 204, 21, 0.16);
+
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #ef4444;
+
+      --input-bg: rgba(15, 23, 42, 0.92);
+      --input-border: rgba(148, 163, 184, 0.7);
+      --input-border-focus: #38bdf8;
+
+      --toggle-bg: rgba(15, 23, 42, 0.92);
+      --toggle-border: rgba(148, 163, 184, 0.7);
+
+      --glass-border-light: rgba(148, 163, 184, 0.5);
+    }
+
+    /* Tema TERANG (light) */
+    :root[data-theme="light"] {
+      color-scheme: light;
+
+      --bg-body: #e5e7eb;
+      --bg-overlay: rgba(15, 23, 42, 0.08);
+      --bg-radial-1: rgba(59, 130, 246, 0.2);
+      --bg-radial-2: rgba(191, 219, 254, 0.7);
+
+      --card-bg: rgba(255, 255, 255, 0.98);
+      --card-border: rgba(148, 163, 184, 0.8);
+      --card-shadow-main: rgba(15, 23, 42, 0.3);
+
+      --primary-color: #004b8d;
+      --primary-hover: #005aa6;
+      --accent-gold: #eab308;
+      --accent-soft: rgba(234, 179, 8, 0.16);
+
+      --text-main: #0f172a;
+      --text-muted: #6b7280;
+      --danger: #b91c1c;
+
+      --input-bg: #f9fafb;
+      --input-border: rgba(148, 163, 184, 0.9);
+      --input-border-focus: #004b8d;
+
+      --toggle-bg: rgba(243, 244, 246, 0.98);
+      --toggle-border: rgba(148, 163, 184, 0.9);
+
+      --glass-border-light: rgba(148, 163, 184, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100dvh;
+      width: 100vw;
+      background:
+        radial-gradient(circle at 0 0, var(--bg-radial-1), transparent 55%),
+        radial-gradient(circle at 100% 100%, var(--bg-radial-2), transparent 60%),
+        var(--bg-body);
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: clamp(12px, 3vw, 24px);
+    }
+
+    /* Overlay foto proyek baja */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, var(--bg-overlay), var(--bg-overlay)),
+        url('assets/bg2.jpg') no-repeat center center/cover;
+      filter: saturate(1.05);
+      z-index: 0;
+    }
+
+    /* Siluet struktur baja abstrak */
+    .steel-structure {
+      position: absolute;
+      right: -60px;
+      bottom: -70px;
+      width: 420px;
+      height: 360px;
+      background:
+        linear-gradient(120deg, rgba(15, 23, 42, 0.15), transparent 45%),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.45), transparent 55%),
+        radial-gradient(circle at 20% 0, rgba(56, 189, 248, 0.6), transparent 60%);
+      clip-path: polygon(0 35%, 32% 0, 100% 0, 100% 100%, 45% 100%);
+      filter: blur(0.5px);
+      opacity: 0.55;
+      z-index: 1;
+      pointer-events: none;
+      animation: steelMove 16s ease-in-out infinite alternate;
+    }
+
+    @keyframes steelMove {
+      0%   { transform: translate3d(0, 10px, 0) scale(1); opacity: 0.5; }
+      50%  { transform: translate3d(-12px, -6px, 0) scale(1.05); opacity: 0.75; }
+      100% { transform: translate3d(6px, -12px, 0) scale(1.02); opacity: 0.55; }
+    }
+
+    .login-card {
+      position: relative;
+      z-index: 2;
+      width: min(96%, 420px);
+      padding: clamp(22px, 4vh, 30px) clamp(20px, 4vw, 30px);
+      border-radius: clamp(20px, 3vw, 26px);
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), transparent 60%),
+        radial-gradient(circle at 100% 100%, var(--accent-soft), transparent 60%),
+        var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow:
+        0 24px 70px var(--card-shadow-main),
+        0 0 0 1px rgba(15, 23, 42, 0.7);
+      text-align: center;
+      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      backdrop-filter: blur(22px) saturate(150%);
+      -webkit-backdrop-filter: blur(22px) saturate(150%);
+      overflow: hidden;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .login-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -10%;
+      width: 120%;
+      height: 3px;
+      background: linear-gradient(90deg, #38bdf8, var(--accent-gold), #38bdf8);
+      opacity: 0.9;
+    }
+
+    .login-card::after {
+      content: '';
+      position: absolute;
+      inset: -60%;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.13), transparent 60%);
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .login-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 80px rgba(15, 23, 42, 0.95);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toggle tema (global) */
+    .theme-toggle {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--toggle-border);
+      background: var(--toggle-bg);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: background 0.25s ease, transform 0.16s ease, box-shadow 0.25s ease, border-color 0.2s;
+    }
+
+    .theme-toggle i {
+      font-size: 1rem;
+      color: var(--primary-color);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .theme-toggle:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.4);
+        border-color: var(--primary-color);
+      }
+    }
+
+    .logo {
+      width: clamp(54px, 14vw, 82px);
+      height: auto;
+      object-fit: contain;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55));
+    }
+
+    .title {
+      font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.7rem);
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: clamp(0.78rem, 0.75rem + 0.3vw, 0.9rem);
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      font-weight: 400;
+    }
+
+    .alert {
+      display: none;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      background: rgba(248, 113, 113, 0.12);
+      color: #fecaca;
+      border: 1px solid rgba(248, 113, 113, 0.9);
+      border-left: 4px solid #f97373;
+      text-align: left;
+      animation: shake 0.4s ease-in-out;
+    }
+
+    :root[data-theme="light"] .alert {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .input-group label {
+      font-size: 0.82rem;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    .input-group label::before {
+      content: "";
+      width: 10px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #38bdf8, var(--accent-gold));
+      opacity: 0.7;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 11px 45px 11px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      transition: all 0.22s ease;
+      outline: none;
+    }
+
+    .input-group input::placeholder {
+      color: rgba(148, 163, 184, 0.9);
+      font-size: 0.86rem;
+    }
+
+    .input-group input:focus {
+      border-color: var(--input-border-focus);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.55);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    :root[data-theme="light"] .input-group input:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
+      background: #ffffff;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      background: none;
+      border: none;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .toggle-password:hover {
+      color: var(--primary-color);
+      transform: translateY(-50%) scale(1.07);
+    }
+
+    /* TOMBOL LOGIN */
+    .login-btn {
+      margin: 14px auto 0;
+      width: 72%;
+      max-width: 230px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #38bdf8 0%, var(--accent-gold) 100%);
+      color: #020617;
+      font-weight: 600;
+      font-size: 0.86rem;
+      line-height: 1.2;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.75);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      transition: transform 0.16s, box-shadow 0.18s, filter 0.22s, background 0.22s;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(
+        120deg,
+        rgba(255,255,255,0.65) 0%,
+        rgba(255,255,255,0) 45%,
+        transparent 60%
+      );
+      transform: translateX(-120%);
+      pointer-events: none;
+      transition: transform 0.7s ease;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .login-btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.9);
+        filter: brightness(1.02);
+      }
+
+      .login-btn:hover::before {
+        transform: translateX(120%);
+      }
+    }
+
+    .login-btn:active:not(:disabled) {
+      transform: scale(0.97);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.85);
+    }
+
+    .login-btn:disabled {
+      background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%);
+      color: #e5e7eb;
+      cursor: not-allowed;
+      box-shadow: none;
+      letter-spacing: 0.06em;
+    }
+
+    .footer {
+      margin-top: 22px;
+      font-size: clamp(0.7rem, 0.65rem + 0.2vw, 0.8rem);
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .footer a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.7);
+      padding-bottom: 1px;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .footer a:hover {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      body {
+        align-items: flex-start;
+        padding-top: 40px;
+      }
+
+      .login-card {
+        border-radius: 22px;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.9);
+        padding: 22px 18px 20px;
+      }
+
+      .subtitle {
+        margin-bottom: 20px;
+      }
+
+      .input-group {
+        margin-bottom: 14px;
+      }
+
+      .login-btn {
+        margin: 12px auto 0;
+        width: 80%;
+        max-width: 230px;
+        padding: 8px 14px;
+        font-size: 0.84rem;
+      }
+
+      .footer {
+        margin-top: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding-inline: 12px;
+      }
+
+      .theme-toggle span {
+        display: none; /* di HP kecil, teks hilang, hanya ikon */
+      }
+
+      .theme-toggle {
+        padding: 4px 8px;
+      }
+    }
+
+    @media (min-width: 992px) {
+      body {
+        padding: 24px;
+      }
+
+      .login-card {
+        padding: 30px 32px 26px;
+        border-radius: 26px;
+      }
+
+      .subtitle {
+        margin-bottom: 26px;
+      }
+
+      .input-group {
+        margin-bottom: 18px;
+      }
+
+      .footer {
+        margin-top: 24px;
+      }
+    }
+
+    @media (max-height: 600px) {
+      body {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+
+      .login-card {
+        padding: 20px 18px;
+      }
+
+      .subtitle {
+        margin-bottom: 16px;
+      }
+
+      .footer {
+        margin-top: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .login-card,
+      .steel-structure {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="steel-structure"></div>
+
+  <div class="login-card">
+    <!-- Toggle tema global -->
+    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Ganti tema">
+      <i class='bx bx-moon' id="themeIcon"></i>
+      <span id="themeLabel">Dark</span>
+    </button>
+
+    <img src="assets/logo.png" class="logo" alt="Logo" onerror="this.style.display='none'">
+
+    <div class="title">MT BAJARAYA</div>
+    <p class="subtitle">Baja Project Analytics &amp; Reporting System</p>
+
+    <div id="errorBox" class="alert"></div>
+
+    <form id="loginForm">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <div class="input-wrapper">
+          <input type="text" id="username" placeholder="Contoh: manaj123" autocomplete="username" required>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" placeholder="Masukkan kata sandi" autocomplete="current-password" required>
+          <button type="button" class="toggle-password" onclick="togglePass()" title="Lihat Password">
+            <i class='bx bx-hide' id="toggleIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="login-btn" id="btnLogin">LOGIN</button>
+    </form>
+
+    <div class="footer">
+      Lupa password atau terkunci?<br>
+      <a href="#">Hubungi IT Support</a>
+      <br><br>
+      © 2025 Mulya Teknik
+    </div>
+  </div>
+
+  <script>
+    // ====== BASE URL GLOBAL (PAKAI URL TERBARU) ======
+    const BASE_URL  = "https://mt-optima-api-176148115028.asia-southeast2.run.app";
+    const LOGIN_ENDPOINT = `${BASE_URL}/api/login`;
+    const THEME_KEY = "mt_theme";
+
+    let isLoginCooldown = false;
+    const LOGIN_COOLDOWN_MS = 3000; // jeda 3 detik mencegah double click
+
+    // ====== THEME HANDLER (GLOBAL UNTUK SEMUA HALAMAN) ======
+    function applyTheme(theme) {
+      const root = document.documentElement;
+      root.setAttribute("data-theme", theme);
+
+      const icon  = document.getElementById("themeIcon");
+      const label = document.getElementById("themeLabel");
+      if (!icon || !label) return;
+
+      if (theme === "light") {
+        icon.classList.remove("bx-moon");
+        icon.classList.add("bx-sun");
+        label.textContent = "Light";
+      } else {
+        icon.classList.remove("bx-sun");
+        icon.classList.add("bx-moon");
+        label.textContent = "Dark";
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme") || "dark";
+      const next    = current === "dark" ? "light" : "dark";
+
+      // DISIMPAN DI LOCALSTORAGE → dipakai splash + dashboard + halaman lain
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    }
+
+    (function initTheme() {
+      let saved = localStorage.getItem(THEME_KEY);
+      if (!saved) {
+        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
+          saved = "light";
+        } else {
+          saved = "dark";
+        }
+      }
+      applyTheme(saved);
+    })();
+
+    // ====== UTIL: PARSE JSON DENGAN AMAN ======
+    async function safeParseJSON(response) {
+      const contentType = response.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        // Bukan JSON → kembalikan teks mentah agar tidak melempar error
+        const rawText = await response.text();
+        return { _raw: rawText };
+      }
+
+      try {
+        return await response.json();
+      } catch (err) {
+        console.error("JSON Parse Error:", err);
+        return { _parseError: true };
+      }
+    }
+
+    // ====== LOGIN LOGIC (DENGAN COOLDOWN 3s) ======
+    function togglePass() {
+      const passInput = document.getElementById("password");
+      const icon      = document.getElementById("toggleIcon");
+
+      if (passInput.type === "password") {
+        passInput.type = "text";
+        icon.classList.replace("bx-hide", "bx-show");
+      } else {
+        passInput.type = "password";
+        icon.classList.replace("bx-show", "bx-hide");
+      }
+    }
+
+    function showError(msg) {
+      const errorBox = document.getElementById("errorBox");
+      errorBox.textContent = msg;
+      errorBox.style.display = "block";
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      if (isLoginCooldown) return;
+
+      const userField = document.getElementById("username");
+      const passField = document.getElementById("password");
+      const btn       = document.getElementById("btnLogin");
+      const errorBox  = document.getElementById("errorBox");
+
+      // Reset error
+      errorBox.style.display = "none";
+      errorBox.textContent   = "";
+
+      if (!userField.value.trim() || !passField.value.trim()) {
+        showError("⚠️ Harap isi Username dan Password.");
+        return;
+      }
+
+      isLoginCooldown = true;
+      const originalText = btn.innerText;
+      btn.innerText = "Memuat...";
+      btn.disabled  = true;
+
+      try {
+        const response = await fetch(LOGIN_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            username: userField.value.trim(),
+            password: passField.value
+          })
+        });
+
+        const data = await safeParseJSON(response);
+        console.log("Login response:", data);
+
+        if (response.ok) {
+          const token = data.token || data.access_token;
+          if (token) {
+            localStorage.setItem("token", token);
+          }
+
+          if (data.user) {
+            localStorage.setItem("user_name", data.user.name || "");
+            localStorage.setItem("user_role", data.user.role_id ?? "");
+          }
+
+          window.location.replace("dashboard.html");
+        } else {
+          // Jika server mengirim JSON dengan message
+          if (data && data.message) {
+            showError(data.message);
+          } else if (data && data._raw) {
+            // Server kirim HTML / teks (bukan JSON)
+            console.warn("Non-JSON error response:", data._raw);
+            showError("❌ Terjadi kesalahan pada server (non-JSON response). Hubungi IT jika berlanjut.");
+          } else if (data && data._parseError) {
+            showError("❌ Terjadi kesalahan saat membaca respon server.");
+          } else {
+            showError("❌ Username atau Password salah atau server bermasalah.");
+          }
+        }
+      } catch (error) {
+        console.error("Fetch Error:", error);
+        showError("❌ Gagal terhubung ke server. Pastikan koneksi internet lancar.");
+      } finally {
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.disabled  = false;
+          isLoginCooldown = false;
+        }, LOGIN_COOLDOWN_MS);
+      }
+    });
+
+    // Optional: auto-redirect jika sudah login
+    window.addEventListener("load", () => {
+      if (localStorage.getItem("token")) {
+        // Kalau mau auto-redirect:
+        // window.location.replace("dashboard.html");
+      }
+    });
+  </script>
+</body>
+</html>
