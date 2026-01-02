@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="id" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -114,7 +114,6 @@
   body { background: var(--bg-body); color: var(--text-main); min-height:100vh; display:flex; }
   button.is-waiting { opacity:0.7; cursor:wait; }
 
-  /* fluid typography */
   html { font-size: 16px; }
   body { font-size: clamp(13px, 1.6vw, 15px); line-height: 1.45; }
   .user-welcome h1 { font-size: clamp(20px, 2.4vw, 28px); line-height: 1.15; }
@@ -176,7 +175,6 @@
     border-color: rgba(129,140,248,0.7);
   }
 
-  /* TABLE */
   .table-container {
     background: var(--surface);
     padding:18px;
@@ -256,7 +254,6 @@
   :root[data-theme="dark"] .status-badge.status-negosiasi { background: rgba(202,138,4,0.25); border-color: rgba(250,204,21,0.7); color:#facc15; }
   :root[data-theme="dark"] .status-badge.status-default { background: rgba(31,41,55,0.9); border-color: rgba(75,85,99,0.7); color:#e5e7eb; }
 
-  /* ACTION BUTTONS */
   .action-cell { white-space: normal; }
   .action-cell{
     display:flex;
@@ -319,7 +316,6 @@
   :root[data-theme="dark"] .pagination button { background: rgba(15,23,42,0.96); border-color: rgba(148,163,184,0.6); color:#e5e7eb; }
   :root[data-theme="dark"] .page-info { background: rgba(31,41,55,0.9); color:#e5e7eb; }
 
-  /* MODAL */
   .modal-wrapper {
     position:fixed;
     inset:0;
@@ -576,11 +572,6 @@
     td { font-size: 12.5px; }
   }
 
-  /* =========================================================
-     ✅ MOBILE: Sidebar follow user.html (lebih kecil),
-     tombol burger/close lebih kecil, tombol X nempel di LUAR sidebar
-     - TANPA ubah fungsi JS lain
-  ========================================================= */
   @media (max-width: 768px) {
     :root{
       --container-pad: 12px;
@@ -588,14 +579,11 @@
       --btn-pad-y: 6px;
       --btn-pad-x: 10px;
       --btn-font: 11px;
-
-      /* ✅ mirip user.html: sidebar ramping */
       --sbw: 235px;
     }
 
     body { flex-direction: column; }
 
-    /* ✅ SIDEBAR mirip user.html (override master) */
     .sidebar{
       width: var(--sbw) !important;
       max-width: 82vw !important;
@@ -632,7 +620,6 @@
       font-size: 12px !important;
     }
 
-    /* ✅ tombol burger lebih kecil (kalau master-shell gak kecil) */
     #toggleBtn.toggle-btn{
       width: 40px !important;
       height: 40px !important;
@@ -640,18 +627,17 @@
     }
     #toggleBtn.toggle-btn i{ font-size: 20px !important; }
 
-    /* ✅ tombol X: POSISI DI LUAR SIDEBAR (menempel kanan sidebar) */
     #mobileCloseBtn{
       position: fixed !important;
       top: 12px !important;
-      left: calc(var(--sbw) + 10px) !important; /* ✅ di luar sidebar */
+      left: calc(var(--sbw) + 10px) !important;
       width: 34px !important;
       height: 34px !important;
       min-width: 34px !important;
       min-height: 34px !important;
       border-radius: 12px !important;
       padding: 0 !important;
-      display: none !important; /* default hidden */
+      display: none !important;
       align-items: center !important;
       justify-content: center !important;
       z-index: 3000 !important;
@@ -663,14 +649,11 @@
     }
     #mobileCloseBtn i{ font-size: 20px !important; }
 
-    /* hanya muncul saat sidebar open */
     body.sidebar-open #mobileCloseBtn{ display: inline-flex !important; }
     body:not(.sidebar-open) #mobileCloseBtn{ display: none !important; }
 
-    /* alert */
     .alert-container{ right: 12px; left: 12px; top: 12px; max-width: none; }
 
-    /* table -> card */
     .table-container { padding: 0; border: none; background: transparent; box-shadow: none; overflow: visible; }
     table{ width: 100%; display:block; }
     thead{ display:none; }
@@ -708,7 +691,6 @@
     .status-badge{ justify-self:end; margin-left:auto; }
     td:last-child{ border-bottom:none; padding-top: 10px; }
 
-    /* ✅ tombol aksi di card: diperkecil (lebih rapih di mobile) */
     .action-cell{
       width:100%;
       justify-content: flex-end;
@@ -730,7 +712,6 @@
     .pagination{ justify-content: center; gap: 8px; padding: 10px 0 0; }
     .page-info{ width: 100%; text-align:center; }
 
-    /* theme toggle jadi ikon saja */
     .page-header-actions{ width: 100%; display:flex; justify-content:flex-end; }
     .theme-toggle{
       width: 40px;
@@ -743,7 +724,6 @@
     }
     .theme-toggle span{ display:none; }
 
-    /* ✅ MODAL: bottom-sheet lebih kecil */
     .modal-wrapper{ align-items: flex-end; padding: 0; }
     .modal-content{
       width:100%;
@@ -797,7 +777,6 @@
       gap: 8px;
     }
 
-    /* ✅ tombol modal diperkecil */
     .btn-cancel, .btn-save{
       min-height: 32px;
       font-size: 11.2px;
@@ -806,7 +785,6 @@
       letter-spacing: 0.03em;
     }
 
-    /* ✅ tombol unduh file diperkecil */
     .file-link{
       padding: 6px 9px;
       font-size: 9.8px;
@@ -828,7 +806,6 @@
     .sidebar .menu a{ padding: 9px 11px !important; }
     .sidebar .menu a i{ font-size: 17px !important; }
 
-    /* ✅ tombol X tetap di luar sidebar + rapih */
     #mobileCloseBtn{
       top: 10px !important;
       left: calc(var(--sbw) + 10px) !important;
@@ -1024,19 +1001,13 @@
   // ================= CONFIG =================
   const BASE_URL = "https://mt-optima-api-176148115028.asia-southeast2.run.app";
 
-  // LIST PROJECTS
   const API_PROJECTS = `${BASE_URL}/api/projects`;
-
-  // GET FILES PER PROJECT
   const API_PROJECT_FILES = (id) => `${BASE_URL}/api/projects/${id}/files`;
-
   const API_ADD_PROGRES = (id) => `${BASE_URL}/api/projects/${id}/progress`;
-
   const API_DOWNLOAD_FILE = (attachmentId) => `${BASE_URL}/api/attachments/${attachmentId}/download`;
 
   const AUTH_TOKEN = localStorage.getItem('token') || '';
 
-  // ✅ tetap sesuai request: 50MB/file, total 200MB
   const MAX_FILE_SIZE  = 50 * 1024 * 1024;
   const MAX_TOTAL_SIZE = 200 * 1024 * 1024;
 
@@ -1131,7 +1102,6 @@
     handleScroll();
   }
 
-  // ✅ penting: tombol X hanya tampil saat sidebar benar-benar open
   function syncSidebarOpenState() {
     const sb = document.getElementById('sidebar');
     const ov = document.getElementById('overlay');
@@ -1500,21 +1470,110 @@
     }
   }
 
-  function getDownloadUrlFromFile(f) {
-    let url = f.url_download || f.download_url || f.url || f.link || f.path_download || f.download_link;
-    const attachId = f.id_attachment || f.attachment_id || f.id;
-    if (!url && attachId) url = API_DOWNLOAD_FILE(attachId);
+  // ============================
+  // ✅ FIX DOWNLOAD (CORS SAFE)
+  // ============================
+
+  function isExternalStorageUrl(url) {
+    if (!url) return false;
+    const u = String(url).toLowerCase();
+    return (
+      u.includes('backblazeb2.com') ||
+      u.includes('s3.us-east-005.backblazeb2.com') ||
+      u.includes('.backblaze') ||
+      u.includes('x-amz-algorithm=') ||
+      u.includes('x-amz-signature=') ||
+      u.includes('x-amz-credential=') ||
+      u.includes('x-amz-date=') ||
+      u.includes('x-amz-expires=')
+    );
+  }
+
+  function safeFileName(name) {
+    const raw = String(name || 'file').trim();
+    return raw.replace(/[\\/:*?"<>|]+/g, '_');
+  }
+
+  function openDirectDownload(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.download = safeFileName(filename || 'file');
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  // ✅ ambil URL yang PALING mungkin benar dari object file
+  function pickAnyUrl(f) {
+    return (
+      f?.url_download ||
+      f?.download_url ||
+      f?.file_url ||
+      f?.url ||
+      f?.link ||
+      f?.path_download ||
+      f?.download_link ||
+      f?.signed_url ||
+      f?.presigned_url ||
+      f?.public_url ||
+      f?.storage_url ||
+      null
+    );
+  }
+
+  // ✅ ambil attachment id yang benar (jangan asal pakai f.id)
+  function pickAttachmentId(f) {
+    return (
+      f?.id_attachment ||
+      f?.attachment_id ||
+      f?.attachmentId ||
+      f?.attachment?.id ||
+      f?.file?.attachment_id ||
+      null
+    );
+  }
+
+  function normalizePossibleRelativeUrl(u) {
+    if (!u) return null;
+    let url = String(u).trim();
     if (!url) return null;
-    if (!url.startsWith('http')) url = `${BASE_URL}${url}`;
-    return url;
+
+    // kalau sudah absolut, biarkan
+    if (/^https?:\/\//i.test(url)) return url;
+
+    // kalau backend mengirim path relatif: "/api/...." atau "api/...."
+    if (!url.startsWith('/')) url = '/' + url;
+    return `${BASE_URL}${url}`;
+  }
+
+  function getDownloadUrlFromFile(f) {
+    // ✅ PRIORITAS 1: kalau ada URL storage/presigned dari API -> pakai itu (CORS-safe via <a href>)
+    const anyUrl = pickAnyUrl(f);
+    const normalizedAnyUrl = normalizePossibleRelativeUrl(anyUrl);
+
+    // kalau URL-nya eksternal (Backblaze/presigned), kembalikan apa adanya (jangan dipaksa jadi API)
+    if (normalizedAnyUrl && isExternalStorageUrl(normalizedAnyUrl)) {
+      return normalizedAnyUrl;
+    }
+
+    // ✅ PRIORITAS 2: kalau ada attachment_id yang valid -> pakai endpoint API download (lebih rapi)
+    const attachId = pickAttachmentId(f);
+    if (attachId) return API_DOWNLOAD_FILE(attachId);
+
+    // ✅ PRIORITAS 3: kalau ada url internal/relative -> pakai itu
+    if (normalizedAnyUrl) return normalizedAnyUrl;
+
+    return null;
   }
 
   async function downloadFile(encodedUrl, encodedName) {
     if (isDownloadCooldown) return;
     isDownloadCooldown = true;
 
-    const url = decodeURIComponent(encodedUrl);
-    const filename = decodeURIComponent(encodedName || 'file');
+    const url = decodeURIComponent(encodedUrl || '');
+    const filename = safeFileName(decodeURIComponent(encodedName || 'file'));
 
     if (!url) {
       tampilkanAlert("Link download tidak tersedia.", "danger");
@@ -1523,6 +1582,13 @@
     }
 
     try {
+      // ✅ Storage external/presigned: jangan fetch (hindari CORS preflight)
+      if (isExternalStorageUrl(url)) {
+        openDirectDownload(url, filename);
+        return;
+      }
+
+      // ✅ API internal: fetch pakai token
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -1718,7 +1784,6 @@
     if (overlay)  overlay.addEventListener("click", closeSidebar);
     if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
 
-    // ✅ pastikan body.sidebar-open ikut berubah walau class dari master berubah
     const mo = new MutationObserver(() => syncSidebarOpenState());
     if (sidebar) mo.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
     if (overlay) mo.observe(overlay, { attributes: true, attributeFilter: ['class'] });
@@ -1752,6 +1817,11 @@
     });
 
     updateNavButtonsState();
+
+    // opsional: warning kalau masih dibuka via file://
+    if (location.protocol === 'file:') {
+      console.warn('[Design] Halaman dibuka via file:// (origin null). Download eksternal aman via <a>, tapi untuk fitur fetch API wajib lewat server (Live Server/hosting).');
+    }
   });
 </script>
 </body>
